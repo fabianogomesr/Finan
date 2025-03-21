@@ -1,0 +1,14 @@
+﻿using Finan.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Finan.Domain.Interfaces
+{
+    public interface IBankRepository : IBaseRepository<Bank>
+    {
+        Task<BankPagination> GetAsync(int pageNumber, int pageSize);
+    }
+}

@@ -1,0 +1,33 @@
+﻿using Finan.Domain.DTOs;
+using Finan.Domain.Entities;
+using Finan.Domain.Interfaces;
+using Finan.Infra.Data.Context;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Finan.Infra.Data.Repository
+{
+    public class ReceivableRepository : BaseRepository<Receivable>, IReceivableRepository
+    {
+        protected readonly BaseContext _dbSet;
+
+        public ReceivableRepository(BaseContext mySqlContext) : base(mySqlContext)
+        {
+            _dbSet = mySqlContext;
+        }
+
+        public async Task<Receivable> GetReceivableByIdAsync(int id)
+        {
+            var result = _dbSet.Receivable.Include(x => x.CostCenter)
+                .Include(x => x.FinancialGroup)
+                .Include(x => x.FinancialClassification)
+                .Include(x => x.Currency);
+
+            return await result.FirstOrDefaultAsync();
+        }
+    }
+}
