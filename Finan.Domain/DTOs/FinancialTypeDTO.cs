@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.DTOs
 {
-    public class FinancialClassificationDTO
+    public class FinancialTypeDTO
     {
         public int Id { get; set; }
         public string? Description { get; set; }
-        public byte TypeId { get; set; }
-        public string? TypeName { get; set; }
-        public int FinancialGroupId { get; set; }
-        public string? FinancialGroupName { get; set; }
     }
 }

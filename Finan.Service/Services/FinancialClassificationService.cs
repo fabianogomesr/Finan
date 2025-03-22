@@ -1,5 +1,6 @@
 ﻿using Finan.Domain.DTOs;
 using Finan.Domain.Entities;
+using Finan.Domain.Enums;
 using Finan.Domain.Interfaces;
 using Finan.Domain.Parameters;
 using System;
@@ -31,7 +32,7 @@ namespace Finan.Service.Services
             var financialClassification = new FinancialClassification
             {
                 Description = financialClassificationParameter.Description,
-                Type = (Domain.Enums.FinancialType)financialClassificationParameter.Type,
+                Type = (Domain.Enums.FinancialType)financialClassificationParameter.TypeId,
                 FinancialGroup = financialGroup
             };
 
@@ -43,7 +44,7 @@ namespace Finan.Service.Services
             {
                 Id = result.Id,
                 Description = result.Description,
-                Type = (byte)result.Type.GetHashCode(),
+                TypeId = (byte)result.Type.GetHashCode(),
                 FinancialGroupId = result.FinancialGroup.Id
             };
         }
@@ -59,7 +60,7 @@ namespace Finan.Service.Services
             {
                 Id = result.Id,
                 Description = result.Description,
-                Type = (byte)result.Type.GetHashCode(),
+                TypeId = (byte)result.Type.GetHashCode(),
                 FinancialGroupId = result.FinancialGroup.Id
             };
         } 
@@ -75,9 +76,41 @@ namespace Finan.Service.Services
             {
                 Id = x.Id,
                 Description = x.Description,
-                Type = (byte)x.Type.GetHashCode(),
+                TypeId = (byte)x.Type.GetHashCode(),
                 FinancialGroupId = x.FinancialGroup.Id
             });
+        }
+  
+        public async Task<FinancialClassificationPaginationDTO> GetFinancialClassificationsAsync(int pageNumber = 1, int pageSize = 5)
+        {
+            var result = await _baseRepository.Select(pageNumber, pageSize);
+
+            return new FinancialClassificationPaginationDTO
+            {
+                FinancialClassifications = result.Entities.Select(x => new FinancialClassificationDTO { 
+                    Id = x.Id, 
+                    Description = x.Description, 
+                    FinancialGroupId = x.FinancialGroup != null ? x.FinancialGroup.Id : 0, 
+                    FinancialGroupName = x.FinancialGroup != null ? x.FinancialGroup.Description : String.Empty, 
+                    TypeId = (byte)x.Type.GetHashCode(),
+                    TypeName = x.Type.GetDescription()
+                }).ToList(),
+                PageSize = result.PageSize,
+                CurrentPage = result.CurrentPage,
+                TotalItems = result.TotalItems,
+                TotalPages = result.TotalPages
+            };
+        }
+
+        public List<FinancialTypeDTO> GetFinancialTypeList()
+        {
+            var result = EnumExtensions.GetEnumList<FinancialType>();
+
+            return result.Select(x => new FinancialTypeDTO
+            {
+                Id = x.Value,
+                Description = x.Description
+            }).ToList();
         }
 
         public async Task<FinancialClassificationDTO> UpdateFinancialClassification(FinancialClassificationCommand financialClassificationParameter)
@@ -89,7 +122,7 @@ namespace Finan.Service.Services
                 throw new Exception("Grupo financeiro não encontrado");
 
             financialClassification.Description = financialClassificationParameter.Description;
-            financialClassification.Type = (Domain.Enums.FinancialType)financialClassificationParameter.Type;
+            financialClassification.Type = (Domain.Enums.FinancialType)financialClassificationParameter.TypeId;
             financialClassification.FinancialGroup = financialGroup;
 
             await _baseRepository.Update(financialClassification);
@@ -98,7 +131,7 @@ namespace Finan.Service.Services
             {
                 Id = financialClassification.Id,
                 Description = financialClassification.Description,
-                Type = (byte)financialClassification.Type,
+                TypeId = (byte)financialClassification.Type,
                 FinancialGroupId = financialClassification.FinancialGroup.Id
             };
 

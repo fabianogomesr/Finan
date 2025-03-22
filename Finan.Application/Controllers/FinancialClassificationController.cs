@@ -66,6 +66,44 @@ namespace Finan.Application.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetFinancialTypeList")]
+        public IActionResult GetFinancialTypeList()
+        {
+            try
+            {
+                var result = _baseFinancialClassificationService.GetFinancialTypeList();
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
+        [HttpGet("{pageNumber}/{pageSize}")]
+        public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
+        {
+            try
+            {
+                var result = await _baseFinancialClassificationService.GetFinancialClassificationsAsync(pageNumber, pageSize);
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)

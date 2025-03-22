@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Finan.Service", "Finan.Serv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Finan.Infra.Data", "Finan.Infra.Data\Finan.Infra.Data.csproj", "{5465BE56-3C79-4104-96EC-49C0802676C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finan.CrossCutting", "Finan.CrossCutting\Finan.CrossCutting.csproj", "{A60995B2-3E2A-4DAC-BD2B-D8052862D118}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{5465BE56-3C79-4104-96EC-49C0802676C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5465BE56-3C79-4104-96EC-49C0802676C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5465BE56-3C79-4104-96EC-49C0802676C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A60995B2-3E2A-4DAC-BD2B-D8052862D118}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A60995B2-3E2A-4DAC-BD2B-D8052862D118}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A60995B2-3E2A-4DAC-BD2B-D8052862D118}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A60995B2-3E2A-4DAC-BD2B-D8052862D118}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +62,7 @@ Global
 		{24E5829A-7C77-41E8-8B91-ACA51D61FCD5} = {0072F5AA-C992-423E-AECD-65FC1DA9CE1F}
 		{D4F55B65-2842-4635-93C0-D60308852951} = {D350F9CC-AB5A-4980-91C5-BBCA8F4761AF}
 		{5465BE56-3C79-4104-96EC-49C0802676C6} = {52F4AA90-FE2F-4A26-A039-39023AAAB5E2}
+		{A60995B2-3E2A-4DAC-BD2B-D8052862D118} = {78762F43-6BB5-4E5A-BCEA-70246AD4CC03}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D12EBF0B-022A-4D4C-AA3C-C120735FC882}

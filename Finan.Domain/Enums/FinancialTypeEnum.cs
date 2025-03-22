@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,11 @@ namespace Finan.Domain.Enums
 {
     public enum FinancialType : byte
     {
-        Expense = 0, //Despesa
-        Income = 1, //Receita
-        Both = 2 //Ambos
+        [Description("Despesa")]
+        Expense = 0,
+        [Description("Receita")]
+        Income = 1,
+        [Description("Ambos")]
+        Both = 2
     }
 }
