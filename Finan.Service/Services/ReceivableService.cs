@@ -47,6 +47,7 @@ namespace Finan.Service.Services
                 FinancialGroup = financialGroup,
                 FinancialClassification = financialClassification,
                 Currency = currency,
+                Description = receivableParameter.Description, 
                 Type = (Domain.Enums.TransactionType)receivableParameter.Type,
                 Value = receivableParameter.Value,
                 Discount = receivableParameter.Discount,

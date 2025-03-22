@@ -17,6 +17,12 @@ namespace Finan.Infra.Data.Mapping
 
             builder.HasKey(prop => prop.Id);
 
+            builder.Property(prop => prop.Description)
+                .HasConversion(prop => prop, prop => prop)
+                .IsRequired()
+                .HasColumnName("Description")
+                .HasColumnType("varchar(50)");
+
             builder.Property(prop => prop.Type)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()

@@ -15,6 +15,7 @@ namespace Finan.Domain.Commands
         public int FinancialGroupId { get; set; }
         public int FinancialClassificationId { get; set; }
         public int CurrencyId { get; set; }
+        public string? Description { get; set; }
         public byte Type { get; set; }
         public decimal Value { get; set; }
         public decimal Discount { get; set; }

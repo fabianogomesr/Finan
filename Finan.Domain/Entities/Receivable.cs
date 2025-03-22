@@ -13,6 +13,7 @@ namespace Finan.Domain.Entities
         public FinancialGroup? FinancialGroup { get; set; }
         public FinancialClassification? FinancialClassification { get; set; }
         public Currency? Currency { get; set; }
+        public string? Description { get; set; }
         public TransactionType Type { get; set; }
         public decimal Value { get; set; }
         public decimal Discount { get; set; }
