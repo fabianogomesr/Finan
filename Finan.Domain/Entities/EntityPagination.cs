@@ -8,6 +8,6 @@ namespace Finan.Domain.Entities
 {
     public class EntityPagination<TEntity> : Pagination 
     {
-        public IEnumerable<TEntity> Entities { get; set; }
+        public IEnumerable<TEntity>? Entities { get; set; }
     }
 }

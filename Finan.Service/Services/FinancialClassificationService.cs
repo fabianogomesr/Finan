@@ -83,7 +83,7 @@ namespace Finan.Service.Services
   
         public async Task<FinancialClassificationPaginationDTO> GetFinancialClassificationsAsync(int pageNumber = 1, int pageSize = 5)
         {
-            var result = await _baseRepository.Select(pageNumber, pageSize);
+            var result = await _baseRepository.GetFinancialClassificationsAsync(pageNumber, pageSize);
 
             return new FinancialClassificationPaginationDTO
             {

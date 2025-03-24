@@ -11,5 +11,7 @@ namespace Finan.Domain.Interfaces
     {
         Task<FinancialClassification> GetFinancialClassificationByIdAsync(int id);
         Task<IEnumerable<FinancialClassification>> GetFinancialClassificationsAsync();
+        Task<EntityPagination<FinancialClassification>> GetFinancialClassificationsAsync(int pageNumber = 1, int pageSize = 5);
+
     }
 }
