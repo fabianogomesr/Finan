@@ -78,6 +78,36 @@ namespace Finan.Application.Controllers
             }
         }
 
+        [HttpGet("{pageNumber}/{pageSize}")]
+        public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
+        {
+            try
+            {
+                var result = await _baseCurrencyService.GetAsync(pageNumber, pageSize);
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(new CurrencyPaginationDTO
+                {
+                    Currencies = result.Entities.Select(x => new CurrencyDTO
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Code = x.Code,
+                        Symbol = x.Symbol
+                    }).ToList(),
+                    CurrentPage = result.CurrentPage,
+                    TotalItems = result.TotalItems,
+                    TotalPages = result.TotalPages
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
