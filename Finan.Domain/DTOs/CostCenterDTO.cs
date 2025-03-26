@@ -9,6 +9,6 @@ namespace Finan.Domain.DTOs
     public class CostCenterDTO
     {
         public int Id { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }

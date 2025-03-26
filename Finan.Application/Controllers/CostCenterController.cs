@@ -77,6 +77,34 @@ namespace Finan.Application.Controllers
             }
         }
 
+        [HttpGet("{pageNumber}/{pageSize}")]
+        public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
+        {
+            try
+            {
+                var result = await _baseCostCenterService.GetAsync(pageNumber, pageSize);
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(new CostCenterPaginationDTO
+                {
+                    CostCenters = result.Entities.Select(x => new CostCenterDTO
+                    {
+                        Id = x.Id,
+                        Description = x.Description,
+                    }).ToList(),
+                    CurrentPage = result.CurrentPage,
+                    TotalItems = result.TotalItems,
+                    TotalPages = result.TotalPages
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
