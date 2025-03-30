@@ -29,6 +29,10 @@ namespace Finan.Infra.Data.Mapping
                 .HasColumnName("Type")
                 .HasColumnType("tinyint");
 
+            builder.Property(prop => prop.FinancialGroupId)
+                .IsRequired()
+                .HasColumnName("FinancialGroupId");
+
             builder.HasOne(a => a.FinancialGroup)
                .WithMany(b => b.FinancialClassifications)
                .HasForeignKey("FinancialGroupId");

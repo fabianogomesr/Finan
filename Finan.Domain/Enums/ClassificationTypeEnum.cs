@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Enums
 {
-    public enum FinancialType : byte
+    public enum ClassificationType : byte
     {
         [Description("Despesa")]
         Expense = 0,

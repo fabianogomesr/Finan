@@ -10,9 +10,9 @@ namespace Finan.Domain.Entities
     public class FinancialClassification : BaseEntity
     {
         public string? Description { get; set; }
-        public FinancialType Type { get; set; }
+        public ClassificationType Type { get; set; }
         public FinancialGroup? FinancialGroup { get; set; }
-
+        public int FinancialGroupId { get; set; }
         public List<AccountDeposit>? AccountDeposits { get; set; }
         public List<Receivable>? Receivables { get; set; }
         public List<Payment>? Payments { get; set; }

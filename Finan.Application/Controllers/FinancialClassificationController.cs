@@ -67,12 +67,12 @@ namespace Finan.Application.Controllers
         }
 
         [HttpGet]
-        [Route("GetFinancialTypeList")]
-        public IActionResult GetFinancialTypeList()
+        [Route("GetClassificationTypeList")]
+        public IActionResult GetClassificationTypeList()
         {
             try
             {
-                var result = _baseFinancialClassificationService.GetFinancialTypeList();
+                var result = _baseFinancialClassificationService.GetClassificationTypeList();
 
                 if (result == null || result.Equals(string.Empty))
                     return NotFound();

@@ -32,7 +32,7 @@ namespace Finan.Service.Services
             var financialClassification = new FinancialClassification
             {
                 Description = financialClassificationParameter.Description,
-                Type = (Domain.Enums.FinancialType)financialClassificationParameter.TypeId,
+                Type = (ClassificationType)financialClassificationParameter.TypeId,
                 FinancialGroup = financialGroup
             };
 
@@ -102,11 +102,11 @@ namespace Finan.Service.Services
             };
         }
 
-        public List<FinancialTypeDTO> GetFinancialTypeList()
+        public List<ClassificationTypeDTO> GetClassificationTypeList()
         {
-            var result = EnumExtensions.GetEnumList<FinancialType>();
+            var result = EnumExtensions.GetEnumList<ClassificationType>();
 
-            return result.Select(x => new FinancialTypeDTO
+            return result.Select(x => new ClassificationTypeDTO
             {
                 Id = x.Value,
                 Description = x.Description
@@ -122,7 +122,7 @@ namespace Finan.Service.Services
                 throw new Exception("Grupo financeiro não encontrado");
 
             financialClassification.Description = financialClassificationParameter.Description;
-            financialClassification.Type = (Domain.Enums.FinancialType)financialClassificationParameter.TypeId;
+            financialClassification.Type = (ClassificationType)financialClassificationParameter.TypeId;
             financialClassification.FinancialGroup = financialGroup;
 
             await _baseRepository.Update(financialClassification);

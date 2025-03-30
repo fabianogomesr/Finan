@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.DTOs
 {
-    public class FinancialTypeDTO
+    public class ClassificationTypeDTO
     {
         public int Id { get; set; }
         public string? Description { get; set; }
