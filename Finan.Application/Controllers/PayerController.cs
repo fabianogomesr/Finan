@@ -77,6 +77,34 @@ namespace Finan.Application.Controllers
             }
         }
 
+        [HttpGet("{pageNumber}/{pageSize}")]
+        public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
+        {
+            try
+            {
+                var result = await _basePayerService.GetAsync(pageNumber, pageSize);
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(new PayerPaginationDTO
+                {
+                    Payers = result.Entities.Select(x => new PayerDTO
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    }).ToList(),
+                    CurrentPage = result.CurrentPage,
+                    TotalItems = result.TotalItems,
+                    TotalPages = result.TotalPages
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.DTOs
 {
-    public class PayerDTO
+    public class PayerPaginationDTO : PaginationDTO
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
+        public List<PayerDTO>? Payers { get; set; }
     }
 }

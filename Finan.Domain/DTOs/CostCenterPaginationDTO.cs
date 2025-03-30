@@ -9,6 +9,6 @@ namespace Finan.Domain.DTOs
 {
     public class CostCenterPaginationDTO : PaginationDTO
     {
-        public List<CostCenterDTO> CostCenters { get; set; }
+        public List<CostCenterDTO>? CostCenters { get; set; }
     }
 }

@@ -201,7 +201,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Payer](
-	[Id] [smallint] IDENTITY(1,1) NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](50) NOT NULL,
  CONSTRAINT [PK_Payer] PRIMARY KEY CLUSTERED 
 (
@@ -230,7 +230,7 @@ CREATE TABLE [dbo].[Payment](
 	[DueDate] [datetime] NOT NULL,
 	[CashFlowDate] [datetime] NOT NULL,
 	[AccrualPeriodDate] [datetime] NOT NULL,
-	[PayerId] [smallint] NOT NULL,
+	[PayerId] [int] NOT NULL,
 	[Observation] [varchar](100) NULL,
 	[Status] [tinyint] NOT NULL
  CONSTRAINT [PK_Payment] PRIMARY KEY CLUSTERED 
