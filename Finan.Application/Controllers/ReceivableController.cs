@@ -27,19 +27,49 @@ namespace Finan.Application.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] ReceivableCommand ReceivableParameter)
         {
-            return Ok(await _baseReceivableService.AddReceivable(ReceivableParameter));
+            return Ok(await _baseReceivableService.AddReceivable<ReceivableValidator>(ReceivableParameter));
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> CreateReceivablesAsync([FromBody] List<ReceivableCommand> receivables)
-        //{
-        //    return Ok(await _baseReceivableService.CreateReceivablesAsync(receivables));
-        //}
 
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] ReceivableCommand ReceivableParameter)
         {
-            return Ok(await _baseReceivableService.UpdateReceivable(ReceivableParameter));
+            return Ok(await _baseReceivableService.UpdateReceivable<ReceivableValidator>(ReceivableParameter));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAsync()
+        {
+            try
+            {
+                var result = await _baseReceivableService.GetAsync();
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("{pageNumber}/{pageSize}")]
+        public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
+        {
+            try
+            {
+                var result = await _baseReceivableService.GetReceivablesAsync(pageNumber, pageSize);
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         [HttpGet("{id}")]

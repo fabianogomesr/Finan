@@ -1,5 +1,5 @@
 using Finan.Application;
-using MeuProjeto.Infrastructure.Persistence;
+using Finan.Infra.Data.Initializer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

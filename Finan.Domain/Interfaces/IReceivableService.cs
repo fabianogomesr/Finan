@@ -11,9 +11,10 @@ namespace Finan.Domain.Interfaces
 {
     public interface IReceivableService : IBaseService<Receivable>
     {
-        Task<ReceivableDTO?> AddReceivable(ReceivableCommand receivableParameter);
-        Task<List<ReceivableDTO>> CreateReceivablesAsync(List<ReceivableCommand> receivables);
+        Task<ReceivableDTO?> AddReceivable<ReceivableValidator>(ReceivableCommand receivableParameter);
         Task<ReceivableDTO> GetReceivableByIdAsync(int id);
-        Task<ReceivableDTO?> UpdateReceivable(ReceivableCommand receivableParameter);
+        Task<List<ReceivableDTO>> GetReceivablesAsync();
+        Task<ReceivablePaginationDTO> GetReceivablesAsync(int pageNumber = 1, int pageSize = 5);
+        Task<ReceivableDTO?> UpdateReceivable<ReceivableValidator>(ReceivableCommand receivableParameter);
     }
 }

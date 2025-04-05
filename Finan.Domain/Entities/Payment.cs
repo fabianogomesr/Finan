@@ -25,7 +25,7 @@ namespace Finan.Domain.Entities
         public DateTime AccrualPeriodDate { get; set; } //Data de Competencia
         public Payer? Payer { get; set; } //Data de Competencia
         public string? Observation { get; set; }
-        public TransactionStatus Status { get; set; }
+        public PaymentStatus Status { get; set; }
         public List<Statement>? Statements { get; set; }
     }
 }

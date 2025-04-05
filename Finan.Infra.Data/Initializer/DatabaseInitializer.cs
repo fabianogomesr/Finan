@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MeuProjeto.Infrastructure.Persistence
+namespace Finan.Infra.Data.Initializer
 {
 	public class DatabaseInitializer
 	{
@@ -99,7 +99,7 @@ namespace MeuProjeto.Infrastructure.Persistence
 
 							context.User.AddRange(new[]
 							{
-								new User { UserName = "admin", Password = "Finan@1234", Email = "dev.fabianorocha@gmail.com", Role = "Maganer" }
+								new User { UserName = "Admin", Password = "Finan@1234", Email = "dev.fabianorocha@gmail.com", Role = "Maganer" }
 							});
 
 							await context.SaveChangesAsync();

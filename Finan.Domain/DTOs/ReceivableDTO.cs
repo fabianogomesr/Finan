@@ -15,6 +15,7 @@ namespace Finan.Domain.DTOs
         public int? FinancialGroupId { get; set; }
         public int? FinancialClassificationId { get; set; }
         public int? CurrencyId { get; set; }
+        public string? Description { get; set; }
         public byte Type { get; set; }
         public decimal Value { get; set; }
         public decimal Discount { get; set; }
@@ -24,7 +25,6 @@ namespace Finan.Domain.DTOs
         public DateTime CashFlowDate { get; set; } //Data de Fluxo 
         public DateTime AccrualPeriodDate { get; set; } //Data de Competencia
         public string? Observation { get; set; }
-        public int Installments { get; set; } //Parcela
         public byte Status { get; set; }
     }
 }

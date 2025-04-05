@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Enums
 {
-    public enum TransactionStatus : byte
+    public enum PaymentStatus : byte
     {
         Open = 1,
-        ReceivedOrPaid = 2,
+        Paid = 2,
         Canceled = 3
     }
 }

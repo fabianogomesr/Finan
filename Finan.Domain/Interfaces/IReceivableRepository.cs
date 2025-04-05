@@ -11,5 +11,7 @@ namespace Finan.Domain.Interfaces
     public interface IReceivableRepository : IBaseRepository<Receivable>
     {
         Task<Receivable> GetReceivableByIdAsync(int id);
+        Task<List<Receivable>> GetReceivablesAsync();
+        Task<EntityPagination<Receivable>> GetReceivablesAsync(int pageNumber, int pageSize);
     }
 }

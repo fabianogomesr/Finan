@@ -3,6 +3,8 @@ using Finan.Domain.Entities;
 using Finan.Domain.Enums;
 using Finan.Domain.Interfaces;
 using Finan.Domain.Parameters;
+using Finan.Service.Validators;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,18 +24,13 @@ namespace Finan.Service.Services
             _financialGroupRepository = financialGroupRepository;   
         }
 
-        public async Task<FinancialClassificationDTO> AddFinancialClassification(FinancialClassificationCommand financialClassificationParameter)
+        public async Task<FinancialClassificationDTO> AddFinancialClassification<FinancialClassificationValidator>(FinancialClassificationCommand financialClassificationParameter)
         {
-            var financialGroup = _financialGroupRepository.GetAll().Where(x => x.Id == financialClassificationParameter.FinancialGroupId).FirstOrDefault();
-
-            if (financialGroup == null)
-                throw new Exception("Grupo financeiro não encontrado");
-
             var financialClassification = new FinancialClassification
             {
                 Description = financialClassificationParameter.Description,
                 Type = (ClassificationType)financialClassificationParameter.TypeId,
-                FinancialGroup = financialGroup
+                FinancialGroupId = financialClassificationParameter.FinancialGroupId
             };
 
             await _baseRepository.Insert(financialClassification);
@@ -45,7 +42,7 @@ namespace Finan.Service.Services
                 Id = result.Id,
                 Description = result.Description,
                 TypeId = (byte)result.Type.GetHashCode(),
-                FinancialGroupId = result.FinancialGroup.Id
+                FinancialGroupId = result.FinancialGroupId
             };
         }
 
@@ -113,17 +110,13 @@ namespace Finan.Service.Services
             }).ToList();
         }
 
-        public async Task<FinancialClassificationDTO> UpdateFinancialClassification(FinancialClassificationCommand financialClassificationParameter)
+        public async Task<FinancialClassificationDTO> UpdateFinancialClassification<FinancialClassificationValidator>(FinancialClassificationCommand financialClassificationParameter)
         {
             var financialClassification = _baseRepository.GetAll().Where(x => x.Id == financialClassificationParameter.Id).FirstOrDefault();
-            var financialGroup = _financialGroupRepository.GetAll().Where(x => x.Id == financialClassificationParameter.FinancialGroupId).FirstOrDefault();
-
-            if (financialGroup == null)
-                throw new Exception("Grupo financeiro não encontrado");
 
             financialClassification.Description = financialClassificationParameter.Description;
             financialClassification.Type = (ClassificationType)financialClassificationParameter.TypeId;
-            financialClassification.FinancialGroup = financialGroup;
+            financialClassification.FinancialGroupId = financialClassificationParameter.FinancialGroupId;
 
             await _baseRepository.Update(financialClassification);
 
@@ -132,7 +125,7 @@ namespace Finan.Service.Services
                 Id = financialClassification.Id,
                 Description = financialClassification.Description,
                 TypeId = (byte)financialClassification.Type,
-                FinancialGroupId = financialClassification.FinancialGroup.Id
+                FinancialGroupId = financialClassification.FinancialGroupId
             };
 
         }

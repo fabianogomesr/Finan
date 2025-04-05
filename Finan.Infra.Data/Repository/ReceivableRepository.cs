@@ -29,5 +29,33 @@ namespace Finan.Infra.Data.Repository
 
             return await result.FirstOrDefaultAsync();
         }
+
+        public async Task<List<Receivable>> GetReceivablesAsync()
+        {
+            var result = _dbSet.Receivable.Include(x => x.CostCenter)
+                .Include(x => x.FinancialGroup)
+                .Include(x => x.FinancialClassification)
+                .Include(x => x.Currency);
+
+            return await result.ToListAsync();
+        }
+
+        public async Task<EntityPagination<Receivable>> GetReceivablesAsync(int pageNumber, int pageSize)
+        {
+            var entities = await _dbSet.Set<Receivable>().AsQueryable()
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+            var totalItems = await _dbSet.Set<Receivable>().CountAsync();
+
+            return new EntityPagination<Receivable>
+            {
+                Entities = entities,
+                TotalItems = totalItems,
+                CurrentPage = pageNumber,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
+            };
+        }
     }
 }

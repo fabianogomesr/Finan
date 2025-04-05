@@ -10,9 +10,13 @@ namespace Finan.Domain.Entities
     public class Receivable : BaseEntity
     {
         public CostCenter? CostCenter { get; set; }
+        public int CostCenterId { get; set; }   
         public FinancialGroup? FinancialGroup { get; set; }
+        public int FinancialGroupId { get; set; }
         public FinancialClassification? FinancialClassification { get; set; }
+        public int FinancialClassificationId { get; set; }
         public Currency? Currency { get; set; }
+        public int CurrencyId { get; set; }
         public string? Description { get; set; }
         public TransactionType Type { get; set; }
         public decimal Value { get; set; }
@@ -23,7 +27,7 @@ namespace Finan.Domain.Entities
         public DateTime CashFlowDate { get; set; } //Data de Fluxo 
         public DateTime AccrualPeriodDate { get; set; } //Data de Competencia
         public string? Observation { get; set; }
-        public TransactionStatus Status { get; set; }
+        public ReceivableStatus Status { get; set; }
         public List<Statement>? Statements { get; set; }
     }
 }

@@ -2,11 +2,6 @@
 using Finan.Domain.DTOs;
 using Finan.Domain.Entities;
 using Finan.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finan.Service.Services
 {
@@ -34,19 +29,14 @@ namespace Finan.Service.Services
             _costCenterRepository = costCenterRepository;
         }
 
-        public async Task<ReceivableDTO?> AddReceivable(ReceivableCommand receivableParameter)
+        public async Task<ReceivableDTO?> AddReceivable<ReceivableValidator>(ReceivableCommand receivableParameter)
         {            
-            var financialGroup = await _financialGroupRepository.Select(receivableParameter.FinancialGroupId);
-            var financialClassification = await _financialClassificationRepository.Select(receivableParameter.FinancialClassificationId);
-            var costCenter = await _costCenterRepository.Select(receivableParameter.CostCenterId);
-            var currency = await _currencyRepository.Select(receivableParameter.CurrencyId);
-
             Receivable receivable = new Receivable
             {
-                CostCenter = costCenter,
-                FinancialGroup = financialGroup,
-                FinancialClassification = financialClassification,
-                Currency = currency,
+                CostCenterId = receivableParameter.CostCenterId,
+                FinancialGroupId = receivableParameter.FinancialGroupId,
+                FinancialClassificationId = receivableParameter.FinancialClassificationId,
+                CurrencyId = receivableParameter.CurrencyId,
                 Description = receivableParameter.Description, 
                 Type = (Domain.Enums.TransactionType)receivableParameter.Type,
                 Value = receivableParameter.Value,
@@ -57,7 +47,7 @@ namespace Finan.Service.Services
                 CashFlowDate = receivableParameter.CashFlowDate,
                 AccrualPeriodDate = receivableParameter.AccrualPeriodDate,
                 Observation = receivableParameter.Observation,
-                Status = (Domain.Enums.TransactionStatus)receivableParameter.Status
+                Status = (Domain.Enums.ReceivableStatus)receivableParameter.Status
             };
            
             await _baseRepository.Insert(receivable);
@@ -65,10 +55,10 @@ namespace Finan.Service.Services
             return new ReceivableDTO
             {
                 Id = receivable.Id,
-                CostCenterId = receivable.CostCenter.Id,
-                FinancialGroupId = receivable.FinancialGroup.Id,
-                FinancialClassificationId = receivable.FinancialClassification.Id,
-                CurrencyId = receivable.Currency.Id,
+                CostCenterId = receivable.CostCenterId,
+                FinancialGroupId = receivable.FinancialGroupId,
+                FinancialClassificationId = receivable.FinancialClassificationId,
+                CurrencyId = receivable.CurrencyId,
                 Type = (byte)receivable.Type.GetHashCode(),
                 Value = receivable.Value,
                 Discount = receivable.Discount,
@@ -82,19 +72,31 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<List<ReceivableDTO>> CreateReceivablesAsync(List<ReceivableCommand> receivables)
+        public async Task<List<ReceivableDTO>> GetReceivablesAsync()
         {
-            List<ReceivableDTO> result = new List<ReceivableDTO>();
+            var result = await _baseRepository.GetReceivablesAsync();
 
-            foreach (var receivable in receivables)
+            if (result == null)
+                return null;
+
+            return result.Select( x => new ReceivableDTO
             {
-                var addResult = await AddReceivable(receivable);
-
-                if(addResult != null)
-                    result.Add(addResult);
-            }
-
-            return result;
+                Id = x.Id,
+                CostCenterId = x.CostCenterId,
+                FinancialGroupId = x.FinancialGroupId,
+                FinancialClassificationId = x.FinancialClassificationId,
+                CurrencyId = x.CurrencyId,
+                Type = (byte)x.Type.GetHashCode(),
+                Value = x.Value,
+                Discount = x.Discount,
+                TotalReceivable = x.TotalReceivable,
+                IssueDate = x.IssueDate,
+                DueDate = x.DueDate,
+                CashFlowDate = x.CashFlowDate,
+                AccrualPeriodDate = x.AccrualPeriodDate,
+                Observation = x.Observation,
+                Status = (byte)x.Status.GetHashCode()
+            }).ToList();
         }
 
         public async Task<ReceivableDTO> GetReceivableByIdAsync(int id)
@@ -108,9 +110,9 @@ namespace Finan.Service.Services
             {
                 Id = result.Id,
                 CostCenterId = result.Id,
-                FinancialGroupId = result.FinancialGroup.Id,
-                FinancialClassificationId = result.FinancialClassification.Id,
-                CurrencyId = result.Currency.Id,
+                FinancialGroupId = result.FinancialGroupId,
+                FinancialClassificationId = result.FinancialClassificationId,
+                CurrencyId = result.CurrencyId,
                 Type = (byte)result.Type.GetHashCode(),
                 Value = result.Value,
                 Discount = result.Discount,
@@ -124,17 +126,17 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<ReceivableDTO?> UpdateReceivable(ReceivableCommand receivableParameter)
+        public async Task<ReceivableDTO?> UpdateReceivable<ReceivableValidator>(ReceivableCommand receivableParameter)
         {
             var receivable = _baseRepository.Select(receivableParameter.Id).Result;
 
             if (receivable == null)
                 return null;
 
-            receivable.CostCenter = _costCenterRepository.Select(receivableParameter.CostCenterId).Result;
-            receivable.FinancialGroup = _financialGroupRepository.Select(receivableParameter.FinancialGroupId).Result;
-            receivable.FinancialClassification = _financialClassificationRepository.Select(receivableParameter.FinancialClassificationId).Result;
-            receivable.Currency = _currencyRepository.Select(receivableParameter.CurrencyId).Result;
+            receivable.CostCenterId = receivableParameter.CostCenterId;
+            receivable.FinancialGroupId = receivableParameter.FinancialGroupId;
+            receivable.FinancialClassificationId = receivableParameter.FinancialClassificationId;
+            receivable.CurrencyId = receivableParameter.CurrencyId;
             receivable.Type = (Domain.Enums.TransactionType)receivableParameter.Type;
             receivable.Value = receivableParameter.Value;
             receivable.Discount = receivableParameter.Discount;
@@ -144,17 +146,17 @@ namespace Finan.Service.Services
             receivable.CashFlowDate = receivableParameter.CashFlowDate;
             receivable.AccrualPeriodDate = receivableParameter.AccrualPeriodDate;
             receivable.Observation = receivableParameter.Observation;
-            receivable.Status = (Domain.Enums.TransactionStatus)receivableParameter.Status; 
+            receivable.Status = (Domain.Enums.ReceivableStatus)receivableParameter.Status; 
 
             await _baseRepository.Update(receivable);
 
             return new ReceivableDTO
             {
                 Id = receivable.Id,
-                CostCenterId = receivable.CostCenter.Id,
-                FinancialGroupId = receivable.FinancialGroup.Id,
-                FinancialClassificationId = receivable.FinancialClassification.Id,
-                CurrencyId = receivable.Currency.Id,
+                CostCenterId = receivable.CostCenterId,
+                FinancialGroupId = receivable.FinancialGroupId,
+                FinancialClassificationId = receivable.FinancialClassificationId,
+                CurrencyId = receivable.CurrencyId,
                 Type = (byte)receivable.Type.GetHashCode(),
                 Value = receivable.Value,
                 Discount = receivable.Discount,
@@ -165,6 +167,39 @@ namespace Finan.Service.Services
                 AccrualPeriodDate = receivable.AccrualPeriodDate,
                 Observation = receivable.Observation,
                 Status = (byte)receivable.Status.GetHashCode()
+            };
+        }
+
+        public async Task<ReceivablePaginationDTO> GetReceivablesAsync(int pageNumber = 1, int pageSize = 5)
+        {
+
+            var result = await _baseRepository.GetReceivablesAsync(pageNumber, pageSize);
+
+            return new ReceivablePaginationDTO
+            {
+                Receivables = result.Entities.Select(x => new ReceivableDTO
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    CostCenterId = x.CostCenterId,
+                    FinancialGroupId = x.FinancialGroupId,
+                    FinancialClassificationId = x.FinancialClassificationId,
+                    CurrencyId = x.CurrencyId,
+                    Type = (byte)x.Type,
+                    Value = x.Value,
+                    Discount = x.Discount,
+                    TotalReceivable = x.TotalReceivable,
+                    IssueDate = x.IssueDate,
+                    DueDate = x.DueDate,
+                    CashFlowDate = x.CashFlowDate,
+                    AccrualPeriodDate = x.AccrualPeriodDate,
+                    Observation = x.Observation,
+                    Status = (byte)x.Status
+
+                }).ToList(),
+                CurrentPage = result.CurrentPage,
+                TotalItems = result.TotalItems,
+                TotalPages = result.TotalPages
             };
         }
     }

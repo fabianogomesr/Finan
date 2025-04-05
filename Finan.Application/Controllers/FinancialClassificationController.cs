@@ -25,16 +25,11 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] FinancialClassificationCommand financialClassificationParameter) 
-        {
-            return Ok(await _baseFinancialClassificationService.AddFinancialClassification(financialClassificationParameter));
-        }
+        public async Task<IActionResult> CreateAsync([FromBody] FinancialClassificationCommand financialClassificationParameter) => await ExecuteAsync(async () => await _baseFinancialClassificationService.AddFinancialClassification<FinancialClassificationValidator>(financialClassificationParameter));
+
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] FinancialClassificationCommand financialClassificationParameter)
-        {
-            return Ok(await _baseFinancialClassificationService.UpdateFinancialClassification(financialClassificationParameter));
-        }
+        public async Task<IActionResult> UpdateAsync([FromBody] FinancialClassificationCommand financialClassificationParameter) => await ExecuteAsync(async () => await _baseFinancialClassificationService.UpdateFinancialClassification<FinancialClassificationValidator>(financialClassificationParameter));
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
