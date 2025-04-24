@@ -25,16 +25,10 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] ReceivableCommand ReceivableParameter)
-        {
-            return Ok(await _baseReceivableService.AddReceivable<ReceivableValidator>(ReceivableParameter));
-        }
+        public async Task<IActionResult> CreateAsync([FromBody] ReceivableCommand ReceivableParameter) => await ExecuteAsync(async () => await _baseReceivableService.AddReceivable<ReceivableValidator>(ReceivableParameter));
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] ReceivableCommand ReceivableParameter)
-        {
-            return Ok(await _baseReceivableService.UpdateReceivable<ReceivableValidator>(ReceivableParameter));
-        }
+        public async Task<IActionResult> UpdateAsync([FromBody] ReceivableCommand ReceivableParameter) => await ExecuteAsync(async () => await _baseReceivableService.UpdateReceivable<ReceivableValidator>(ReceivableParameter));
 
         [HttpGet]
         public async Task<IActionResult> GetAsync()
@@ -42,6 +36,44 @@ namespace Finan.Application.Controllers
             try
             {
                 var result = await _baseReceivableService.GetAsync();
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetStatusList")]
+        public IActionResult GetStatusList()
+        {
+            try
+            {
+                var result = _baseReceivableService.GetStatusList();
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetTypeList")]
+        public IActionResult GetTypeList()
+        {
+            try
+            {
+                var result = _baseReceivableService.GetTypeList();
 
                 if (result == null || result.Equals(string.Empty))
                     return NotFound();

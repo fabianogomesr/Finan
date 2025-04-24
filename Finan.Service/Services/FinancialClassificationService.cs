@@ -5,6 +5,7 @@ using Finan.Domain.Interfaces;
 using Finan.Domain.Parameters;
 using Finan.Service.Validators;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,10 @@ namespace Finan.Service.Services
     public class FinancialClassificationService : BaseService<FinancialClassification>, IFinancialClassificationService
     {
         private readonly IFinancialClassificationRepository _baseRepository;
-        private readonly IBaseRepository<FinancialGroup> _financialGroupRepository;
 
-        public FinancialClassificationService(IFinancialClassificationRepository baseRepository, IBaseRepository<FinancialGroup> financialGroupRepository) : base(baseRepository)
+        public FinancialClassificationService(IFinancialClassificationRepository baseRepository) : base(baseRepository)
         {
             _baseRepository = baseRepository;
-            _financialGroupRepository = financialGroupRepository;   
         }
 
         public async Task<FinancialClassificationDTO> AddFinancialClassification<FinancialClassificationValidator>(FinancialClassificationCommand financialClassificationParameter)
@@ -44,6 +43,24 @@ namespace Finan.Service.Services
                 TypeId = (byte)result.Type.GetHashCode(),
                 FinancialGroupId = result.FinancialGroupId
             };
+        }
+
+        public async Task<List<FinancialClassificationDTO>> GetClassificationsFromReceivableByGroupIdAsync(int financialGroupId)
+        {
+            var result = await _baseRepository.GetClassificationsFromReceivableByGroupIdAsync(financialGroupId);
+
+            if (result == null)
+                return null;
+
+            return result.Select(x => new FinancialClassificationDTO
+            {
+                Id = x.Id,
+                Description = x.Description,
+                FinancialGroupId = x.FinancialGroup != null ? x.FinancialGroup.Id : 0,
+                FinancialGroupName = x.FinancialGroup != null ? x.FinancialGroup.Description : String.Empty,
+                TypeId = (byte)x.Type.GetHashCode(),
+                TypeName = x.Type.GetDescription()
+            }).ToList();
         }
 
         public async Task<FinancialClassificationDTO> GetFinancialClassificationByIdAsync(int id)

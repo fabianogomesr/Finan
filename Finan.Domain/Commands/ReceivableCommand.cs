@@ -16,7 +16,7 @@ namespace Finan.Domain.Commands
         public int FinancialClassificationId { get; set; }
         public int CurrencyId { get; set; }
         public string? Description { get; set; }
-        public byte Type { get; set; }
+        public byte TypeId { get; set; }
         public decimal Value { get; set; }
         public decimal Discount { get; set; }
         public decimal TotalReceivable { get; set; }
@@ -25,6 +25,6 @@ namespace Finan.Domain.Commands
         public DateTime CashFlowDate { get; set; } //Data de Fluxo 
         public DateTime AccrualPeriodDate { get; set; } //Data de Competencia
         public string? Observation { get; set; }
-        public byte Status { get; set; }
+        public byte StatusId { get; set; }
     }
 }

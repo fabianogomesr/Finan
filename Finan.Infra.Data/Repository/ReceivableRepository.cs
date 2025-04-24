@@ -42,7 +42,12 @@ namespace Finan.Infra.Data.Repository
 
         public async Task<EntityPagination<Receivable>> GetReceivablesAsync(int pageNumber, int pageSize)
         {
-            var entities = await _dbSet.Set<Receivable>().AsQueryable()
+            var entities = await _dbSet.Set<Receivable>()
+            .Include(x => x.CostCenter)
+            .Include(x => x.FinancialGroup)
+            .Include(x => x.FinancialClassification)
+            .Include(x => x.Currency)
+            .AsQueryable()
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();

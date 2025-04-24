@@ -17,6 +17,7 @@ namespace Finan.Domain.Interfaces
         Task<FinancialClassificationDTO> GetFinancialClassificationByIdAsync(int id);
         Task<IEnumerable<FinancialClassificationDTO>> GetFinancialClassificationsAsync();
         Task<FinancialClassificationPaginationDTO> GetFinancialClassificationsAsync(int pageNumber = 1, int pageSize = 5);
+        Task<List<FinancialClassificationDTO>> GetClassificationsFromReceivableByGroupIdAsync(int financialGroupId);
         List<ClassificationTypeDTO>GetClassificationTypeList();
         Task<FinancialClassificationDTO> UpdateFinancialClassification<FinancialClassificationValidator>(FinancialClassificationCommand financialClassificationParameter);
     }

@@ -1,4 +1,5 @@
 ﻿using Finan.Domain.Entities;
+using Finan.Domain.Enums;
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
 using FluentValidation;
@@ -20,7 +21,10 @@ namespace Finan.Infra.Data.Repository
             _dbSet = mySqlContext;
         }
 
-        public async Task<FinancialClassification> GetFinancialClassificationByIdAsync(int id) => await _dbSet.Set<FinancialClassification>().Include(x => x.FinancialGroup).FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<IEnumerable<FinancialClassification>> GetClassificationsFromReceivableByGroupIdAsync(int financialGroupId) => await _dbSet.Set<FinancialClassification>().Include(x => x.FinancialGroup).Where(x => x.FinancialGroupId == financialGroupId 
+            && (x.Type == ClassificationType.Income || x.Type == ClassificationType.Both)).ToListAsync();
+
+        public async Task<FinancialClassification> GetFinancialClassificationByIdAsync(int id) => await _dbSet.Set<FinancialClassification>().Include(x => x.FinancialGroup).FirstAsync(x => x.Id == id);
         public async Task<IEnumerable<FinancialClassification>> GetFinancialClassificationsAsync() => await _dbSet.Set<FinancialClassification>().Include(x => x.FinancialGroup).ToListAsync();
 
         public async Task<EntityPagination<FinancialClassification>> GetFinancialClassificationsAsync(int pageNumber = 1, int pageSize = 5)

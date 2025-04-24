@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Finan.Domain.Parameters;
+using Finan.Infra.Data.Repository;
 
 namespace Finan.Application.Controllers
 {
@@ -51,6 +52,24 @@ namespace Finan.Application.Controllers
                 var result = await _baseFinancialClassificationService.GetFinancialClassificationsAsync();
 
                 if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("GetClassificationsFromReceivableByGroupIdAsync/{financialGroupId}")]
+        public async Task<IActionResult> GetClassificationsFromReceivableByGroupIdAsync(int financialGroupId)
+        {
+            try
+            {
+                var result = await _baseFinancialClassificationService.GetClassificationsFromReceivableByGroupIdAsync(financialGroupId);
+
+                if (result == null || !result.Any())
                     return NotFound();
 
                 return Ok(result);
