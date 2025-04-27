@@ -93,17 +93,41 @@ namespace Finan.Infra.Data.Mapping
                .WithMany(b => b.Payments)
                .HasForeignKey("CostCenterId");
 
+            builder.Property(prop => prop.CostCenterId)
+                .IsRequired()
+                .HasColumnName("CostCenterId");
+
             builder.HasOne(a => a.FinancialGroup)
                .WithMany(b => b.Payments)
                .HasForeignKey("FinancialGroupId");
+
+            builder.Property(prop => prop.FinancialGroupId)
+                .IsRequired()
+                .HasColumnName("FinancialGroupId");
 
             builder.HasOne(a => a.FinancialClassification)
                .WithMany(b => b.Payments)
                .HasForeignKey("FinancialClassificationId");
 
+            builder.Property(prop => prop.FinancialClassificationId)
+                .IsRequired()
+                .HasColumnName("FinancialClassificationId");
+
+            builder.HasOne(a => a.Currency)
+               .WithMany(b => b.Payments)
+               .HasForeignKey("CurrencyId");
+
+            builder.Property(prop => prop.CurrencyId)
+                .IsRequired()
+                .HasColumnName("CurrencyId");
+
             builder.HasOne(a => a.Payer)
                .WithMany(b => b.Payments)
                .HasForeignKey("PayerId");
+
+            builder.Property(prop => prop.PayerId)
+                .IsRequired()
+                .HasColumnName("PayerId");
         }
     }
 }

@@ -20,5 +20,6 @@ namespace Finan.Domain.Interfaces
         Task<List<FinancialClassificationDTO>> GetClassificationsFromReceivableByGroupIdAsync(int financialGroupId);
         List<ClassificationTypeDTO>GetClassificationTypeList();
         Task<FinancialClassificationDTO> UpdateFinancialClassification<FinancialClassificationValidator>(FinancialClassificationCommand financialClassificationParameter);
+        Task<List<FinancialClassificationDTO>> GetClassificationsFromPaymentByGroupIdAsync(int financialGroupId);
     }
 }

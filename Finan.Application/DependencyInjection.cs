@@ -19,6 +19,7 @@ namespace Finan.Application
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IFinancialClassificationService, FinancialClassificationService>();
             services.AddScoped<IReceivableService, ReceivableService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IBaseService<Bank>, BaseService<Bank>>();
         }
 
@@ -30,6 +31,7 @@ namespace Finan.Application
             services.AddScoped<IBaseRepository<Payer>, BaseRepository<Payer>>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IReceivableRepository, ReceivableRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IFinancialClassificationRepository, FinancialClassificationRepository>();
             services.AddScoped<IBaseRepository<Bank>, BaseRepository<Bank>>();
         }

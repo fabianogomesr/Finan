@@ -18,7 +18,7 @@ namespace Finan.Domain.Entities
         public Currency? Currency { get; set; }
         public int CurrencyId { get; set; }
         public string? Description { get; set; }
-        public TransactionType Type { get; set; }
+        public ReceivableType Type { get; set; }
         public decimal Value { get; set; }
         public decimal Discount { get; set; }
         public decimal TotalReceivable { get; set; }

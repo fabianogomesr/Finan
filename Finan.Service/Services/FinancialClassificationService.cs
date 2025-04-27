@@ -47,7 +47,25 @@ namespace Finan.Service.Services
 
         public async Task<List<FinancialClassificationDTO>> GetClassificationsFromReceivableByGroupIdAsync(int financialGroupId)
         {
-            var result = await _baseRepository.GetClassificationsFromReceivableByGroupIdAsync(financialGroupId);
+            var result = await _baseRepository.GetClassificationsByGroupIdAndTypeAsync(financialGroupId, ClassificationType.Income);
+
+            if (result == null)
+                return null;
+
+            return result.Select(x => new FinancialClassificationDTO
+            {
+                Id = x.Id,
+                Description = x.Description,
+                FinancialGroupId = x.FinancialGroup != null ? x.FinancialGroup.Id : 0,
+                FinancialGroupName = x.FinancialGroup != null ? x.FinancialGroup.Description : String.Empty,
+                TypeId = (byte)x.Type.GetHashCode(),
+                TypeName = x.Type.GetDescription()
+            }).ToList();
+        }
+
+        public async Task<List<FinancialClassificationDTO>> GetClassificationsFromPaymentByGroupIdAsync(int financialGroupId)
+        {
+            var result = await _baseRepository.GetClassificationsByGroupIdAndTypeAsync(financialGroupId, ClassificationType.Expense);
 
             if (result == null)
                 return null;

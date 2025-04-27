@@ -9,25 +9,9 @@ namespace Finan.Service.Services
     public class ReceivableService : BaseService<Receivable>, IReceivableService
     {
         private readonly IReceivableRepository _baseRepository;
-        private readonly IBaseRepository<FinancialGroup> _financialGroupRepository;
-        private readonly IFinancialClassificationRepository _financialClassificationRepository;
-        private readonly IBaseRepository<Currency> _currencyRepository;
-        private readonly IBaseRepository<CostCenter> _costCenterRepository;
-        private readonly IUserRepository _userRepository;
-
-        public ReceivableService(IReceivableRepository baseRepository,
-            IBaseRepository<FinancialGroup> financialGroupRepository,
-            IFinancialClassificationRepository financialClassificationRepository,
-            IUserRepository userRepository,
-            IBaseRepository<Currency> currencyRepository,
-            IBaseRepository<CostCenter> costCenterRepository) : base(baseRepository)
+        public ReceivableService(IReceivableRepository baseRepository) : base(baseRepository)
         {
             _baseRepository = baseRepository;
-            _financialGroupRepository = financialGroupRepository;
-            _financialClassificationRepository = financialClassificationRepository;
-            _userRepository = userRepository;
-            _currencyRepository = currencyRepository;
-            _costCenterRepository = costCenterRepository;
         }
 
         public async Task<ReceivableDTO> AddReceivable<ReceivableValidator>(ReceivableCommand receivableParameter)
@@ -39,7 +23,7 @@ namespace Finan.Service.Services
                 FinancialClassificationId = receivableParameter.FinancialClassificationId,
                 CurrencyId = receivableParameter.CurrencyId,
                 Description = receivableParameter.Description, 
-                Type = (Domain.Enums.TransactionType)receivableParameter.TypeId,
+                Type = (Domain.Enums.ReceivableType)receivableParameter.TypeId,
                 Value = receivableParameter.Value,
                 Discount = receivableParameter.Discount,
                 TotalReceivable = receivableParameter.TotalReceivable,
@@ -139,7 +123,7 @@ namespace Finan.Service.Services
             receivable.FinancialGroupId = receivableParameter.FinancialGroupId;
             receivable.FinancialClassificationId = receivableParameter.FinancialClassificationId;
             receivable.CurrencyId = receivableParameter.CurrencyId;
-            receivable.Type = (Domain.Enums.TransactionType)receivableParameter.TypeId;
+            receivable.Type = (Domain.Enums.ReceivableType)receivableParameter.TypeId;
             receivable.Description = receivableParameter.Description;
             receivable.Value = receivableParameter.Value;
             receivable.Discount = receivableParameter.Discount;
@@ -214,7 +198,7 @@ namespace Finan.Service.Services
 
         public List<ReceivableTypeDTO> GetTypeList()
         {
-            var result = EnumExtensions.GetEnumList<TransactionType>();
+            var result = EnumExtensions.GetEnumList<ReceivableType>();
 
             return result.Select(x => new ReceivableTypeDTO
             {

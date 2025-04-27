@@ -10,7 +10,7 @@ namespace Finan.Domain.Interfaces
 {
     public interface IFinancialClassificationRepository : IBaseRepository<FinancialClassification>
     {
-        Task<IEnumerable<FinancialClassification>> GetClassificationsFromReceivableByGroupIdAsync(int financialGroupId);
+        Task<IEnumerable<FinancialClassification>> GetClassificationsByGroupIdAndTypeAsync(int financialGroupId, ClassificationType classificationType);
         Task<FinancialClassification> GetFinancialClassificationByIdAsync(int id);
         Task<IEnumerable<FinancialClassification>> GetFinancialClassificationsAsync();
         Task<EntityPagination<FinancialClassification>> GetFinancialClassificationsAsync(int pageNumber = 1, int pageSize = 5);

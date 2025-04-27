@@ -37,8 +37,9 @@ namespace Finan.Infra.Data.Initializer
 								new FinancialGroup { Description = "Despesas Variáveis" },
 								new FinancialGroup { Description = "Receitas de Trabalho" },
 								new FinancialGroup { Description = "Receitas de Investimentos" },
-								new FinancialGroup { Description = "Receitas Eventuais ou Extraordinárias" }
-							});
+								new FinancialGroup { Description = "Receitas Eventuais ou Extraordinárias" },
+                                new FinancialGroup { Description = "Impostos" }
+                            });
 
 							await context.SaveChangesAsync();
 
@@ -58,8 +59,10 @@ namespace Finan.Infra.Data.Initializer
 								new FinancialClassification { Description = "Presentes", FinancialGroupId = 5, Type = ClassificationType.Income },
 								new FinancialClassification { Description = "Vendas de Bens", FinancialGroupId = 5, Type = ClassificationType.Income },
 								new FinancialClassification { Description = "Educação e Cursos", FinancialGroupId = 2, Type = ClassificationType.Expense },
-								new FinancialClassification { Description = "Cartão de Crédito", FinancialGroupId = 2, Type = ClassificationType.Expense }
-							});
+								new FinancialClassification { Description = "Cartão de Crédito", FinancialGroupId = 2, Type = ClassificationType.Expense },
+                                new FinancialClassification { Description = "Serviços de Internet, Gás e Energia", FinancialGroupId = 2, Type = ClassificationType.Expense },
+                                new FinancialClassification { Description = "Pagamento e Restituição de Impostos", FinancialGroupId = 2, Type = ClassificationType.Expense }
+                            });
 
 							context.CostCenter.AddRange(new[]
 							{
@@ -68,8 +71,15 @@ namespace Finan.Infra.Data.Initializer
 								new CostCenter { Description = "Saúde" },
 								new CostCenter { Description = "Educação" },
 								new CostCenter { Description = "Lazer" },
-								new CostCenter { Description = "Investimentos" }
-							});
+								new CostCenter { Description = "Investimentos" },
+                                new CostCenter { Description = "Alimentação" },
+                                new CostCenter { Description = "Cartão de Crédito" },
+                                new CostCenter { Description = "Doações e Presentes" },
+                                new CostCenter { Description = "Trabalho Formal" },
+                                new CostCenter { Description = "Trabalho Autônomo" },
+                                new CostCenter { Description = "Aluguéis" },
+                                new CostCenter { Description = "Outras Receitas" }
+                            });
 
 							context.Payer.AddRange(new[]
 							{

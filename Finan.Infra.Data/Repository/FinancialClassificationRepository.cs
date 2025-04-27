@@ -21,8 +21,17 @@ namespace Finan.Infra.Data.Repository
             _dbSet = mySqlContext;
         }
 
-        public async Task<IEnumerable<FinancialClassification>> GetClassificationsFromReceivableByGroupIdAsync(int financialGroupId) => await _dbSet.Set<FinancialClassification>().Include(x => x.FinancialGroup).Where(x => x.FinancialGroupId == financialGroupId 
-            && (x.Type == ClassificationType.Income || x.Type == ClassificationType.Both)).ToListAsync();
+        public async Task<IEnumerable<FinancialClassification>> GetClassificationsByGroupIdAndTypeAsync(int financialGroupId, ClassificationType classificationType) {
+
+            var result = _dbSet.Set<FinancialClassification>().Include(x => x.FinancialGroup).Where(x => x.FinancialGroupId == financialGroupId);
+
+            if (classificationType == ClassificationType.Income)
+                result = result.Where(x => (x.Type == ClassificationType.Income || x.Type == ClassificationType.Both));
+            else if (classificationType == ClassificationType.Expense)
+                result = result.Where(x => (x.Type == ClassificationType.Expense || x.Type == ClassificationType.Both));
+
+            return await result.ToListAsync();
+        } 
 
         public async Task<FinancialClassification> GetFinancialClassificationByIdAsync(int id) => await _dbSet.Set<FinancialClassification>().Include(x => x.FinancialGroup).FirstAsync(x => x.Id == id);
         public async Task<IEnumerable<FinancialClassification>> GetFinancialClassificationsAsync() => await _dbSet.Set<FinancialClassification>().Include(x => x.FinancialGroup).ToListAsync();

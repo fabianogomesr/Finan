@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Enums
 {
-    public enum TransactionType : byte
+    public enum ReceivableType : byte
     {
         [Description("Confirmado")]
         Confirmed = 1, 

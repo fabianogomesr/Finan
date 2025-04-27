@@ -80,6 +80,24 @@ namespace Finan.Application.Controllers
             }
         }
 
+        [HttpGet("GetClassificationsFromPaymentByGroupIdAsync/{financialGroupId}")]
+        public async Task<IActionResult> GetClassificationsFromPaymentByGroupIdAsync(int financialGroupId)
+        {
+            try
+            {
+                var result = await _baseFinancialClassificationService.GetClassificationsFromPaymentByGroupIdAsync(financialGroupId);
+
+                if (result == null || !result.Any())
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpGet]
         [Route("GetClassificationTypeList")]
         public IActionResult GetClassificationTypeList()
