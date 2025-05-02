@@ -30,61 +30,55 @@ namespace Finan.Infra.Data.Mapping
                 .HasColumnType("tinyint");
 
             builder.Property(prop => prop.Value)
-                .HasConversion(prop => prop, prop => prop)
+                .HasPrecision(18, 2) // Configuração para aceitar valores decimais
                 .IsRequired()
                 .HasColumnName("Value")
                 .HasColumnType("decimal(18,2)");
 
             builder.Property(prop => prop.Discount)
-                .HasConversion(prop => prop, prop => prop)
+                .HasPrecision(18, 2) // Configuração para aceitar valores decimais
                 .IsRequired()
                 .HasColumnName("Discount")
                 .HasColumnType("decimal(18,2)");
 
             builder.Property(prop => prop.LatePayments)
-                .HasConversion(prop => prop, prop => prop)
+                .HasPrecision(18, 2) // Configuração para aceitar valores decimais
                 .IsRequired()
                 .HasColumnName("LatePayments")
                 .HasColumnType("decimal(18,2)");
 
             builder.Property(prop => prop.TotalPaid)
-                .HasConversion(prop => prop, prop => prop)
+                .HasPrecision(18, 2) // Configuração para aceitar valores decimais
                 .IsRequired()
                 .HasColumnName("TotalPaid")
                 .HasColumnType("decimal(18,2)");
 
             builder.Property(prop => prop.IssueDate)
-                .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("IssueDate")
                 .HasColumnType("datetime");
 
             builder.Property(prop => prop.DueDate)
-                .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("DueDate")
                 .HasColumnType("datetime");
 
             builder.Property(prop => prop.CashFlowDate)
-                .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("CashFlowDate")
                 .HasColumnType("datetime");
 
             builder.Property(prop => prop.AccrualPeriodDate)
-                .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("AccrualPeriodDate")
                 .HasColumnType("datetime");
 
             builder.Property(prop => prop.Observation)
-                .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Observation")
                 .HasColumnType("varchar(100)");
 
             builder.Property(prop => prop.Status)
-                .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Status")
                 .HasColumnType("tinyint");

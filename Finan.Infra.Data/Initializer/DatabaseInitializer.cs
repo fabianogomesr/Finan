@@ -109,7 +109,7 @@ namespace Finan.Infra.Data.Initializer
 
 							context.User.AddRange(new[]
 							{
-								new User { UserName = "Admin", Password = "Finan@1234", Email = "dev.fabianorocha@gmail.com", Role = "Maganer" }
+								new User { UserName = "Finan", Password = "Finan@1234", Email = "dev.fabianorocha@gmail.com", Role = "Maganer" }
 							});
 
 							await context.SaveChangesAsync();
