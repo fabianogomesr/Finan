@@ -1,5 +1,6 @@
 ﻿using Finan.Domain.DTOs;
 using Finan.Domain.Entities;
+using Finan.Domain.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,6 @@ namespace Finan.Domain.Interfaces
     {
         Task<Payment> GetPaymentByIdAsync(int id);
         Task<List<Payment>> GetPaymentsAsync();
-        Task<EntityPagination<Payment>> GetPaymentsAsync(int pageNumber, int pageSize);
+        Task<EntityPagination<Payment>> GetPaymentsAsync(PaymentFilter filter);
     }
 }

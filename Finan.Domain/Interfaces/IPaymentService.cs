@@ -1,6 +1,7 @@
 ﻿using Finan.Domain.Commands;
 using Finan.Domain.DTOs;
 using Finan.Domain.Entities;
+using Finan.Domain.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,12 @@ namespace Finan.Domain.Interfaces
 {
     public interface IPaymentService : IBaseService<Payment>
     {
-        Task<PaymentDTO> AddPayment<PaymentValidator>(PaymentCommand PaymentParameter);
+        Task<PaymentDTO> AddPayment(PaymentCommand PaymentParameter);
         Task<PaymentDTO> GetPaymentByIdAsync(int id);
         Task<List<PaymentDTO>> GetPaymentsAsync();
-        Task<PaymentPaginationDTO> GetPaymentsAsync(int pageNumber = 1, int pageSize = 5);
+        Task<PaymentPaginationDTO> GetPaymentsAsync(PaymentFilter filter);
         List<PaymentTypeDTO> GetTypeList();
         List<PaymentStatusDTO> GetStatusList();
-        Task<PaymentDTO> UpdatePayment<PaymentValidator>(PaymentCommand PaymentParameter);
+        Task<PaymentDTO> UpdatePayment(PaymentCommand PaymentParameter);
     }
 }

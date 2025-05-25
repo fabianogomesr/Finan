@@ -50,6 +50,10 @@ namespace Finan.Infra.Data.Mapping
             builder.HasOne(a => a.Bank)
                .WithMany(b => b.Accounts)
                .HasForeignKey("BankId");
+
+            builder.Property(prop => prop.BankId)
+                .IsRequired()
+                .HasColumnName("BankId");
         }
     }
 }

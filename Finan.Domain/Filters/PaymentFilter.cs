@@ -1,0 +1,16 @@
+﻿using Finan.Domain.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Finan.Domain.Filters
+{
+    public class PaymentFilter : BaseFilter
+    {
+        public DateTypeEnum DateType { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+    }
+}

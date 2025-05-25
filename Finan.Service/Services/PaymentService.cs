@@ -2,7 +2,10 @@
 using Finan.Domain.DTOs;
 using Finan.Domain.Entities;
 using Finan.Domain.Enums;
+using Finan.Domain.Filters;
 using Finan.Domain.Interfaces;
+using Finan.Service.Validators;
+using FluentValidation;
 
 namespace Finan.Service.Services
 {
@@ -15,7 +18,7 @@ namespace Finan.Service.Services
             _baseRepository = baseRepository;
         }
 
-        public async Task<PaymentDTO> AddPayment<PaymentValidator>(PaymentCommand PaymentParameter)
+        public async Task<PaymentDTO> AddPayment(PaymentCommand PaymentParameter)
         {
             Payment Payment = new Payment
             {
@@ -35,7 +38,7 @@ namespace Finan.Service.Services
                 AccrualPeriodDate = PaymentParameter.AccrualPeriodDate,
                 PayerId = PaymentParameter.PayerId,
                 Observation = PaymentParameter.Observation,
-                Status = (Domain.Enums.PaymentStatus)PaymentParameter.StatusId
+                Status = (PaymentStatus)PaymentParameter.StatusId
             };
 
             await _baseRepository.Insert(Payment);
@@ -121,12 +124,12 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<PaymentDTO> UpdatePayment<PaymentValidator>(PaymentCommand PaymentParameter)
+        public async Task<PaymentDTO> UpdatePayment(PaymentCommand PaymentParameter) 
         {
             var Payment = _baseRepository.Select(PaymentParameter.Id).Result;
 
             if (Payment == null)
-                return null;
+                throw new Exception("Pagamento não localizado.");
 
             Payment.CostCenterId = PaymentParameter.CostCenterId;
             Payment.FinancialGroupId = PaymentParameter.FinancialGroupId;
@@ -144,7 +147,7 @@ namespace Finan.Service.Services
             Payment.AccrualPeriodDate = PaymentParameter.AccrualPeriodDate;
             Payment.PayerId = PaymentParameter.PayerId;
             Payment.Observation = PaymentParameter.Observation;
-            Payment.Status = (Domain.Enums.PaymentStatus)PaymentParameter.StatusId;
+            Payment.Status = (PaymentStatus)PaymentParameter.StatusId;
 
             await _baseRepository.Update(Payment);
 
@@ -170,10 +173,9 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<PaymentPaginationDTO> GetPaymentsAsync(int pageNumber = 1, int pageSize = 5)
+        public async Task<PaymentPaginationDTO> GetPaymentsAsync(PaymentFilter filter)
         {
-
-            var result = await _baseRepository.GetPaymentsAsync(pageNumber, pageSize);
+            var result = await _baseRepository.GetPaymentsAsync(filter);
 
             return new PaymentPaginationDTO
             {

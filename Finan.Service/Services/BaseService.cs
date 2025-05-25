@@ -42,7 +42,7 @@ namespace Finan.Service.Services
             return obj;
         }
 
-        private void Validate(TEntity obj, AbstractValidator<TEntity> validator)
+        public void Validate(TEntity obj, AbstractValidator<TEntity> validator)
         {
             if (obj == null)
                 throw new Exception("Registros não detectados!");

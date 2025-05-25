@@ -1,0 +1,35 @@
+﻿using Finan.Domain.Entities;
+using FluentValidation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Finan.Service.Validators
+{
+    public class AccountValidator : AbstractValidator<Account>
+    {
+        public AccountValidator()
+        {
+            RuleFor(p => p.Name)
+            .NotEmpty().WithMessage("O nome é obrigatório.")
+            .Length(1, 100).WithMessage("O nome deve ter entre 1 e 100 caracteres.");
+
+            RuleFor(p => p.Agency)
+            .NotEmpty().WithMessage("O agência é obrigatória.")
+            .Length(1, 10).WithMessage("O nome deve ter entre 1 e 100 caracteres.");
+
+            RuleFor(p => p.Number)
+            .NotEmpty().WithMessage("O número da conta é obrigatório.")
+            .Length(1, 15).WithMessage("O nome deve ter entre 1 e 100 caracteres.");
+
+            RuleFor(p => p.CreditLimit)
+            .GreaterThan(0).WithMessage("O valor deve ser maior que zero.")
+            .ScalePrecision(2, 18).WithMessage("O valor deve ter no máximo 2 casas decimais e até 18 dígitos totais.");
+
+            RuleFor(p => p.BankId)
+            .GreaterThan(0).WithMessage("O ID deve ser um valor positivo.");
+        }
+    }
+}

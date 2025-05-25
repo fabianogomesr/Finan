@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Finan.Domain.Parameters;
+using Finan.Domain.Filters;
 
 namespace Finan.Application.Controllers
 {
@@ -25,28 +26,10 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] PaymentCommand PaymentParameter) => await ExecuteAsync(async () => await _basePaymentService.AddPayment<PaymentValidator>(PaymentParameter));
+        public async Task<IActionResult> CreateAsync([FromBody] PaymentCommand PaymentParameter) => await ExecuteAsync(async () => await _basePaymentService.AddPayment(PaymentParameter));
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] PaymentCommand PaymentParameter) => await ExecuteAsync(async () => await _basePaymentService.UpdatePayment<PaymentValidator>(PaymentParameter));
-
-        [HttpGet]
-        public async Task<IActionResult> GetAsync()
-        {
-            try
-            {
-                var result = await _basePaymentService.GetAsync();
-
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
+        public async Task<IActionResult> UpdateAsync([FromBody] PaymentCommand PaymentParameter) => await ExecuteAsync(async () => await _basePaymentService.UpdatePayment(PaymentParameter));
 
         [HttpGet]
         [Route("GetStatusList")]
@@ -63,7 +46,7 @@ namespace Finan.Application.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -82,16 +65,16 @@ namespace Finan.Application.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("{pageNumber}/{pageSize}")]
-        public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
+        [HttpGet]
+        public async Task<IActionResult> GetAsync([FromQuery]PaymentFilter filter)
         {
             try
             {
-                var result = await _basePaymentService.GetPaymentsAsync(pageNumber, pageSize);
+                var result = await _basePaymentService.GetPaymentsAsync(filter);
 
                 if (result == null || result.Equals(string.Empty))
                     return NotFound();
@@ -100,7 +83,7 @@ namespace Finan.Application.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -118,7 +101,7 @@ namespace Finan.Application.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -137,7 +120,7 @@ namespace Finan.Application.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
     }

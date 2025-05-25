@@ -1,5 +1,6 @@
 ﻿using Finan.Domain.DTOs;
 using Finan.Domain.Entities;
+using Finan.Domain.Filters;
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,8 @@ namespace Finan.Infra.Data.Repository
             var result = _dbSet.Payment.Include(x => x.CostCenter)
                 .Include(x => x.FinancialGroup)
                 .Include(x => x.FinancialClassification)
-                .Include(x => x.Currency);
+                .Include(x => x.Currency)
+                .Where(x => x.Id == id);
 
             return await result.FirstAsync();
         }
@@ -40,26 +42,48 @@ namespace Finan.Infra.Data.Repository
             return await result.ToListAsync();
         }
 
-        public async Task<EntityPagination<Payment>> GetPaymentsAsync(int pageNumber, int pageSize)
+        public async Task<EntityPagination<Payment>> GetPaymentsAsync(PaymentFilter filter)
         {
-            var entities = await _dbSet.Set<Payment>()
+            var query = _dbSet.Set<Payment>()
             .Include(x => x.CostCenter)
             .Include(x => x.FinancialGroup)
             .Include(x => x.FinancialClassification)
             .Include(x => x.Currency)
-            .AsQueryable()
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
+            .AsQueryable();
+
+            if (filter.StartDate != null && filter.EndDate != null)
+            {
+                if(filter.DateType == Domain.Enums.DateTypeEnum.Issue)
+                {
+                    query = query.Where(x => x.IssueDate >= filter.StartDate && x.IssueDate <= filter.EndDate);
+                }
+                else if(filter.DateType == Domain.Enums.DateTypeEnum.Due)
+                {
+                    query = query.Where(x => x.DueDate >= filter.StartDate && x.DueDate <= filter.EndDate);
+                }
+                else if (filter.DateType == Domain.Enums.DateTypeEnum.CashFlow)
+                {
+                    query = query.Where(x => x.CashFlowDate >= filter.StartDate && x.CashFlowDate <= filter.EndDate);
+                }
+                else if (filter.DateType == Domain.Enums.DateTypeEnum.AccrualPeriod)
+                {
+                    query = query.Where(x => x.AccrualPeriodDate >= filter.StartDate && x.AccrualPeriodDate <= filter.EndDate);
+                }
+            }
+
+            var totalItems = await query.CountAsync();
+
+            var result = await query.Skip((filter.PageNumber - 1) * filter.PageSize)
+            .Take(filter.PageSize)
             .ToListAsync();
 
-            var totalItems = await _dbSet.Set<Payment>().CountAsync();
 
             return new EntityPagination<Payment>
             {
-                Entities = entities,
+                Entities = result,
                 TotalItems = totalItems,
-                CurrentPage = pageNumber,
-                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
+                CurrentPage = filter.PageNumber,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)filter.PageSize)
             };
         }
     }

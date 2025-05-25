@@ -21,6 +21,7 @@ namespace Finan.Application
             services.AddScoped<IReceivableService, ReceivableService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IBaseService<Bank>, BaseService<Bank>>();
+            services.AddScoped<IAccountService, AccountService>();
         }
 
         public static void AddRepositories(this IServiceCollection services)
@@ -34,6 +35,7 @@ namespace Finan.Application
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IFinancialClassificationRepository, FinancialClassificationRepository>();
             services.AddScoped<IBaseRepository<Bank>, BaseRepository<Bank>>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
         }
 
         public static void AddContext(this IServiceCollection services, string connectionString)

@@ -25,7 +25,8 @@ namespace Finan.Infra.Data.Repository
             var result = _dbSet.Receivable.Include(x => x.CostCenter)
                 .Include(x => x.FinancialGroup)
                 .Include(x => x.FinancialClassification)
-                .Include(x => x.Currency);
+                .Include(x => x.Currency)
+                .Where(x => x.Id == id);
 
             return await result.FirstOrDefaultAsync();
         }
