@@ -14,5 +14,7 @@ namespace Finan.Domain.Interfaces
         Task<Payment> GetPaymentByIdAsync(int id);
         Task<List<Payment>> GetPaymentsAsync();
         Task<EntityPagination<Payment>> GetPaymentsAsync(PaymentFilter filter);
+        Task<PaymentSummaryDTO> GetPaymentSummaryByMonthYear(int month, int year);
+        Task<List<PaymentSummaryClassificationDTO>> GetPaymentSummaryClassificationByMonthYear(int month, int year);
     }
 }

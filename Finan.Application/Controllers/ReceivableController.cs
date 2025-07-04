@@ -122,6 +122,44 @@ namespace Finan.Application.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetReceivableSummaryByMonthYear")]
+        public async Task<IActionResult> GetReceivableSummaryByMonthYear(int month, int year)
+        {
+            try
+            {
+                var result = await _baseReceivableService.GetReceivableSummaryByMonthYear(month, year);
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetReceivableSummaryClassificationByMonthYear")]
+        public async Task<IActionResult> GetReceivableSummaryClassificationByMonthYear(int month, int year)
+        {
+            try
+            {
+                var result = await _baseReceivableService.GetReceivableSummaryClassificationByMonthYear(month, year);
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         private async Task<IActionResult> ExecuteAsync(Func<Task<object>> func)
         {
             try

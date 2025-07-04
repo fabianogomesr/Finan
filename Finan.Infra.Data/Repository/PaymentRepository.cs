@@ -1,5 +1,6 @@
 ﻿using Finan.Domain.DTOs;
 using Finan.Domain.Entities;
+using Finan.Domain.Enums;
 using Finan.Domain.Filters;
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
@@ -53,25 +54,34 @@ namespace Finan.Infra.Data.Repository
 
             if (filter.StartDate != null && filter.EndDate != null)
             {
-                if(filter.DateType == Domain.Enums.DateTypeEnum.Issue)
+                if (filter.DateType == DateTypeEnum.Issue)
                 {
                     query = query.Where(x => x.IssueDate >= filter.StartDate && x.IssueDate <= filter.EndDate);
                 }
-                else if(filter.DateType == Domain.Enums.DateTypeEnum.Due)
+                else if (filter.DateType == DateTypeEnum.Due)
                 {
                     query = query.Where(x => x.DueDate >= filter.StartDate && x.DueDate <= filter.EndDate);
                 }
-                else if (filter.DateType == Domain.Enums.DateTypeEnum.CashFlow)
+                else if (filter.DateType == DateTypeEnum.CashFlow)
                 {
                     query = query.Where(x => x.CashFlowDate >= filter.StartDate && x.CashFlowDate <= filter.EndDate);
                 }
-                else if (filter.DateType == Domain.Enums.DateTypeEnum.AccrualPeriod)
+                else if (filter.DateType == DateTypeEnum.AccrualPeriod)
                 {
                     query = query.Where(x => x.AccrualPeriodDate >= filter.StartDate && x.AccrualPeriodDate <= filter.EndDate);
                 }
             }
 
-            var totalItems = await query.CountAsync();
+            if (filter.Canceled)
+            {
+                query = query.Where(x => x.Status == PaymentStatus.Canceled);
+            }
+            else
+            {
+                query = query.Where(x => x.Status != PaymentStatus.Canceled);
+            }
+
+                var totalItems = await query.CountAsync();
 
             var result = await query.Skip((filter.PageNumber - 1) * filter.PageSize)
             .Take(filter.PageSize)
@@ -85,6 +95,39 @@ namespace Finan.Infra.Data.Repository
                 CurrentPage = filter.PageNumber,
                 TotalPages = (int)Math.Ceiling(totalItems / (double)filter.PageSize)
             };
+        }
+
+        public async Task<List<PaymentSummaryClassificationDTO>> GetPaymentSummaryClassificationByMonthYear(int month, int year)
+        {
+            var result = await _dbSet.Payment
+                .Where(x => x.DueDate.Month == month && x.DueDate.Year == year && (int)x.Status == (int)PaymentStatus.Paid)
+                .GroupBy(x => new { x.FinancialClassificationId, x.FinancialClassification.Description })
+                .Select(g => new PaymentSummaryClassificationDTO
+                {
+                    Classification = g.Key.Description,
+                    TotalAmount = g.Sum(x => x.Value + x.LatePayments - x.Discount),
+                    TotalCount = g.Count()
+                })
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<PaymentSummaryDTO> GetPaymentSummaryByMonthYear(int month, int year)
+        {
+            var result = await _dbSet.Payment
+                .Where(x => x.DueDate.Month == month && x.DueDate.Year == year && (int)x.Status == (int)PaymentStatus.Paid)
+                .GroupBy(x => new { x.DueDate.Month, x.DueDate.Year })
+                .Select(g => new PaymentSummaryDTO
+                {
+                    Month = g.Key.Month,
+                    Year = g.Key.Year,
+                    TotalAmount = g.Sum(x => x.Value + x.LatePayments - x.Discount),
+                    TotalCount = g.Count()
+                })
+                .FirstOrDefaultAsync();
+
+                return result ?? new PaymentSummaryDTO { Month = month, Year = year, TotalAmount = 0, TotalCount = 0 };
         }
     }
 }

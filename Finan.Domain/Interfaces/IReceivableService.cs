@@ -18,5 +18,7 @@ namespace Finan.Domain.Interfaces
         List<ReceivableTypeDTO> GetTypeList();
         List<ReceivableStatusDTO> GetStatusList();
         Task<ReceivableDTO> UpdateReceivable<ReceivableValidator>(ReceivableCommand receivableParameter);
+        Task<ReceivableSummaryDTO> GetReceivableSummaryByMonthYear(int month, int year);
+        Task<List<ReceivableSummaryClassificationDTO>> GetReceivableSummaryClassificationByMonthYear(int month, int year);
     }
 }

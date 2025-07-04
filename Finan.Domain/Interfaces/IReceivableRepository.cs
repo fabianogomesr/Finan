@@ -13,5 +13,7 @@ namespace Finan.Domain.Interfaces
         Task<Receivable> GetReceivableByIdAsync(int id);
         Task<List<Receivable>> GetReceivablesAsync();
         Task<EntityPagination<Receivable>> GetReceivablesAsync(int pageNumber, int pageSize);
+        Task<List<ReceivableSummaryClassificationDTO>> GetReceivableSummaryClassificationByMonthYear(int month, int year);
+        Task<ReceivableSummaryDTO> GetReceivableSummaryByMonthYear(int month, int year);
     }
 }

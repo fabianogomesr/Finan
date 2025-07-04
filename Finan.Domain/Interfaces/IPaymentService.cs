@@ -19,5 +19,8 @@ namespace Finan.Domain.Interfaces
         List<PaymentTypeDTO> GetTypeList();
         List<PaymentStatusDTO> GetStatusList();
         Task<PaymentDTO> UpdatePayment(PaymentCommand PaymentParameter);
+        List<DateTypeDTO> GetDateTypeList();
+        Task<PaymentSummaryDTO> GetPaymentSummaryByMonthYear(int month, int year);
+        Task<List<PaymentSummaryClassificationDTO>> GetPaymentSummaryClassificationByMonthYear(int month, int year);
     }
 }

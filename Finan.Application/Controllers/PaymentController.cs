@@ -70,6 +70,63 @@ namespace Finan.Application.Controllers
         }
 
         [HttpGet]
+        [Route("GetDateTypeList")]
+        public IActionResult GetDateTypeList()
+        {
+            try
+            {
+                var result = _basePaymentService.GetDateTypeList();
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetPaymentSummaryByMonthYear")]
+        public async Task<IActionResult> GetPaymentSummaryByMonthYearAsync(int month, int year)
+        {
+            try
+            {
+                var result = await _basePaymentService.GetPaymentSummaryByMonthYear(month, year);
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetPaymentSummaryClassificationByMonthYear")]
+        public async Task<IActionResult> GetPaymentSummaryClassificationByMonthYearAsync(int month, int year)
+        {
+            try
+            {
+                var result = await _basePaymentService.GetPaymentSummaryClassificationByMonthYear(month, year);
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetAsync([FromQuery]PaymentFilter filter)
         {
             try

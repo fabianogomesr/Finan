@@ -15,14 +15,14 @@ namespace Finan.Service.Services
         }
 
         public async Task<ReceivableDTO> AddReceivable<ReceivableValidator>(ReceivableCommand receivableParameter)
-        {            
+        {
             Receivable receivable = new Receivable
             {
                 CostCenterId = receivableParameter.CostCenterId,
                 FinancialGroupId = receivableParameter.FinancialGroupId,
                 FinancialClassificationId = receivableParameter.FinancialClassificationId,
                 CurrencyId = receivableParameter.CurrencyId,
-                Description = receivableParameter.Description, 
+                Description = receivableParameter.Description,
                 Type = (Domain.Enums.ReceivableType)receivableParameter.TypeId,
                 Value = receivableParameter.Value,
                 Discount = receivableParameter.Discount,
@@ -34,7 +34,7 @@ namespace Finan.Service.Services
                 Observation = receivableParameter.Observation,
                 Status = (Domain.Enums.ReceivableStatus)receivableParameter.StatusId
             };
-           
+
             await _baseRepository.Insert(receivable);
 
             return new ReceivableDTO
@@ -64,7 +64,7 @@ namespace Finan.Service.Services
             if (result == null)
                 return null;
 
-            return result.Select( x => new ReceivableDTO
+            return result.Select(x => new ReceivableDTO
             {
                 Id = x.Id,
                 CostCenterId = x.CostCenterId,
@@ -133,7 +133,7 @@ namespace Finan.Service.Services
             receivable.CashFlowDate = receivableParameter.CashFlowDate;
             receivable.AccrualPeriodDate = receivableParameter.AccrualPeriodDate;
             receivable.Observation = receivableParameter.Observation;
-            receivable.Status = (Domain.Enums.ReceivableStatus)receivableParameter.StatusId; 
+            receivable.Status = (Domain.Enums.ReceivableStatus)receivableParameter.StatusId;
 
             await _baseRepository.Update(receivable);
 
@@ -217,5 +217,9 @@ namespace Finan.Service.Services
                 Description = x.Description
             }).ToList();
         }
+
+        public async Task<ReceivableSummaryDTO> GetReceivableSummaryByMonthYear(int month, int year) => await _baseRepository.GetReceivableSummaryByMonthYear(month, year);
+
+        public async Task<List<ReceivableSummaryClassificationDTO>> GetReceivableSummaryClassificationByMonthYear(int month, int year) => await _baseRepository.GetReceivableSummaryClassificationByMonthYear(month, year);
     }
 }

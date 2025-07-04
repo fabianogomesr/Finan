@@ -124,7 +124,7 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<PaymentDTO> UpdatePayment(PaymentCommand PaymentParameter) 
+        public async Task<PaymentDTO> UpdatePayment(PaymentCommand PaymentParameter)
         {
             var Payment = _baseRepository.Select(PaymentParameter.Id).Result;
 
@@ -234,6 +234,22 @@ namespace Finan.Service.Services
                 Description = x.Description
             }).ToList();
         }
+
+        public List<DateTypeDTO> GetDateTypeList()
+        {
+            var result = EnumExtensions.GetEnumList<DateTypeEnum>();
+
+            return result.Select(x => new DateTypeDTO
+            {
+                TypeId = x.Value,
+                Name = x.Description
+            }).ToList();
+
+        }
+        public async Task<List<PaymentSummaryClassificationDTO>> GetPaymentSummaryClassificationByMonthYear(int month, int year) => await _baseRepository.GetPaymentSummaryClassificationByMonthYear(month, year);
+
+        public async Task<PaymentSummaryDTO> GetPaymentSummaryByMonthYear(int month, int year) => await _baseRepository.GetPaymentSummaryByMonthYear(month, year);
+
     }
 }
 
