@@ -88,19 +88,7 @@ namespace Finan.Application.Controllers
                 if (result == null || result.Equals(string.Empty))
                     return NotFound();
 
-                return Ok(new CurrencyPaginationDTO
-                {
-                    Currencies = result.Entities.Select(x => new CurrencyDTO
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Code = x.Code,
-                        Symbol = x.Symbol
-                    }).ToList(),
-                    CurrentPage = result.CurrentPage,
-                    TotalItems = result.TotalItems,
-                    TotalPages = result.TotalPages
-                });
+                return Ok(result);
             }
             catch (Exception ex)
             {

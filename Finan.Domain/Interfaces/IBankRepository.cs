@@ -9,6 +9,5 @@ namespace Finan.Domain.Interfaces
 {
     public interface IBankRepository : IBaseRepository<Bank>
     {
-        Task<BankPagination> GetAsync(int pageNumber, int pageSize);
     }
 }

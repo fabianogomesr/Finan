@@ -87,17 +87,7 @@ namespace Finan.Application.Controllers
                 if (result == null || result.Equals(string.Empty))
                     return NotFound();
 
-                return Ok(new CostCenterPaginationDTO
-                {
-                    CostCenters = result.Entities.Select(x => new CostCenterDTO
-                    {
-                        Id = x.Id,
-                        Description = x.Description,
-                    }).ToList(),
-                    CurrentPage = result.CurrentPage,
-                    TotalItems = result.TotalItems,
-                    TotalPages = result.TotalPages
-                });
+                return Ok(result);
             }
             catch (Exception ex)
             {

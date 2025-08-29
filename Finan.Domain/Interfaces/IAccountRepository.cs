@@ -1,4 +1,5 @@
-﻿using Finan.Domain.Entities;
+﻿using Finan.Domain.DTOs;
+using Finan.Domain.Entities;
 using Finan.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Finan.Domain.Interfaces
     {
         Task<Account> GetAccountByIdAsync(int id);
         Task<IEnumerable<Account>> GetAccountsAsync();
-        Task<EntityPagination<Account>> GetAccountsAsync(int pageNumber = 1, int pageSize = 5);
+        Task<PagedResult<AccountDTO>> GetAccountsAsync(int pageNumber = 1, int pageSize = 5);
 
     }
 }

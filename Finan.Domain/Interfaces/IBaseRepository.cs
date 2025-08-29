@@ -15,7 +15,7 @@ namespace Finan.Domain.Interfaces
         Task Delete(int id);
         Task<IEnumerable<TEntity>> Select();
         Task<TEntity> Select(int id);
-        Task<EntityPagination<TEntity>> Select(int pageNumber, int pageSize);
+        Task<PagedResult<TEntity>> Select(int pageNumber, int pageSize);
         IQueryable<TEntity> GetAll();
     }
 }

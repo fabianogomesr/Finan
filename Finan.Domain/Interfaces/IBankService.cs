@@ -12,6 +12,5 @@ namespace Finan.Domain.Interfaces
 {
     public interface IBankService : IBaseService<Bank>
     {
-        Task<BankPaginationDTO?> GetAsync(int pageNumber, int pageSize);
     }
 }

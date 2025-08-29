@@ -1,7 +1,5 @@
 using Finan.Application;
-using Finan.Infra.Data.Initializer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
@@ -80,8 +78,6 @@ builder.Services.AddAuthentication(x =>
 });
 
 var app = builder.Build();
-
-await DatabaseInitializer.SeedAsync(app.Services);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

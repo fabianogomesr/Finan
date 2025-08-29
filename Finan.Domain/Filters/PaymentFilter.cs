@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Filters
 {
-    public class PaymentFilter : BaseFilter
+    public class TransactionFilter : BaseFilter
     {
         public DateTypeEnum DateType { get; set; }
         public DateTime StartDate { get; set; }

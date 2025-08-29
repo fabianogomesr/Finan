@@ -10,8 +10,7 @@ namespace Finan.Domain.Entities
     {
         public string? Description { get; set; }
 
-        public List<AccountDeposit>? AccountDeposits { get; set; }
-        public List<Receivable>? Receivables { get; set; }
-        public List<Payment>? Payments { get; set; }
+        public List<BankTransaction>? BankTransactions { get; set; }
+        public List<Transaction>? Transactions { get; set; }
     }
 }

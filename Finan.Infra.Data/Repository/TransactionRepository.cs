@@ -1,0 +1,107 @@
+﻿using Finan.Domain.DTOs;
+using Finan.Domain.Entities;
+using Finan.Domain.Enums;
+using Finan.Domain.Filters;
+using Finan.Domain.Interfaces;
+using Finan.Infra.Data.Context;
+using Finan.Infra.Data.Extensions;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Finan.Infra.Data.Repository
+{
+    public class TransactionRepository : BaseRepository<Transaction>, ITransactionRepository
+    {
+        protected new readonly BaseContext _dbSet;
+
+        public TransactionRepository(BaseContext mySqlContext) : base(mySqlContext)
+        {
+            _dbSet = mySqlContext;
+        }
+
+        public async Task<Transaction> GetTransactionByIdAsync(int id)
+        {
+            var result = _dbSet.Transaction.Include(x => x.CostCenter)
+                .Include(x => x.Group)
+                .Include(x => x.Classification)
+                .Include(x => x.Currency)
+                .Where(x => x.Id == id);
+
+            return await result.FirstAsync();
+        }
+
+        public async Task<List<Transaction>> GetTransactionsAsync()
+        {
+            return await _dbSet.Transaction.Include(x => x.CostCenter)
+                .Include(x => x.Group)
+                .Include(x => x.Classification)
+                .Include(x => x.Currency)
+                .ToListAsync();
+        }
+
+        public async Task<PagedResult<TransactionDTO>> GetTransactionsAsync(TransactionFilter filter)
+        {
+            var query = _dbSet.Set<Transaction>().AsQueryable();
+
+            if (filter.StartDate != null && filter.EndDate != null)
+            {
+                if (filter.DateType == DateTypeEnum.Issue)
+                {
+                    query = query.Where(x => x.IssueDate >= filter.StartDate && x.IssueDate <= filter.EndDate);
+                }
+                else if (filter.DateType == DateTypeEnum.Due)
+                {
+                    query = query.Where(x => x.DueDate >= filter.StartDate && x.DueDate <= filter.EndDate);
+                }
+                else if (filter.DateType == DateTypeEnum.CashFlow)
+                {
+                    query = query.Where(x => x.CashFlowDate >= filter.StartDate && x.CashFlowDate <= filter.EndDate);
+                }
+                else if (filter.DateType == DateTypeEnum.AccrualPeriod)
+                {
+                    query = query.Where(x => x.AccrualPeriodDate >= filter.StartDate && x.AccrualPeriodDate <= filter.EndDate);
+                }
+            }
+
+            if (filter.Canceled)
+            {
+                query = query.Where(x => x.Status == TransactionStatus.Canceled);
+            }
+            else
+            {
+                query = query.Where(x => x.Status != TransactionStatus.Canceled);
+            }
+
+            return query.Select(x => new TransactionDTO
+            {
+                Id = x.Id,
+                Description = x.Description,
+                CostCenterId = x.CostCenter != null ? x.CostCenter.Id : 0,
+                CostCenterName = x.CostCenter != null ? x.CostCenter.Description : string.Empty,
+                GroupId = x.Group != null ? x.Group.Id : 0,
+                GroupName = x.Group != null ? x.Group.Description : String.Empty,
+                ClassificationId = x.Classification != null ? x.Classification.Id : 0,
+                ClassificationName = x.Classification != null ? x.Classification.Description : String.Empty,
+                CurrencyId = x.CurrencyId,
+                CurrencyName = x.Currency != null ? x.Currency.Code : String.Empty,
+                TypeId = (byte)x.Type,
+                TypeName = x.Type.GetDescription(),
+                Value = x.Value,
+                Discount = x.Discount,
+                LateFee = x.LateFee,
+                TotalPaid = x.TotalPaid,
+                IssueDate = x.IssueDate,
+                DueDate = x.DueDate,
+                CashFlowDate = x.CashFlowDate,
+                AccrualPeriodDate = x.AccrualPeriodDate,
+                Observation = x.Observation,
+                StatusId = (byte)x.Status,
+                StatusName = x.Status.GetDescription()
+            }).ToPagedList(filter.PageNumber, filter.PageSize);
+        }
+    }
+}

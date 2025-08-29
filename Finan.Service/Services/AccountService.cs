@@ -84,29 +84,8 @@ namespace Finan.Service.Services
             });
         }
 
-        public async Task<AccountPaginationDTO> GetAccountsAsync(int pageNumber = 1, int pageSize = 5)
-        {
-            var result = await _baseRepository.GetAccountsAsync(pageNumber, pageSize);
+        public async Task<PagedResult<AccountDTO>> GetAccountsAsync(int pageNumber = 1, int pageSize = 5) => await _baseRepository.GetAccountsAsync(pageNumber, pageSize);
 
-            return new AccountPaginationDTO
-            {
-                Accounts = result.Entities?.Select(x => new AccountDTO
-                {
-                    Id = x.Id,
-                    BankId = x.BankId,
-                    BankName = x.Bank?.Name,
-                    Name = x.Name,
-                    Agency = x.Agency,
-                    Number = x.Number,
-                    CreditLimit = x.CreditLimit,
-                    Balance = x.Balance
-                }).ToList(),
-                PageSize = result.PageSize,
-                CurrentPage = result.CurrentPage,
-                TotalItems = result.TotalItems,
-                TotalPages = result.TotalPages
-            };
-        }
 
         public async Task<AccountDTO> UpdateAccount<AccountValidator>(AccountCommand AccountParameter)
         {

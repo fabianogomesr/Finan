@@ -11,8 +11,6 @@ namespace Finan.Domain.Entities
         public string? Name { get; set; }
         public string? Code { get; set; }
         public string? Symbol { get; set; }
-
-        public List<Receivable>? Receivables { get; set; }
-        public List<Payment>? Payments { get; set; }
+        public List<Transaction>? Transactions { get; set; }
     }
 }

@@ -31,7 +31,7 @@ namespace Finan.Service.Services
 
         public async Task<TEntity> GetByIdAsync(int id) => await _baseRepository.Select(id);
 
-        public async Task<EntityPagination<TEntity>> GetAsync(int pageNumber, int pageSize) => await _baseRepository.Select(pageNumber, pageSize);
+        public async Task<PagedResult<TEntity>> GetAsync(int pageNumber, int pageSize) => await _baseRepository.Select(pageNumber, pageSize);
 
         public IQueryable<TEntity> GetAll() => _baseRepository.GetAll();
 

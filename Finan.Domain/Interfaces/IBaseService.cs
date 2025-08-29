@@ -14,7 +14,7 @@ namespace Finan.Domain.Interfaces
         Task DeleteAsync(int id);
         Task<IEnumerable<TEntity>> GetAsync();
         Task<TEntity> GetByIdAsync(int id);
-        Task<EntityPagination<TEntity>> GetAsync(int pageNumber, int pageSize);
+        Task<PagedResult<TEntity>> GetAsync(int pageNumber, int pageSize);
         Task<TEntity> UpdateAsync<TValidator>(TEntity obj) where TValidator : AbstractValidator<TEntity>;
         IQueryable<TEntity> GetAll();
     }

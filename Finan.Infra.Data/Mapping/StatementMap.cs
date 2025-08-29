@@ -47,21 +47,17 @@ namespace Finan.Infra.Data.Mapping
                 .HasColumnName("Reversed")
                 .HasColumnType("bit");
 
-            builder.HasOne(a => a.Payment)
+            builder.HasOne(a => a.Transaction)
                .WithMany(b => b.Statements)
-               .HasForeignKey("PaymentId");
-
-            builder.HasOne(a => a.Receivable)
-               .WithMany(b => b.Statements)
-               .HasForeignKey("ReceivableId");
+               .HasForeignKey("TransactionId");
 
             builder.HasOne(a => a.Account)
                .WithMany(b => b.Statements)
                .HasForeignKey("AccountId");
 
-            builder.HasOne(a => a.AccountDeposit)
+            builder.HasOne(a => a.BankTransaction)
                .WithMany(b => b.Statements)
-               .HasForeignKey("AccountDepositId");
+               .HasForeignKey("BankTransactionId");
         }
     }
 }

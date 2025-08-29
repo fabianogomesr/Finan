@@ -90,18 +90,7 @@ namespace Finan.Application.Controllers
                 if (result == null || result.Equals(string.Empty))
                     return NotFound();
 
-                return Ok(new BankPaginationDTO
-                {
-                    Banks = result.Entities.Select(x => new BankDTO
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Code = x.Code
-                    }).ToList(),
-                    CurrentPage = result.CurrentPage,
-                    TotalItems = result.TotalItems,
-                    TotalPages = result.TotalPages
-                });
+                return Ok(result);
             }
             catch (Exception ex)
             {

@@ -1,58 +1,45 @@
-﻿using Finan.Domain.Entities;
+﻿using Finan.Domain.DTOs;
+using Finan.Domain.Entities;
 using Finan.Domain.Enums;
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
+using Finan.Infra.Data.Extensions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Finan.Infra.Data.Repository
 {
-    public class FinancialClassificationRepository : BaseRepository<FinancialClassification>, IFinancialClassificationRepository
+    public class ClassificationRepository : BaseRepository<Classification>, IClassificationRepository
     {
         protected readonly BaseContext _dbSet;
 
-        public FinancialClassificationRepository(BaseContext mySqlContext) : base(mySqlContext)
+        public ClassificationRepository(BaseContext mySqlContext) : base(mySqlContext)
         {
             _dbSet = mySqlContext;
         }
 
-        public async Task<IEnumerable<FinancialClassification>> GetClassificationsByGroupIdAndTypeAsync(int financialGroupId, ClassificationType classificationType) {
-
-            var result = _dbSet.Set<FinancialClassification>().Include(x => x.FinancialGroup).Where(x => x.FinancialGroupId == financialGroupId);
-
-            if (classificationType == ClassificationType.Income)
-                result = result.Where(x => (x.Type == ClassificationType.Income || x.Type == ClassificationType.Both));
-            else if (classificationType == ClassificationType.Expense)
-                result = result.Where(x => (x.Type == ClassificationType.Expense || x.Type == ClassificationType.Both));
-
-            return await result.ToListAsync();
-        } 
-
-        public async Task<FinancialClassification> GetFinancialClassificationByIdAsync(int id) => await _dbSet.Set<FinancialClassification>().Include(x => x.FinancialGroup).FirstAsync(x => x.Id == id);
-        public async Task<IEnumerable<FinancialClassification>> GetFinancialClassificationsAsync() => await _dbSet.Set<FinancialClassification>().Include(x => x.FinancialGroup).ToListAsync();
-
-        public async Task<EntityPagination<FinancialClassification>> GetFinancialClassificationsAsync(int pageNumber = 1, int pageSize = 5)
+        public async Task<IEnumerable<Classification>> GetClassificationsByGroupIdAsync(int GroupId) => await _dbSet.Set<Classification>().Include(x => x.Group).Where(x => x.GroupId == GroupId).ToListAsync();
+        public async Task<Classification> GetClassificationByIdAsync(int id) => await _dbSet.Set<Classification>().Include(x => x.Group).FirstAsync(x => x.Id == id);
+        public async Task<IEnumerable<Classification>> GetClassificationsAsync() => await _dbSet.Set<Classification>().Include(x => x.Group).ToListAsync();
+        public async Task<PagedResult<ClassificationDTO>> GetClassificationsAsync(int pageNumber = 1, int pageSize = 5) 
         {
-            var entities = await _dbSet.Set<FinancialClassification>().AsQueryable()
-            .Include(x => x.FinancialGroup)
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-            var totalItems = await _dbSet.Set<FinancialClassification>().CountAsync();
-
-            return new EntityPagination<FinancialClassification>
+            var result = _dbSet.Set<Classification>().Select(x => new ClassificationDTO
             {
-                Entities = entities,
-                TotalItems = totalItems,
-                CurrentPage = pageNumber,
-                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
-            };
+                Id = x.Id,
+                Description = x.Description,
+                GroupId = x.Group != null ? x.Group.Id : 0,
+                GroupName = x.Group != null ? x.Group.Description : String.Empty
+            });
+
+            return result.ToPagedList(pageNumber, pageSize);
         }
+
     }
 }

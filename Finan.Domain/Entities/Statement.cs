@@ -12,9 +12,8 @@ namespace Finan.Domain.Entities
         public DateTime ReconciledDate { get; set; }
         public decimal Value { get; set; }
         public decimal Balance { get; set; }
-        public Payment? Payment { get; set; }
-        public Receivable? Receivable { get; set; }
-        public AccountDeposit? AccountDeposit { get; set; }
+        public Transaction? Transaction { get; set; }
+        public BankTransaction? BankTransaction { get; set; }
         public Account? Account { get; set; }
         public bool Reversed { get; set; }
     }

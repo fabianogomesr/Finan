@@ -20,11 +20,7 @@ namespace Finan.Infra.Data.Repository
             _dbSet = mySqlContext;
         }
 
-        public async Task<User> GetUserByUserName(string userName)
-        {
-            return await _dbSet.Set<User>().Where(x => x.UserName == userName).FirstOrDefaultAsync();
-        }
-            
+        public async Task<User> GetUserByUserName(string userName) => await _dbSet.Set<User>().Where(x => x.UserName == userName).FirstOrDefaultAsync();
 
     }
 }
