@@ -1,6 +1,6 @@
 ﻿namespace Finan.Domain.Entities
 {
-    public class Account : BaseEntity
+    public class Account : BaseContractEntity
     {
         public Bank? Bank { get; set; }
         public int BankId { get; set; }

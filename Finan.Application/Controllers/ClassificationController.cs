@@ -62,12 +62,12 @@ namespace Finan.Application.Controllers
             }
         }
 
-        [HttpGet("Group/{GroupId}")]
-        public async Task<IActionResult> GetClassificationsByGroupIdAsync(int GroupId)
+        [HttpGet("Group/{groupId}")]
+        public async Task<IActionResult> GetClassificationsByGroupIdAsync(int groupId)
         {
             try
             {
-                var result = await _baseClassificationService.GetClassificationsByGroupIdAsync(GroupId);
+                var result = await _baseClassificationService.GetClassificationsByGroupIdAsync(groupId);
 
                 if (result == null || !result.Any())
                     return NotFound();

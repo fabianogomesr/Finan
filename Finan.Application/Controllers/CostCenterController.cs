@@ -17,9 +17,9 @@ namespace Finan.Application.Controllers
     [Authorize(Roles = "Manager")]
     public class CostCenterController : ControllerBase
     {
-        private IBaseService<CostCenter> _baseCostCenterService;
+        private IBaseContractService<CostCenter> _baseCostCenterService;
 
-        public CostCenterController(IBaseService<CostCenter> baseCostCenterService)
+        public CostCenterController(IBaseContractService<CostCenter> baseCostCenterService)
         {
             _baseCostCenterService = baseCostCenterService;
         }
@@ -77,7 +77,7 @@ namespace Finan.Application.Controllers
             }
         }
 
-        [HttpGet("{pageNumber}/{pageSize}")]
+        [HttpGet("Paged/{pageNumber}/{pageSize}")]
         public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
         {
             try

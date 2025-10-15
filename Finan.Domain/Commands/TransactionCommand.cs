@@ -26,5 +26,14 @@ namespace Finan.Domain.Commands
         public int PayerId { get; set; }
         public string? Observation { get; set; }
         public byte StatusId { get; set; }
+        public PaidTransactionCommand? PaidTransaction { get; set; }
+
+    }
+
+    public class PaidTransactionCommand
+    {
+        public DateTime PaidDate { get; set; }
+        public decimal PaidValue { get; set; }
+        public int AccountId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Finan.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +10,20 @@ namespace Finan.Infra.Data.Extensions
 {
     public static class IQueryableExtensions
     {
-        public static PagedResult<T> ToPagedList<T>(
+        public static async Task<PagedResult<T>> ToPagedListAsync<T>(
             this IQueryable<T> query,
             int page,
             int pageSize)
         {
             if (page <= 0) page = 1;
+            if (pageSize <= 0) pageSize = 10;
 
-            var totalCount = query.Count();
-            var items = query
+            var totalCount = await query.CountAsync();
+
+            var items = await query
                 .Skip((page - 1) * pageSize)
-                .Take(10)
-                .ToList();
+                .Take(pageSize)
+                .ToListAsync();
 
             return new PagedResult<T>(items, totalCount, page, pageSize);
         }

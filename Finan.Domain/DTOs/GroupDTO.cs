@@ -10,6 +10,7 @@ namespace Finan.Domain.DTOs
     {
         public int Id { get; set; }
         public string? Description { get; set; }
-        public byte Nature { get; set; }
+        public string? Nature { get; set; }
+        public byte NatureId { get; set; }
     }
 }

@@ -37,7 +37,6 @@ namespace Finan.Infra.Data.Mapping
 
             builder.Property(prop => prop.ReconciledDate)
                 .HasConversion(prop => prop, prop => prop)
-                .IsRequired()
                 .HasColumnName("ReconciledDate")
                 .HasColumnType("datetime");
 
@@ -51,13 +50,27 @@ namespace Finan.Infra.Data.Mapping
                .WithMany(b => b.Statements)
                .HasForeignKey("TransactionId");
 
+            builder.Property(prop => prop.TransactionId)
+                .HasColumnName("TransactionId");
+
             builder.HasOne(a => a.Account)
                .WithMany(b => b.Statements)
                .HasForeignKey("AccountId");
 
+            builder.Property(prop => prop.AccountId)
+                .IsRequired()
+                .HasColumnName("AccountId");
+
             builder.HasOne(a => a.BankTransaction)
                .WithMany(b => b.Statements)
                .HasForeignKey("BankTransactionId");
+
+            builder.Property(prop => prop.BankTransactionId)
+                .HasColumnName("BankTransactionId");
+
+            builder.Property(prop => prop.ContractId)
+                .IsRequired()
+                .HasColumnName("ContractId");
         }
     }
 }

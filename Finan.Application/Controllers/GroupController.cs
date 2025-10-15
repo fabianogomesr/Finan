@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Finan.Domain.Parameters;
+using Finan.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Finan.Application.Controllers
 {
@@ -17,9 +19,9 @@ namespace Finan.Application.Controllers
     [Authorize(Roles = "Manager")]
     public class GroupController : ControllerBase
     {
-        private IBaseService<Group> _baseGroupService;
+        private IGroupService _baseGroupService;
 
-        public GroupController(IBaseService<Group> baseGroupService)
+        public GroupController(IGroupService baseGroupService)
         {
             _baseGroupService = baseGroupService;
         }
@@ -30,6 +32,7 @@ namespace Finan.Application.Controllers
             return await ExecuteAsync(async () => await _baseGroupService.Add<GroupValidator>(new Group
             {
                 Description = GroupParameter.Description,
+                Nature = (NatureGroup)GroupParameter.NatureId
             }));
         }
 
@@ -40,6 +43,7 @@ namespace Finan.Application.Controllers
             {
                 Id = GroupParameter.Id,
                 Description = GroupParameter.Description,
+                Nature = (NatureGroup)GroupParameter.NatureId
             }));
         }
 
@@ -69,7 +73,8 @@ namespace Finan.Application.Controllers
                 {
                     Id = x.Id,
                     Description = x.Description,
-                    Nature = (byte)x.Nature
+                    Nature = x.Nature.GetDescription(),
+                    NatureId = (byte)x.Nature
                 }));
             }
             catch (Exception ex)
@@ -78,12 +83,48 @@ namespace Finan.Application.Controllers
             }
         }
 
-        [HttpGet("{pageNumber}/{pageSize}")]
+        [HttpGet("Nature/{natureId}")]
+        public async Task<IActionResult> GetGroupsByNatureId(NatureGroup natureId)
+        {
+            try
+            {
+                var result = await _baseGroupService.GetAll().Where(x => x.Nature == natureId).ToListAsync();
+
+                if (result == null || result.Equals(string.Empty))
+                    return NotFound();
+
+                return Ok(result.Select(x => new GroupDTO
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    Nature = x.Nature.GetDescription(),
+                    NatureId = (byte)x.Nature
+                }));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("Natures")]
+        public IActionResult GetNatureList()
+        {
+            var result = EnumExtensions.GetEnumList<NatureGroup>();
+
+            return Ok(result.Select(x => new NatureDTO
+            {
+                Id = x.Value,
+                Description = x.Description
+            }).ToList());
+        }
+
+        [HttpGet("Paged/{pageNumber}/{pageSize}")]
         public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
         {
             try
             {
-                var result = await _baseGroupService.GetAsync(pageNumber, pageSize);
+                var result = await _baseGroupService.GetGroupsAsync(pageNumber, pageSize);
 
                 if (result == null || result.Equals(string.Empty))
                     return NotFound();
@@ -111,7 +152,8 @@ namespace Finan.Application.Controllers
                 {
                     Id = result.Id,
                     Description = result.Description,
-                    Nature = (byte)result.Nature
+                    Nature = result.Nature.GetDescription(),
+                    NatureId = (byte)result.Nature
                 });
             }
             catch (Exception ex)

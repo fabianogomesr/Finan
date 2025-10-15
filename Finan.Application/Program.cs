@@ -77,6 +77,8 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
+builder.Services.AddHttpContextAccessor(); // Adicionei aqui
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -86,19 +88,29 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-if (app.Environment.IsDevelopment())
+// Substitua o middleware de desenvolvimento por um middleware global para adicionar o usuário padrão em todas as requisições
+app.Use(async (context, next) =>
 {
-    app.Use(async (context, next) =>
+    // Adiciona um header customizado com o Login do usuário padrão
+    context.Request.Headers["login"] = "Finan";
+
+    // Adiciona um header customizado com a Role do usuário padrão
+    context.Request.Headers["contractId"] = "1";
+
+    // Adiciona um header customizado com a Role do usuário padrão
+    context.Request.Headers["role"] = "Manager";
+
+    // Cria claims padrão para o usuário de ID 1
+    var claims = new List<Claim>
     {
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, "admin"),
-            new Claim(ClaimTypes.Role, "Manager")
-        };
-        context.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "Development"));
-        await next.Invoke();
-    });
-}
+        new Claim(ClaimTypes.NameIdentifier, "1"),
+        new Claim(ClaimTypes.Name, "admin"),
+        new Claim(ClaimTypes.Role, "Manager")
+    };
+    context.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "DefaultUser"));
+
+    await next.Invoke();
+});
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

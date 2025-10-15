@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Entities
 {
-    public class Transaction : BaseEntity
+    public class Transaction : BaseContractEntity
     {
         public CostCenter? CostCenter { get; set; }
         public int CostCenterId { get; set; }

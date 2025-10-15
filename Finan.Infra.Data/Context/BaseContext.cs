@@ -32,7 +32,7 @@ namespace Finan.Infra.Data.Context
         {
             base.OnModelCreating(modelBuilder);
             ConfigureEntityMappings(modelBuilder);
-            //SeedEntities(modelBuilder);
+            SeedEntities(modelBuilder);
         }
         private static void SeedEntities(ModelBuilder modelBuilder)
         {
@@ -42,6 +42,8 @@ namespace Finan.Infra.Data.Context
             modelBuilder.Entity<Currency>().HasData(GetCurrencySeed());
             modelBuilder.Entity<CostCenter>().HasData(GetCostCenterSeed());
             modelBuilder.Entity<Bank>().HasData(GetBankSeed());
+            modelBuilder.Entity<SubscriptionPlan>().HasData(GetSubscriptionPlanSeed());
+            modelBuilder.Entity<Contract>().HasData(GetContractSeed());
         }
 
         private static void ConfigureEntityMappings(ModelBuilder modelBuilder)
@@ -56,72 +58,91 @@ namespace Finan.Infra.Data.Context
             modelBuilder.Entity<BankTransaction>(new BankTransactionMap().Configure);
             modelBuilder.Entity<Transaction>(new TransactionMap().Configure);
             modelBuilder.Entity<Statement>(new StatementMap().Configure);
+            modelBuilder.Entity<SubscriptionPlan>(new SubscriptionPlanMap().Configure);
+            modelBuilder.Entity<Contract>(new ContractMap().Configure);
         }
+
+        private static SubscriptionPlan[] GetSubscriptionPlanSeed() => new[]
+{
+            new SubscriptionPlan { Id = 1, Name = "Gratuito", UserQuantity = 1, Value = 0  },
+            new SubscriptionPlan { Id = 2, Name = "Profissional", UserQuantity = 5, Value = 29.90M  },
+            new SubscriptionPlan { Id = 3, Name = "Empresarial", UserQuantity = 20, Value = 99.90M  }
+        };
+
+        private static Contract[] GetContractSeed() => new[]
+        {       
+            new Contract { Id = 1, SubscriptionPlanId = 1, StartDate = DateTime.Now, EndDate = DateTime.Now.AddYears(99), IsActive = true  },
+        };
 
         private static User[] GetUserSeed() => new[]
         {
-            new User { UserName = "Finan", Password = "Finan@1234", Email = "dev.fabianorocha@gmail.com", Role = "Maganer" }
+            new User { Id = 1, UserName = "Finan", Password = "Finan@1234", Email = "dev.fabianorocha@gmail.com", Role = "Manager", ContractId = 1 }
         };
+
         private static Group[] GetGroupSeed() => new[]
         {
-            new Group { Description = "Despesas Fixas", Nature = NatureGroupEnum.Debit },
-            new Group { Description = "Despesas Variáveis", Nature = NatureGroupEnum.Debit },
-            new Group { Description = "Receitas de Trabalho", Nature = NatureGroupEnum.Credit },
-            new Group { Description = "Receitas de Investimentos", Nature = NatureGroupEnum.Credit },
-            new Group { Description = "Receitas Eventuais ou Extraordinárias", Nature = NatureGroupEnum.Credit },
-            new Group { Description = "Impostos", Nature = NatureGroupEnum.Both }
+            new Group { Id = 1, Description = "Despesas Fixas", Nature = NatureGroup.Debit, ContractId = 0 },
+            new Group { Id = 2, Description = "Despesas Variáveis", Nature = NatureGroup.Debit, ContractId = 0  },
+            new Group { Id = 3, Description = "Receitas de Trabalho", Nature = NatureGroup.Credit, ContractId = 0  },
+            new Group { Id = 4, Description = "Receitas de Investimentos", Nature = NatureGroup.Credit, ContractId = 0  },
+            new Group { Id = 5, Description = "Receitas Eventuais ou Extraordinárias", Nature = NatureGroup.Credit, ContractId = 0  },
         };
+
         private static Classification[] GetClassificationSeed() => new[]
         {
-            new Classification { Description = "Moradia", GroupId = 1 },
-            new Classification { Description = "Alimentação", GroupId = 2},
-            new Classification { Description = "Transporte", GroupId = 2 },
-            new Classification { Description = "Lazer", GroupId = 2 },
-            new Classification { Description = "Viagens", GroupId = 2 },
-            new Classification { Description = "Salário", GroupId = 3 },
-            new Classification { Description = "Gratificações e Bônus", GroupId = 3 },
-            new Classification { Description = "Rendimentos de Poupança", GroupId = 4 },
-            new Classification { Description = "Dividendos", GroupId = 4 },
-            new Classification { Description = "Juros de Investimentos", GroupId = 4},
-            new Classification { Description = "Aluguel de Imóveis", GroupId = 4 },
-            new Classification { Description = "Presentes", GroupId = 5 },
-            new Classification { Description = "Vendas de Bens", GroupId = 5},
-            new Classification { Description = "Educação e Cursos", GroupId = 2 },
-            new Classification { Description = "Cartão de Crédito", GroupId = 2},
-            new Classification { Description = "Serviços de Internet, Gás e Energia", GroupId = 2 },
-            new Classification { Description = "Pagamento e Restituição de Impostos", GroupId = 2 }
+            new Classification { Id = 1, Description = "Moradia", GroupId = 1, ContractId = 0  },
+            new Classification { Id = 2, Description = "Alimentação", GroupId = 2, ContractId = 0  },
+            new Classification { Id = 3, Description = "Transporte", GroupId = 2, ContractId = 0  },
+            new Classification { Id = 4, Description = "Lazer", GroupId = 2, ContractId = 0  },
+            new Classification { Id = 5, Description = "Viagens", GroupId = 2, ContractId = 0  },
+            new Classification { Id = 6, Description = "Salário", GroupId = 3, ContractId = 0  },
+            new Classification { Id = 7, Description = "Gratificações e Bônus", GroupId = 3, ContractId = 0  },
+            new Classification { Id = 8, Description = "Rendimentos de Poupança", GroupId = 4, ContractId = 0  },
+            new Classification { Id = 9, Description = "Dividendos", GroupId = 4, ContractId = 0  },
+            new Classification { Id = 10, Description = "Juros de Investimentos", GroupId = 4, ContractId = 0  },
+            new Classification { Id = 11, Description = "Aluguel de Imóveis", GroupId = 4, ContractId = 0  },
+            new Classification { Id = 12, Description = "Presentes", GroupId = 5, ContractId = 0  },
+            new Classification { Id = 13, Description = "Vendas de Bens", GroupId = 5, ContractId = 0  },
+            new Classification { Id = 14, Description = "Educação e Cursos", GroupId = 2, ContractId = 0  },
+            new Classification { Id = 15, Description = "Cartão de Crédito", GroupId = 2, ContractId = 0  },
+            new Classification { Id = 16, Description = "Serviços de Internet, Gás e Energia", GroupId = 2, ContractId = 0  },
+            new Classification { Id = 17, Description = "Pagamento de Impostos", GroupId = 2, ContractId = 0  },
+            new Classification { Id = 18, Description = "Restituição de Impostos", GroupId = 5, ContractId = 0  }
         };
+
         private static Currency[] GetCurrencySeed() => new[]
         {
-            new Currency { Name = "Real", Code = "BRL", Symbol = "R$" },
-            new Currency { Name = "Dólar", Code = "USD", Symbol = "$" }
+            new Currency { Id = 1, Name = "Real", Code = "BRL", Symbol = "R$", ContractId = 0  },
+            new Currency { Id = 2, Name = "Dólar", Code = "USD", Symbol = "$", ContractId = 0  }
         };
+
         private static CostCenter[] GetCostCenterSeed() => new[]
         {
-                new CostCenter { Description = "Casa" },
-                new CostCenter { Description = "Transporte" },
-                new CostCenter { Description = "Saúde" },
-                new CostCenter { Description = "Educação" },
-                new CostCenter { Description = "Lazer" },
-                new CostCenter { Description = "Investimentos" },
-                new CostCenter { Description = "Alimentação" },
-                new CostCenter { Description = "Cartão de Crédito" },
-                new CostCenter { Description = "Doações e Presentes" },
-                new CostCenter { Description = "Trabalho Formal" },
-                new CostCenter { Description = "Trabalho Autônomo" },
-                new CostCenter { Description = "Aluguéis" },
-                new CostCenter { Description = "Outras Receitas" }
+            new CostCenter { Id = 1, Description = "Casa", ContractId = 0  },
+            new CostCenter { Id = 2, Description = "Transporte", ContractId = 0  },
+            new CostCenter { Id = 3, Description = "Saúde", ContractId = 0  },
+            new CostCenter { Id = 4, Description = "Educação", ContractId = 0  },
+            new CostCenter { Id = 5, Description = "Lazer", ContractId = 0  },
+            new CostCenter { Id = 6, Description = "Investimentos", ContractId = 0  },
+            new CostCenter { Id = 7, Description = "Alimentação", ContractId = 0  },
+            new CostCenter { Id = 8, Description = "Cartão de Crédito", ContractId = 0  },
+            new CostCenter { Id = 9, Description = "Doações e Presentes", ContractId = 0  },
+            new CostCenter { Id = 10, Description = "Trabalho Formal", ContractId = 0  },
+            new CostCenter { Id = 11, Description = "Trabalho Autônomo", ContractId = 0  },
+            new CostCenter { Id = 12, Description = "Aluguéis", ContractId = 0  },
+            new CostCenter { Id = 13, Description = "Outras Receitas", ContractId = 0  }
         };
+
         private static Bank[] GetBankSeed() => new[]
         {
-            new Bank { Name = "Banco do Brasil S.A.", Code = "001"},
-            new Bank { Name = "Banco Santander (Brasil) S.A.", Code = "033" },
-            new Bank { Name = "Caixa Econômica Federal", Code = "104" },
-            new Bank { Name = "Banco Bradesco S.A.", Code = "237" },
-            new Bank { Name = "Itaú Unibanco S.A.", Code = "341" },
-            new Bank { Name = "Nu Pagamentos S.A.", Code = "260" },
-            new Bank { Name = "Banco C6 S.A.", Code = "336" },
-            new Bank { Name = "Banco Inter S.A.", Code = "077" }
+            new Bank { Id = 1, Name = "Banco do Brasil S.A.", Code = "001", ContractId = 0  },
+            new Bank { Id = 2, Name = "Banco Santander (Brasil) S.A.", Code = "033", ContractId = 0  },
+            new Bank { Id = 3, Name = "Caixa Econômica Federal", Code = "104", ContractId = 0  },
+            new Bank { Id = 4, Name = "Banco Bradesco S.A.", Code = "237", ContractId = 0  },
+            new Bank { Id = 5, Name = "Itaú Unibanco S.A.", Code = "341", ContractId = 0  },
+            new Bank { Id = 6, Name = "Nu Pagamentos S.A.", Code = "260", ContractId = 0  },
+            new Bank { Id = 7, Name = "Banco C6 S.A.", Code = "336", ContractId = 0  },
+            new Bank { Id = 8, Name = "Banco Inter S.A.", Code = "077", ContractId = 0  }
         };
 
     }

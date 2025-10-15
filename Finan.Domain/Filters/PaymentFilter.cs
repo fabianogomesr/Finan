@@ -9,7 +9,8 @@ namespace Finan.Domain.Filters
 {
     public class TransactionFilter : BaseFilter
     {
-        public DateTypeEnum DateType { get; set; }
+        public TransactionType TransactionType { get; set; }
+        public DateType DateType { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool Canceled { get; set; }

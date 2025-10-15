@@ -6,7 +6,7 @@ using FluentValidation;
 
 namespace Finan.Service.Services
 {
-    public class AccountService : BaseService<Account>, IAccountService
+    public class AccountService : BaseContractService<Account>, IAccountService
     {
         private readonly IAccountRepository _baseRepository;
 

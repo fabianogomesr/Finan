@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Interfaces
 {
-    public interface IUserRepository : IBaseRepository<User>
+    public interface IUserRepository : IBaseContractRepository<User>
     {
         Task<User> GetUserByUserName(string userName);
     }

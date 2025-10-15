@@ -8,7 +8,7 @@ namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
+    [Authorize(Roles = "Manager, Operator")]
     public class AccountController : ControllerBase
     {
         private IAccountService _baseAccountService;
@@ -20,7 +20,6 @@ namespace Finan.Application.Controllers
 
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] AccountCommand AccountParameter) => await ExecuteAsync(async () => await _baseAccountService.AddAccount<AccountValidator>(AccountParameter));
-
 
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] AccountCommand AccountParameter) => await ExecuteAsync(async () => await _baseAccountService.UpdateAccount<AccountValidator>(AccountParameter));
@@ -55,7 +54,7 @@ namespace Finan.Application.Controllers
             }
         }
 
-        [HttpGet("{pageNumber}/{pageSize}")]
+        [HttpGet("Paged/{pageNumber}/{pageSize}")]
         public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
         {
             try

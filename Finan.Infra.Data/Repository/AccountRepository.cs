@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 
 namespace Finan.Infra.Data.Repository
 {
-    public class AccountRepository : BaseRepository<Account>, IAccountRepository
+    public class AccountRepository : BaseContractRepository<Account>, IAccountRepository
     {
         protected readonly BaseContext _dbSet;
 
-        public AccountRepository(BaseContext mySqlContext) : base(mySqlContext)
+        public AccountRepository(BaseContext mySqlContext, IUserContext userContext) : base(mySqlContext, userContext)
         {
             _dbSet = mySqlContext;
         }
@@ -27,7 +27,7 @@ namespace Finan.Infra.Data.Repository
         public async Task<IEnumerable<Account>> GetAccountsAsync() => await _dbSet.Set<Account>().Include(x => x.Bank).ToListAsync();
         public async Task<PagedResult<AccountDTO>> GetAccountsAsync(int pageNumber = 1, int pageSize = 5) 
         {
-            return _dbSet.Set<Account>().Include(x => x.Bank).Select(x => new AccountDTO
+            return await GetAll().Select(x => new AccountDTO
             {
                 Id = x.Id,
                 BankId = x.BankId,
@@ -37,7 +37,7 @@ namespace Finan.Infra.Data.Repository
                 Number = x.Number,
                 CreditLimit = x.CreditLimit,
                 Balance = x.Balance
-            }).ToPagedList(pageNumber, pageSize);
+            }).ToPagedListAsync(pageNumber, pageSize);
         } 
 
     }

@@ -28,6 +28,10 @@ namespace Finan.Infra.Data.Mapping
                 .IsRequired()
                 .HasColumnName("Code")
                 .HasColumnType("varchar(5)");
+
+            builder.Property(prop => prop.ContractId)
+                .IsRequired()
+                .HasColumnName("ContractId");
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Interfaces
 {
-    public interface IBankRepository : IBaseRepository<Bank>
+    public interface IBankRepository : IBaseContractRepository<Bank>
     {
     }
 }

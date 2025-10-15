@@ -14,16 +14,49 @@ namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
     public class UserController : ControllerBase
     {
         private IUserService _baseUserService;
+        private IBaseService<SubscriptionPlan> _subscriptionPlanService;
+        private IBaseService<Contract> _contractPlanService;
 
-        public UserController(IUserService baseUserService)
+
+        public UserController(IUserService baseUserService, IBaseService<SubscriptionPlan> subscriptionPlanService, IBaseService<Contract> contractPlanService)
         {
             _baseUserService = baseUserService;
+            _subscriptionPlanService = subscriptionPlanService;
+            _contractPlanService = contractPlanService;
         }
 
+        [HttpPost("Admin")]
+        public async Task<IActionResult> CreateAdminAsync([FromBody] UserCommand UserParameter)
+        {
+            var subscriptionPlan = await _subscriptionPlanService.GetByIdAsync(UserParameter.SubscriptionPlanId);
+
+            if (subscriptionPlan == null)
+                return BadRequest("Plano de assinatura inválido.");
+
+            var contract = await _contractPlanService.Add<ContractValidator>(
+                new Contract
+                {
+                    SubscriptionPlanId = subscriptionPlan.Id,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddMonths(UserParameter.Months),
+                    IsActive = true
+                });
+
+            return await ExecuteAsync(async () => await _baseUserService.Add<UserValidator>(
+                new User
+                {
+                    UserName = UserParameter.UserName,
+                    Password = UserParameter.Password,
+                    Email = UserParameter.Email,
+                    Role = UserParameter.Role,
+                    ContractId = contract.Id
+                }));
+        }
+
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] UserCommand UserParameter)
         {
@@ -31,9 +64,10 @@ namespace Finan.Application.Controllers
                 new User { UserName = UserParameter.UserName,
                     Password = UserParameter.Password,
                     Email = UserParameter.Email,
-                    Role = UserParameter.Role }));
+                    Role = UserParameter.Role}));
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] UserCommand UserParameter)
         {
@@ -45,6 +79,7 @@ namespace Finan.Application.Controllers
                     Role = UserParameter.Role }));
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
@@ -57,6 +92,7 @@ namespace Finan.Application.Controllers
             return new NoContentResult();
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpGet]
         public async Task<IActionResult> GetAsync() 
         {
@@ -79,9 +115,12 @@ namespace Finan.Application.Controllers
             {
                 return BadRequest(ex);
             }
-        } 
+        }
 
+        [HttpGet("Plans")]
+        public Task<IActionResult> GetPlansAsync() => ExecuteAsync(async () => await _subscriptionPlanService.GetAsync());
 
+        [Authorize(Roles = "Manager")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id) 
         {

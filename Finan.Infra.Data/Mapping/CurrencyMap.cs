@@ -35,6 +35,10 @@ namespace Finan.Infra.Data.Mapping
                 .HasColumnName("Symbol")
                 .HasColumnType("varchar(5)");
 
+            builder.Property(prop => prop.ContractId)
+                .IsRequired()
+                .HasColumnName("ContractId");
+
         }
     }
 }

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Service.Services
 {
-    public class ClassificationService : BaseService<Classification>, IClassificationService
+    public class ClassificationService : BaseContractService<Classification>, IClassificationService
     {
         private readonly IClassificationRepository _baseRepository;
 

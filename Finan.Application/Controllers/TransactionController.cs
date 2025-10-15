@@ -15,7 +15,7 @@ namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
+    [Authorize(Roles = "Manager, Operator")]
     public class TransactionController : ControllerBase
     {
         private ITransactionService _baseTransactionService;
@@ -31,9 +31,8 @@ namespace Finan.Application.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] TransactionCommand TransactionParameter) => await ExecuteAsync(async () => await _baseTransactionService.UpdateTransaction(TransactionParameter));
 
-        [HttpGet]
-        [Route("GetStatusList")]
-        public IActionResult GetStatusList()
+        [HttpGet("Status")]
+        public IActionResult GetStatus()
         {
             try
             {
@@ -50,9 +49,8 @@ namespace Finan.Application.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("GetTypeList")]
-        public IActionResult GetTypeList()
+        [HttpGet("Types")]
+        public IActionResult GetTypes()
         {
             try
             {
@@ -69,9 +67,8 @@ namespace Finan.Application.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("GetDateTypeList")]
-        public IActionResult GetDateTypeList()
+        [HttpGet("DateTypes")]
+        public IActionResult GetDateTypes()
         {
             try
             {

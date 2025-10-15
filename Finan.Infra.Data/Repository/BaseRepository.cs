@@ -49,7 +49,7 @@ namespace Finan.Infra.Data.Repository
 
         public IQueryable<TEntity> GetAll() => _dbSet.Set<TEntity>().AsQueryable<TEntity>();
 
-        public async Task<PagedResult<TEntity>> Select(int pageNumber, int pageSize) => _dbSet.Set<TEntity>().ToPagedList(pageNumber, pageSize);
+        public async Task<PagedResult<TEntity>> Select(int pageNumber, int pageSize) => await _dbSet.Set<TEntity>().ToPagedListAsync(pageNumber, pageSize);
 
         public async Task<TEntity> Select(int id) => await _dbSet.Set<TEntity>().FindAsync(id);
 

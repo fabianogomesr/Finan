@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Entities
 {
-    public class User : BaseEntity
+    public class User : BaseContractEntity
     {
         public string? UserName { get; set; }
         public string? Email { get; set; }
         public string? Password { get; set; }
         public string? Role { get; set; }
+        public Contract? Contract { get; set; }
     }
 }

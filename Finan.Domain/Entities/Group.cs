@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Entities
 {
-    public class Group : BaseEntity
+    public class Group : BaseContractEntity
     {
         public string? Description { get; set; }
         public List<Classification>? Classifications { get; set; }
         public List<BankTransaction>? BankTransactions { get; set; }
         public List<Transaction>? Transactions { get; set; }
-        public NatureGroupEnum Nature { get; set; }
+        public NatureGroup Nature { get; set; }
     }
 }

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Entities
 {
-    public class CostCenter : BaseEntity
+    public class CostCenter : BaseContractEntity
     {
         public string? Description { get; set; }
-
         public List<BankTransaction>? BankTransactions { get; set; }
         public List<Transaction>? Transactions { get; set; }
     }

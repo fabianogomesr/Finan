@@ -17,8 +17,7 @@ namespace Finan.Service.Validators
             .Length(1, 100).WithMessage("O nome deve ter entre 1 e 100 caracteres.");
 
             RuleFor(p => p.Nature.GetHashCode())
-            .GreaterThan(0).WithMessage("A natureza deve ser um valor positivo.")
-            .Must(x => x == 1 || x == 2 || x == 3).WithMessage("A natureza tem que ser 0(Saida), 1(Entrada) ou 2(ambos).");
+            .Must(x => x == 0 || x == 1).WithMessage("A natureza tem que ser 0(Saida), 1(Entrada).");
         }
     }
 

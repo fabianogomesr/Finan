@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Entities
 {
-    public class Classification : BaseEntity
+    public class Classification : BaseContractEntity
     {
         public string? Description { get; set; }
         public Group? Group { get; set; }

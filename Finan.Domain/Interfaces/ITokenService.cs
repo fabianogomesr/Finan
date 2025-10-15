@@ -11,6 +11,6 @@ namespace Finan.Domain.Interfaces
 {
     public interface ITokenService
     {
-        Task<string> GenerateTokenAsync(LoginCommand loginParameter);
+        Task<AuthDTO?> GenerateTokenAsync(LoginCommand loginParameter);
     }
 }

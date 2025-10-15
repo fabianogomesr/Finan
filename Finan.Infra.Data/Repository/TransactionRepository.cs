@@ -6,26 +6,21 @@ using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
 using Finan.Infra.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finan.Infra.Data.Repository
 {
-    public class TransactionRepository : BaseRepository<Transaction>, ITransactionRepository
+    public class TransactionRepository : BaseContractRepository<Transaction>, ITransactionRepository
     {
         protected new readonly BaseContext _dbSet;
 
-        public TransactionRepository(BaseContext mySqlContext) : base(mySqlContext)
+        public TransactionRepository(BaseContext mySqlContext, IUserContext userContext) : base(mySqlContext, userContext)
         {
             _dbSet = mySqlContext;
         }
 
         public async Task<Transaction> GetTransactionByIdAsync(int id)
         {
-            var result = _dbSet.Transaction.Include(x => x.CostCenter)
+            var result = GetAll().Include(x => x.CostCenter)
                 .Include(x => x.Group)
                 .Include(x => x.Classification)
                 .Include(x => x.Currency)
@@ -36,7 +31,8 @@ namespace Finan.Infra.Data.Repository
 
         public async Task<List<Transaction>> GetTransactionsAsync()
         {
-            return await _dbSet.Transaction.Include(x => x.CostCenter)
+            return await GetAll()
+                .Include(x => x.CostCenter)
                 .Include(x => x.Group)
                 .Include(x => x.Classification)
                 .Include(x => x.Currency)
@@ -45,23 +41,25 @@ namespace Finan.Infra.Data.Repository
 
         public async Task<PagedResult<TransactionDTO>> GetTransactionsAsync(TransactionFilter filter)
         {
-            var query = _dbSet.Set<Transaction>().AsQueryable();
+            var query = GetAll();
+
+            query.Where(x => x.Type == filter.TransactionType);
 
             if (filter.StartDate != null && filter.EndDate != null)
             {
-                if (filter.DateType == DateTypeEnum.Issue)
+                if (filter.DateType == DateType.Issue)
                 {
                     query = query.Where(x => x.IssueDate >= filter.StartDate && x.IssueDate <= filter.EndDate);
                 }
-                else if (filter.DateType == DateTypeEnum.Due)
+                else if (filter.DateType == DateType.Due)
                 {
                     query = query.Where(x => x.DueDate >= filter.StartDate && x.DueDate <= filter.EndDate);
                 }
-                else if (filter.DateType == DateTypeEnum.CashFlow)
+                else if (filter.DateType == DateType.CashFlow)
                 {
                     query = query.Where(x => x.CashFlowDate >= filter.StartDate && x.CashFlowDate <= filter.EndDate);
                 }
-                else if (filter.DateType == DateTypeEnum.AccrualPeriod)
+                else if (filter.DateType == DateType.AccrualPeriod)
                 {
                     query = query.Where(x => x.AccrualPeriodDate >= filter.StartDate && x.AccrualPeriodDate <= filter.EndDate);
                 }
@@ -76,7 +74,7 @@ namespace Finan.Infra.Data.Repository
                 query = query.Where(x => x.Status != TransactionStatus.Canceled);
             }
 
-            return query.Select(x => new TransactionDTO
+            return await query.Select(x => new TransactionDTO
             {
                 Id = x.Id,
                 Description = x.Description,
@@ -101,7 +99,7 @@ namespace Finan.Infra.Data.Repository
                 Observation = x.Observation,
                 StatusId = (byte)x.Status,
                 StatusName = x.Status.GetDescription()
-            }).ToPagedList(filter.PageNumber, filter.PageSize);
+            }).ToPagedListAsync(filter.PageNumber, filter.PageSize);
         }
     }
 }

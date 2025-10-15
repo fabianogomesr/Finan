@@ -13,9 +13,9 @@ namespace Finan.Application.Controllers
     [Authorize(Roles = "Manager")]
     public class CurrencyController : ControllerBase
     {
-        private IBaseService<Currency> _baseCurrencyService;
+        private IBaseContractService<Currency> _baseCurrencyService;
 
-        public CurrencyController(IBaseService<Currency> baseCurrencyService)
+        public CurrencyController(IBaseContractService<Currency> baseCurrencyService)
         {
             _baseCurrencyService = baseCurrencyService;
         }
@@ -78,7 +78,7 @@ namespace Finan.Application.Controllers
             }
         }
 
-        [HttpGet("{pageNumber}/{pageSize}")]
+        [HttpGet("Paged/{pageNumber}/{pageSize}")]
         public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
         {
             try

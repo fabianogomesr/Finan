@@ -6,61 +6,21 @@ using Finan.Domain.Filters;
 using Finan.Domain.Interfaces;
 using Finan.Service.Validators;
 using FluentValidation;
+using System.Data.Common;
 
 namespace Finan.Service.Services
 {
-    public class TransactionService : BaseService<Transaction>, ITransactionService
+    public class TransactionService : BaseContractService<Transaction>, ITransactionService
     {
         private readonly ITransactionRepository _baseRepository;
+        private readonly IStatementRepository _statementRepository;
+        private readonly IAccountRepository _accountRepository;
 
-        public TransactionService(ITransactionRepository baseRepository) : base(baseRepository)
+        public TransactionService(ITransactionRepository baseRepository, IStatementRepository statementRepository, IAccountRepository accountRepository) : base(baseRepository)
         {
             _baseRepository = baseRepository;
-        }
-
-        public async Task<TransactionDTO> AddTransaction(TransactionCommand TransactionParameter)
-        {
-            Transaction Transaction = new Transaction
-            {
-                CostCenterId = TransactionParameter.CostCenterId,
-                GroupId = TransactionParameter.GroupId,
-                ClassificationId = TransactionParameter.ClassificationId,
-                CurrencyId = TransactionParameter.CurrencyId,
-                Description = TransactionParameter.Description,
-                Type = (TransactionType)TransactionParameter.TypeId,
-                Value = TransactionParameter.Value,
-                Discount = TransactionParameter.Discount,
-                LateFee = TransactionParameter.LateTransactions,
-                TotalPaid = TransactionParameter.TotalPaid,
-                IssueDate = TransactionParameter.IssueDate,
-                DueDate = TransactionParameter.DueDate,
-                CashFlowDate = TransactionParameter.CashFlowDate,
-                AccrualPeriodDate = TransactionParameter.AccrualPeriodDate,
-                Observation = TransactionParameter.Observation,
-                Status = (TransactionStatus)TransactionParameter.StatusId
-            };
-
-            await _baseRepository.Insert(Transaction);
-
-            return new TransactionDTO
-            {
-                Id = Transaction.Id,
-                CostCenterId = Transaction.CostCenterId,
-                GroupId = Transaction.GroupId,
-                ClassificationId = Transaction.ClassificationId,
-                CurrencyId = Transaction.CurrencyId,
-                TypeId = (byte)Transaction.Type.GetHashCode(),
-                Value = Transaction.Value,
-                Discount = Transaction.Discount,
-                LateFee = Transaction.LateFee,
-                TotalPaid = Transaction.TotalPaid,
-                IssueDate = Transaction.IssueDate,
-                DueDate = Transaction.DueDate,
-                CashFlowDate = Transaction.CashFlowDate,
-                AccrualPeriodDate = Transaction.AccrualPeriodDate,
-                Observation = Transaction.Observation,
-                StatusId = (byte)Transaction.Status.GetHashCode()
-            };
+            _statementRepository = statementRepository;
+            _accountRepository = accountRepository;
         }
 
         public async Task<List<TransactionDTO>> GetTransactionsAsync()
@@ -120,50 +80,139 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<TransactionDTO> UpdateTransaction(TransactionCommand TransactionParameter)
+        public async Task<TransactionDTO> AddTransaction(TransactionCommand transactionParameter)
         {
-            var Transaction = _baseRepository.Select(TransactionParameter.Id).Result;
+            var transaction = CreateTransactionFields(transactionParameter);
 
-            if (Transaction == null)
-                throw new Exception("Pagamento não localizado.");
+            await _baseRepository.Insert(transaction);
 
-            Transaction.CostCenterId = TransactionParameter.CostCenterId;
-            Transaction.GroupId = TransactionParameter.GroupId;
-            Transaction.ClassificationId = TransactionParameter.ClassificationId;
-            Transaction.CurrencyId = TransactionParameter.CurrencyId;
-            Transaction.Type = (TransactionType)TransactionParameter.TypeId;
-            Transaction.Description = TransactionParameter.Description;
-            Transaction.Value = TransactionParameter.Value;
-            Transaction.Discount = TransactionParameter.Discount;
-            Transaction.LateFee = TransactionParameter.LateTransactions;
-            Transaction.TotalPaid = TransactionParameter.TotalPaid;
-            Transaction.IssueDate = TransactionParameter.IssueDate;
-            Transaction.DueDate = TransactionParameter.DueDate;
-            Transaction.CashFlowDate = TransactionParameter.CashFlowDate;
-            Transaction.AccrualPeriodDate = TransactionParameter.AccrualPeriodDate;
-            Transaction.Observation = TransactionParameter.Observation;
-            Transaction.Status = (TransactionStatus)TransactionParameter.StatusId;
+            // Gerencia os efeitos colaterais de acordo com o status
+            await HandleTransactionStatusEffects(transaction, transactionParameter);
 
-            await _baseRepository.Update(Transaction);
+            return MapToTransactionDTO(transaction);
+        }
 
+        private static Transaction CreateTransactionFields(TransactionCommand TransactionParameter)
+        {
+            return new Transaction
+            {
+                CostCenterId = TransactionParameter.CostCenterId,
+                GroupId = TransactionParameter.GroupId,
+                ClassificationId = TransactionParameter.ClassificationId,
+                CurrencyId = TransactionParameter.CurrencyId,
+                Description = TransactionParameter.Description,
+                Type = (TransactionType)TransactionParameter.TypeId,
+                Value = TransactionParameter.Value,
+                Discount = TransactionParameter.Discount,
+                LateFee = TransactionParameter.LateTransactions,
+                TotalPaid = TransactionParameter.TotalPaid,
+                IssueDate = TransactionParameter.IssueDate,
+                DueDate = TransactionParameter.DueDate,
+                CashFlowDate = TransactionParameter.CashFlowDate,
+                AccrualPeriodDate = TransactionParameter.AccrualPeriodDate,
+                Observation = TransactionParameter.Observation,
+                Status = (TransactionStatus)TransactionParameter.StatusId
+            };
+        }
+
+        public async Task<TransactionDTO> UpdateTransaction(TransactionCommand transactionParameter)
+        {
+            // Recupera a transação existente
+            var transaction = await _baseRepository.Select(transactionParameter.Id);
+            if (transaction == null)
+                throw new Exception("Transação não localizada.");
+
+            // Atualiza os campos da transação
+            UpdateTransactionFields(transaction, transactionParameter);
+
+            await _baseRepository.Update(transaction);
+
+            // Gerencia os efeitos colaterais de acordo com o status
+            await HandleTransactionStatusEffects(transaction, transactionParameter);
+
+            return MapToTransactionDTO(transaction);
+        }
+
+        private void UpdateTransactionFields(Transaction transaction, TransactionCommand parameter)
+        {
+            transaction.CostCenterId = parameter.CostCenterId;
+            transaction.GroupId = parameter.GroupId;
+            transaction.ClassificationId = parameter.ClassificationId;
+            transaction.CurrencyId = parameter.CurrencyId;
+            transaction.Type = (TransactionType)parameter.TypeId;
+            transaction.Description = parameter.Description;
+            transaction.Value = parameter.Value;
+            transaction.Discount = parameter.Discount;
+            transaction.LateFee = parameter.LateTransactions;
+            transaction.TotalPaid = parameter.TotalPaid;
+            transaction.IssueDate = parameter.IssueDate;
+            transaction.DueDate = parameter.DueDate;
+            transaction.CashFlowDate = parameter.CashFlowDate;
+            transaction.AccrualPeriodDate = parameter.AccrualPeriodDate;
+            transaction.Observation = parameter.Observation;
+            transaction.Status = (TransactionStatus)parameter.StatusId;
+        }
+
+        private async Task HandleTransactionStatusEffects(Transaction transaction, TransactionCommand parameter)
+        {
+            if (transaction.Status == TransactionStatus.Paid)
+            {
+                await HandlePaidTransaction(transaction, parameter);
+            }
+            else if (transaction.Status == TransactionStatus.Canceled || transaction.Status == TransactionStatus.Open)
+            {
+                await HandleCanceledOrOpenTransaction(transaction);
+            }
+        }
+
+        private async Task HandlePaidTransaction(Transaction transaction, TransactionCommand parameter)
+        {
+            var account = await _accountRepository.Select(parameter.PaidTransaction.AccountId);
+            if (account == null)
+                throw new Exception("Conta não localizada.");
+
+            var balance = _statementRepository.GetBalanceByAccountId(parameter.PaidTransaction.AccountId);
+            var statement = new Statement(parameter.PaidTransaction.PaidDate, parameter.PaidTransaction.PaidValue, balance, parameter.PaidTransaction.AccountId, transaction);
+
+            account.Balance = statement.Balance;
+            await _accountRepository.Update(account);
+        }
+
+        private async Task HandleCanceledOrOpenTransaction(Transaction transaction)
+        {
+            var statement = _statementRepository.GetAll()
+                .FirstOrDefault(x => x.TransactionId == transaction.Id && !x.Reversed);
+
+            if (statement != null)
+            {
+                if (statement.ReconciledDate != null)
+                    throw new Exception("Não é possível cancelar uma transação conciliada. Favor desfazer a conciliação antes de cancelar.");
+
+                statement.Reversed = true;
+                await _statementRepository.Update(statement);
+            }
+        }
+
+        private TransactionDTO MapToTransactionDTO(Transaction transaction)
+        {
             return new TransactionDTO
             {
-                Id = Transaction.Id,
-                CostCenterId = Transaction.CostCenterId,
-                GroupId = Transaction.GroupId,
-                ClassificationId = Transaction.ClassificationId,
-                CurrencyId = Transaction.CurrencyId,
-                TypeId = (byte)Transaction.Type.GetHashCode(),
-                Value = Transaction.Value,
-                Discount = Transaction.Discount,
-                LateFee = Transaction.LateFee,
-                TotalPaid = Transaction.TotalPaid,
-                IssueDate = Transaction.IssueDate,
-                DueDate = Transaction.DueDate,
-                CashFlowDate = Transaction.CashFlowDate,
-                AccrualPeriodDate = Transaction.AccrualPeriodDate,
-                Observation = Transaction.Observation,
-                StatusId = (byte)Transaction.Status.GetHashCode()
+                Id = transaction.Id,
+                CostCenterId = transaction.CostCenterId,
+                GroupId = transaction.GroupId,
+                ClassificationId = transaction.ClassificationId,
+                CurrencyId = transaction.CurrencyId,
+                TypeId = (byte)transaction.Type.GetHashCode(),
+                Value = transaction.Value,
+                Discount = transaction.Discount,
+                LateFee = transaction.LateFee,
+                TotalPaid = transaction.TotalPaid,
+                IssueDate = transaction.IssueDate,
+                DueDate = transaction.DueDate,
+                CashFlowDate = transaction.CashFlowDate,
+                AccrualPeriodDate = transaction.AccrualPeriodDate,
+                Observation = transaction.Observation,
+                StatusId = (byte)transaction.Status.GetHashCode()
             };
         }
 
@@ -193,7 +242,7 @@ namespace Finan.Service.Services
 
         public List<DateTypeDTO> GetDateTypeList()
         {
-            var result = EnumExtensions.GetEnumList<DateTypeEnum>();
+            var result = EnumExtensions.GetEnumList<DateType>();
 
             return result.Select(x => new DateTypeDTO
             {

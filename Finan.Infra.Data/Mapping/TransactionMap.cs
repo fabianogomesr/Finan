@@ -21,7 +21,7 @@ namespace Finan.Infra.Data.Mapping
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Description")
-                .HasColumnType("varchar(50)");
+                .HasColumnType("varchar(200)");
 
             builder.Property(prop => prop.Type)
                 .HasConversion(prop => prop, prop => prop)
@@ -76,7 +76,7 @@ namespace Finan.Infra.Data.Mapping
             builder.Property(prop => prop.Observation)
                 .IsRequired()
                 .HasColumnName("Observation")
-                .HasColumnType("varchar(100)");
+                .HasColumnType("varchar(500)");
 
             builder.Property(prop => prop.Status)
                 .IsRequired()
@@ -92,8 +92,9 @@ namespace Finan.Infra.Data.Mapping
                 .HasColumnName("CostCenterId");
 
             builder.HasOne(a => a.Group)
-               .WithMany(b => b.Transactions)
-               .HasForeignKey("GroupId");
+                .WithMany(b => b.Transactions)
+                .HasForeignKey(t => t.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(prop => prop.GroupId)
                 .IsRequired()
@@ -101,7 +102,8 @@ namespace Finan.Infra.Data.Mapping
 
             builder.HasOne(a => a.Classification)
                .WithMany(b => b.Transactions)
-               .HasForeignKey("ClassificationId");
+               .HasForeignKey(t => t.ClassificationId)
+               .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(prop => prop.ClassificationId)
                 .IsRequired()
@@ -114,6 +116,10 @@ namespace Finan.Infra.Data.Mapping
             builder.Property(prop => prop.CurrencyId)
                 .IsRequired()
                 .HasColumnName("CurrencyId");
+
+            builder.Property(prop => prop.ContractId)
+                .IsRequired()
+                .HasColumnName("ContractId");
         }
     }
 }

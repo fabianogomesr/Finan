@@ -16,21 +16,21 @@ using System.Threading.Tasks;
 
 namespace Finan.Infra.Data.Repository
 {
-    public class ClassificationRepository : BaseRepository<Classification>, IClassificationRepository
+    public class ClassificationRepository : BaseContractRepository<Classification>, IClassificationRepository
     {
         protected readonly BaseContext _dbSet;
 
-        public ClassificationRepository(BaseContext mySqlContext) : base(mySqlContext)
+        public ClassificationRepository(BaseContext mySqlContext, IUserContext userContext) : base(mySqlContext, userContext)
         {
             _dbSet = mySqlContext;
         }
 
-        public async Task<IEnumerable<Classification>> GetClassificationsByGroupIdAsync(int GroupId) => await _dbSet.Set<Classification>().Include(x => x.Group).Where(x => x.GroupId == GroupId).ToListAsync();
-        public async Task<Classification> GetClassificationByIdAsync(int id) => await _dbSet.Set<Classification>().Include(x => x.Group).FirstAsync(x => x.Id == id);
-        public async Task<IEnumerable<Classification>> GetClassificationsAsync() => await _dbSet.Set<Classification>().Include(x => x.Group).ToListAsync();
+        public async Task<IEnumerable<Classification>> GetClassificationsByGroupIdAsync(int GroupId) => await GetAll().Include(x => x.Group).Where(x => x.GroupId == GroupId).ToListAsync();
+        public async Task<Classification> GetClassificationByIdAsync(int id) => await GetAll().Include(x => x.Group).FirstAsync(x => x.Id == id);
+        public async Task<IEnumerable<Classification>> GetClassificationsAsync() => await GetAll().Include(x => x.Group).ToListAsync();
         public async Task<PagedResult<ClassificationDTO>> GetClassificationsAsync(int pageNumber = 1, int pageSize = 5) 
         {
-            var result = _dbSet.Set<Classification>().Select(x => new ClassificationDTO
+            var result = GetAll().Select(x => new ClassificationDTO
             {
                 Id = x.Id,
                 Description = x.Description,
@@ -38,7 +38,7 @@ namespace Finan.Infra.Data.Repository
                 GroupName = x.Group != null ? x.Group.Description : String.Empty
             });
 
-            return result.ToPagedList(pageNumber, pageSize);
+            return await result.ToPagedListAsync(pageNumber, pageSize);
         }
 
     }

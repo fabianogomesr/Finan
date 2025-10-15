@@ -24,7 +24,7 @@ namespace Finan.Service.Services
             _configuration = configuration;
             _userRepository = userRepository;
         }
-        public async Task<string> GenerateTokenAsync(LoginCommand loginParameter)
+        public async Task<AuthDTO?> GenerateTokenAsync(LoginCommand loginParameter)
         {
             var userDataBase = await _userRepository.GetUserByUserName(loginParameter.UserName);
 
@@ -58,7 +58,13 @@ namespace Finan.Service.Services
 
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-            return token;
+            return new AuthDTO
+            {
+                Token = token,
+                UserName = userDataBase.UserName,
+                Role = userDataBase.Role,
+                ContractId = userDataBase.ContractId
+            };
         }
     }
 }

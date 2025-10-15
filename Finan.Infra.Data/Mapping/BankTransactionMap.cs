@@ -20,7 +20,7 @@ namespace Finan.Infra.Data.Mapping
             builder.Property(prop => prop.Type)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
-                .HasColumnName("Name")
+                .HasColumnName("Type")
                 .HasColumnType("tinyint");
 
             builder.Property(prop => prop.Date)
@@ -51,13 +51,39 @@ namespace Finan.Infra.Data.Mapping
                .WithMany(b => b.BankTransactions)
                .HasForeignKey("CostCenterId");
 
+            builder.Property(prop => prop.CostCenterId)
+                .IsRequired()
+                .HasColumnName("CostCenterId");
+
             builder.HasOne(a => a.Group)
                .WithMany(b => b.BankTransactions)
-               .HasForeignKey("GroupId");
+               .HasForeignKey("GroupId")
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(prop => prop.GroupId)
+                .IsRequired()
+                .HasColumnName("GroupId");
 
             builder.HasOne(a => a.Classification)
                .WithMany(b => b.BankTransactions)
-               .HasForeignKey("ClassificationId");
+               .HasForeignKey("ClassificationId")
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(prop => prop.ClassificationId)
+                .IsRequired()
+                .HasColumnName("ClassificationId");
+
+            builder.Property(prop => prop.AccountInId)
+                .IsRequired()
+                .HasColumnName("AccountInId");
+
+            builder.Property(prop => prop.AccountOutId)
+                .IsRequired()
+                .HasColumnName("AccountOutId");
+
+            builder.Property(prop => prop.ContractId)
+                .IsRequired()
+                .HasColumnName("ContractId");
         }
     }
 }

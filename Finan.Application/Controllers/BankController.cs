@@ -17,9 +17,9 @@ namespace Finan.Application.Controllers
     [Authorize(Roles = "Manager")]
     public class BankController : ControllerBase
     {
-        private IBaseService<Bank> _baseBankService;
+        private IBaseContractService<Bank> _baseBankService;
 
-        public BankController(IBaseService<Bank> baseBankService)
+        public BankController(IBaseContractService<Bank> baseBankService)
         {
             _baseBankService = baseBankService;
         }
@@ -80,7 +80,7 @@ namespace Finan.Application.Controllers
             }
         }
 
-        [HttpGet("{pageNumber}/{pageSize}")]
+        [HttpGet("Paged/{pageNumber}/{pageSize}")]
         public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
         {
             try

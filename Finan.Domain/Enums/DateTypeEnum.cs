@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Enums
 {
-    public enum DateTypeEnum
+    public enum DateType
     {
         [Description("Emissão")]
         Issue = 1,

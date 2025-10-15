@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Enums
 {
-    public enum NatureGroupEnum : byte
+    public enum NatureGroup : byte
     {
         [Description("Saida")]
         Debit = 0,
         [Description("Entrada")]
-        Credit = 1,
-        [Description("Ambos")]
-        Both = 2
+        Credit = 1
     }
 }

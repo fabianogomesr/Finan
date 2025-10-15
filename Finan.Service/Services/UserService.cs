@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Service.Services
 {
-    public class UserService : BaseService<User>, IUserService
+    public class UserService : BaseContractService<User>, IUserService
     {
         private readonly IUserRepository _baseRepository;
 

@@ -9,6 +9,7 @@ namespace Finan.Domain.Parameters
     public class GroupCommand
     {
         public int Id { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
+        public int NatureId { get; set; }
     }
 }
