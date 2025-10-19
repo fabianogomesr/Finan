@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace Finan.Infra.Data.Migrations
 {
     /// <inheritdoc />
@@ -21,7 +19,7 @@ namespace Finan.Infra.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "varchar(100)", nullable: false),
                     Code = table.Column<string>(type: "varchar(5)", nullable: false),
-                    ContractId = table.Column<int>(type: "int", nullable: false)
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -35,7 +33,7 @@ namespace Finan.Infra.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "varchar(100)", nullable: false),
-                    ContractId = table.Column<int>(type: "int", nullable: false)
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,7 +49,7 @@ namespace Finan.Infra.Data.Migrations
                     Name = table.Column<string>(type: "varchar(50)", nullable: false),
                     Code = table.Column<string>(type: "varchar(3)", nullable: false),
                     Symbol = table.Column<string>(type: "varchar(5)", nullable: false),
-                    ContractId = table.Column<int>(type: "int", nullable: false)
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,7 +64,7 @@ namespace Finan.Infra.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "varchar(100)", nullable: false),
                     Nature = table.Column<byte>(type: "tinyint", nullable: false),
-                    ContractId = table.Column<int>(type: "int", nullable: false)
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,18 +72,19 @@ namespace Finan.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SubscriptionPlan",
+                name: "User",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Value = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    UserQuantity = table.Column<int>(type: "int", nullable: false)
+                    UserName = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Password = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SubscriptionPlan", x => x.Id);
+                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -100,7 +99,7 @@ namespace Finan.Infra.Data.Migrations
                     Number = table.Column<string>(type: "varchar(15)", nullable: false),
                     CreditLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ContractId = table.Column<int>(type: "int", nullable: false)
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,7 +120,7 @@ namespace Finan.Infra.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "varchar(100)", nullable: false),
                     GroupId = table.Column<int>(type: "int", nullable: false),
-                    ContractId = table.Column<int>(type: "int", nullable: false)
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -130,28 +129,6 @@ namespace Finan.Infra.Data.Migrations
                         name: "FK_Classification_Group_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Group",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Contract",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SubscriptionPlanId = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Contract", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Contract_SubscriptionPlan_SubscriptionPlanId",
-                        column: x => x.SubscriptionPlanId,
-                        principalTable: "SubscriptionPlan",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -172,7 +149,7 @@ namespace Finan.Infra.Data.Migrations
                     Observation = table.Column<string>(type: "varchar(100)", nullable: false),
                     AccountInId = table.Column<int>(type: "int", nullable: false),
                     AccountOutId = table.Column<int>(type: "int", nullable: false),
-                    ContractId = table.Column<int>(type: "int", nullable: false)
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -219,7 +196,7 @@ namespace Finan.Infra.Data.Migrations
                     AccrualPeriodDate = table.Column<DateTime>(type: "datetime", nullable: false),
                     Observation = table.Column<string>(type: "varchar(500)", nullable: false),
                     Status = table.Column<byte>(type: "tinyint", nullable: false),
-                    ContractId = table.Column<int>(type: "int", nullable: false)
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -251,29 +228,6 @@ namespace Finan.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Email = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Password = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Role = table.Column<string>(type: "varchar(100)", nullable: false),
-                    ContractId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_User_Contract_ContractId",
-                        column: x => x.ContractId,
-                        principalTable: "Contract",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Statement",
                 columns: table => new
                 {
@@ -287,7 +241,7 @@ namespace Finan.Infra.Data.Migrations
                     BankTransactionId = table.Column<int>(type: "int", nullable: true),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     Reversed = table.Column<bool>(type: "bit", nullable: false),
-                    ContractId = table.Column<int>(type: "int", nullable: false)
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -309,107 +263,6 @@ namespace Finan.Infra.Data.Migrations
                         principalTable: "Transaction",
                         principalColumn: "Id");
                 });
-
-            migrationBuilder.InsertData(
-                table: "Bank",
-                columns: new[] { "Id", "Code", "ContractId", "Name" },
-                values: new object[,]
-                {
-                    { 1, "001", 0, "Banco do Brasil S.A." },
-                    { 2, "033", 0, "Banco Santander (Brasil) S.A." },
-                    { 3, "104", 0, "Caixa Econômica Federal" },
-                    { 4, "237", 0, "Banco Bradesco S.A." },
-                    { 5, "341", 0, "Itaú Unibanco S.A." },
-                    { 6, "260", 0, "Nu Pagamentos S.A." },
-                    { 7, "336", 0, "Banco C6 S.A." },
-                    { 8, "077", 0, "Banco Inter S.A." }
-                });
-
-            migrationBuilder.InsertData(
-                table: "CostCenter",
-                columns: new[] { "Id", "ContractId", "Description" },
-                values: new object[,]
-                {
-                    { 1, 0, "Casa" },
-                    { 2, 0, "Transporte" },
-                    { 3, 0, "Saúde" },
-                    { 4, 0, "Educação" },
-                    { 5, 0, "Lazer" },
-                    { 6, 0, "Investimentos" },
-                    { 7, 0, "Alimentação" },
-                    { 8, 0, "Cartão de Crédito" },
-                    { 9, 0, "Doações e Presentes" },
-                    { 10, 0, "Trabalho Formal" },
-                    { 11, 0, "Trabalho Autônomo" },
-                    { 12, 0, "Aluguéis" },
-                    { 13, 0, "Outras Receitas" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Currency",
-                columns: new[] { "Id", "Code", "ContractId", "Name", "Symbol" },
-                values: new object[,]
-                {
-                    { 1, "BRL", 0, "Real", "R$" },
-                    { 2, "USD", 0, "Dólar", "$" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Group",
-                columns: new[] { "Id", "ContractId", "Description", "Nature" },
-                values: new object[,]
-                {
-                    { 1, 0, "Despesas Fixas", (byte)0 },
-                    { 2, 0, "Despesas Variáveis", (byte)0 },
-                    { 3, 0, "Receitas de Trabalho", (byte)1 },
-                    { 4, 0, "Receitas de Investimentos", (byte)1 },
-                    { 5, 0, "Receitas Eventuais ou Extraordinárias", (byte)1 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "SubscriptionPlan",
-                columns: new[] { "Id", "Name", "UserQuantity", "Value" },
-                values: new object[,]
-                {
-                    { 1, "Gratuito", 1, 0m },
-                    { 2, "Profissional", 5, 29.90m },
-                    { 3, "Empresarial", 20, 99.90m }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Classification",
-                columns: new[] { "Id", "ContractId", "Description", "GroupId" },
-                values: new object[,]
-                {
-                    { 1, 0, "Moradia", 1 },
-                    { 2, 0, "Alimentação", 2 },
-                    { 3, 0, "Transporte", 2 },
-                    { 4, 0, "Lazer", 2 },
-                    { 5, 0, "Viagens", 2 },
-                    { 6, 0, "Salário", 3 },
-                    { 7, 0, "Gratificações e Bônus", 3 },
-                    { 8, 0, "Rendimentos de Poupança", 4 },
-                    { 9, 0, "Dividendos", 4 },
-                    { 10, 0, "Juros de Investimentos", 4 },
-                    { 11, 0, "Aluguel de Imóveis", 4 },
-                    { 12, 0, "Presentes", 5 },
-                    { 13, 0, "Vendas de Bens", 5 },
-                    { 14, 0, "Educação e Cursos", 2 },
-                    { 15, 0, "Cartão de Crédito", 2 },
-                    { 16, 0, "Serviços de Internet, Gás e Energia", 2 },
-                    { 17, 0, "Pagamento de Impostos", 2 },
-                    { 18, 0, "Restituição de Impostos", 5 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Contract",
-                columns: new[] { "Id", "EndDate", "IsActive", "StartDate", "SubscriptionPlanId" },
-                values: new object[] { 1, new DateTime(2124, 10, 15, 15, 18, 59, 970, DateTimeKind.Local).AddTicks(3291), true, new DateTime(2025, 10, 15, 15, 18, 59, 970, DateTimeKind.Local).AddTicks(3278), 1 });
-
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] { "Id", "ContractId", "Email", "Password", "Role", "UserName" },
-                values: new object[] { 1, 1, "dev.fabianorocha@gmail.com", "Finan@1234", "Manager", "Finan" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Account_BankId",
@@ -435,11 +288,6 @@ namespace Finan.Infra.Data.Migrations
                 name: "IX_Classification_GroupId",
                 table: "Classification",
                 column: "GroupId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Contract_SubscriptionPlanId",
-                table: "Contract",
-                column: "SubscriptionPlanId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Statement_AccountId",
@@ -475,11 +323,6 @@ namespace Finan.Infra.Data.Migrations
                 name: "IX_Transaction_GroupId",
                 table: "Transaction",
                 column: "GroupId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_ContractId",
-                table: "User",
-                column: "ContractId");
         }
 
         /// <inheritdoc />
@@ -501,9 +344,6 @@ namespace Finan.Infra.Data.Migrations
                 name: "Transaction");
 
             migrationBuilder.DropTable(
-                name: "Contract");
-
-            migrationBuilder.DropTable(
                 name: "Bank");
 
             migrationBuilder.DropTable(
@@ -514,9 +354,6 @@ namespace Finan.Infra.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Currency");
-
-            migrationBuilder.DropTable(
-                name: "SubscriptionPlan");
 
             migrationBuilder.DropTable(
                 name: "Group");

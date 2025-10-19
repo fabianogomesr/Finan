@@ -10,7 +10,7 @@ using System.Data.Common;
 
 namespace Finan.Service.Services
 {
-    public class TransactionService : BaseContractService<Transaction>, ITransactionService
+    public class TransactionService : BaseService<Transaction>, ITransactionService
     {
         private readonly ITransactionRepository _baseRepository;
         private readonly IStatementRepository _statementRepository;
@@ -83,6 +83,8 @@ namespace Finan.Service.Services
         public async Task<TransactionDTO> AddTransaction(TransactionCommand transactionParameter)
         {
             var transaction = CreateTransactionFields(transactionParameter);
+
+            Validate(transaction, new TransactionValidator());
 
             await _baseRepository.Insert(transaction);
 

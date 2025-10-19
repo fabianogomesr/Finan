@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Interfaces
 {
-    public interface IClassificationRepository : IBaseContractRepository<Classification>
+    public interface IClassificationRepository : IBaseRepository<Classification>
     {
         Task<IEnumerable<Classification>> GetClassificationsByGroupIdAsync(int GroupId);
         Task<Classification> GetClassificationByIdAsync(int id);

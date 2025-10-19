@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Finan.Infra.Data.Repository
 {
-    public class StatementRepository : BaseContractRepository<Statement>, IStatementRepository
+    public class StatementRepository : BaseRepository<Statement>, IStatementRepository
     {
         protected new readonly BaseContext _dbSet;
-        public StatementRepository(BaseContext mySqlContext, IUserContext userContext) : base(mySqlContext, userContext)
+        public StatementRepository(BaseContext mySqlContext) : base(mySqlContext)
         {
             _dbSet = mySqlContext;
         }

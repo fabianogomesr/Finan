@@ -2,7 +2,7 @@
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
 using Finan.Infra.Data.Repository;
-using Finan.Service.Context;
+using Finan.Service.Identity;
 using Finan.Service.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,11 +12,6 @@ namespace Finan.Application
     {
         public static void AddServices(this IServiceCollection services)
         {
-            // Serviços base genéricos de contrato
-            services.AddScoped<IBaseContractService<Currency>, BaseContractService<Currency>>();
-            services.AddScoped<IBaseContractService<CostCenter>, BaseContractService<CostCenter>>();
-            services.AddScoped<IBaseContractService<Bank>, BaseContractService<Bank>>();
-
             // Serviços específicos
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IGroupService, GroupService>();
@@ -26,8 +21,9 @@ namespace Finan.Application
             services.AddScoped<IAccountService, AccountService>();
 
             // Serviços base genéricos
-            services.AddScoped<IBaseService<Contract>, BaseService<Contract>>();
-            services.AddScoped<IBaseService<SubscriptionPlan>, BaseService<SubscriptionPlan>>();
+            services.AddScoped<IBaseService<Currency>, BaseService<Currency>>();
+            services.AddScoped<IBaseService<CostCenter>, BaseService<CostCenter>>();
+            services.AddScoped<IBaseService<Bank>, BaseService<Bank>>();
 
             // Contexto do usuário
             services.AddScoped<IUserContext, UserContext>();
@@ -35,11 +31,6 @@ namespace Finan.Application
 
         public static void AddRepositories(this IServiceCollection services)
         {
-            // Repositórios base genéricos de contrato
-            services.AddScoped<IBaseContractRepository<Currency>, BaseContractRepository<Currency>>();
-            services.AddScoped<IBaseContractRepository<CostCenter>, BaseContractRepository<CostCenter>>();
-            services.AddScoped<IBaseContractRepository<Bank>, BaseContractRepository<Bank>>();
-
             // Repositórios específicos
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -47,10 +38,12 @@ namespace Finan.Application
             services.AddScoped<IClassificationRepository, ClassificationRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IStatementRepository, StatementRepository>();
+            services.AddScoped<ISeedDataRepository, SeedDataRepository>();
 
             // Repositorios base genéricos
-            services.AddScoped<IBaseRepository<Contract>, BaseRepository<Contract>>();
-            services.AddScoped<IBaseRepository<SubscriptionPlan>, BaseRepository<SubscriptionPlan>>();
+            services.AddScoped<IBaseRepository<Currency>, BaseRepository<Currency>>();
+            services.AddScoped<IBaseRepository<CostCenter>, BaseRepository<CostCenter>>();
+            services.AddScoped<IBaseRepository<Bank>, BaseRepository<Bank>>();
         }
 
         public static void AddContext(this IServiceCollection services, string connectionString)

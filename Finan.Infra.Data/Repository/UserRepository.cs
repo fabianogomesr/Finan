@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace Finan.Infra.Data.Repository
 {
-    public class UserRepository : BaseContractRepository<User>, IUserRepository
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
         protected readonly BaseContext _dbSet;
 
-        public UserRepository(BaseContext mySqlContext, IUserContext userContext) : base(mySqlContext, userContext)
+        public UserRepository(BaseContext mySqlContext) : base(mySqlContext)
         {
             _dbSet = mySqlContext;
         }
 
-        public async Task<User> GetUserByUserName(string userName) => await _dbSet.Set<User>().Where(x => x.UserName == userName).FirstOrDefaultAsync();
+        public async Task<User> GetUserByUserName(string userName) => await WithoutTenantFilter().Where(x => x.UserName == userName).FirstOrDefaultAsync();
 
 
 

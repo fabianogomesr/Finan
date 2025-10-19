@@ -24,18 +24,18 @@ namespace Finan.Service.Services
             _configuration = configuration;
             _userRepository = userRepository;
         }
-        public async Task<AuthDTO?> GenerateTokenAsync(LoginCommand loginParameter)
+        public async Task<string> GenerateTokenAsync(LoginCommand loginParameter)
         {
             var userDataBase = await _userRepository.GetUserByUserName(loginParameter.UserName);
 
             if(userDataBase == null)
             {
-                return null;
+                return string.Empty;
             }
 
             if(loginParameter.UserName != userDataBase.UserName || loginParameter.Password != userDataBase.Password)
             {
-                return null;
+                return string.Empty;
             }
              
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? string.Empty));
@@ -46,25 +46,20 @@ namespace Finan.Service.Services
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
             var tokenOptions = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
-                claims: new[]
-                {
-                    new Claim(type: ClaimTypes.Name, userDataBase.UserName),
-                    new Claim(type: ClaimTypes.Role, userDataBase.Role)
-                },
-                expires: DateTime.Now.AddHours(2),
-                signingCredentials: signinCredentials);
+            issuer: issuer,
+            audience: audience,
+            claims: new[]
+            {
+                new Claim(type: ClaimTypes.Name, userDataBase.UserName),
+                new Claim("tenant_id", userDataBase.TenantId.ToString())
+            },
+
+            expires: DateTime.Now.AddHours(2),
+            signingCredentials: signinCredentials);
 
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-            return new AuthDTO
-            {
-                Token = token,
-                UserName = userDataBase.UserName,
-                Role = userDataBase.Role,
-                ContractId = userDataBase.ContractId
-            };
+            return token;
         }
     }
 }

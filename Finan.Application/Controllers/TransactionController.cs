@@ -15,7 +15,7 @@ namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager, Operator")]
+    [Authorize]
     public class TransactionController : ControllerBase
     {
         private ITransactionService _baseTransactionService;

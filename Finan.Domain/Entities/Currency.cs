@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Entities
 {
-    public class Currency : BaseContractEntity
+    public class Currency : MultiTenantEntity
     {
         public string? Name { get; set; }
         public string? Code { get; set; }

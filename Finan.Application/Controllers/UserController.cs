@@ -1,14 +1,12 @@
 ﻿using Finan.Domain.DTOs;
 using Finan.Domain.Entities;
 using Finan.Domain.Interfaces;
-using Finan.Domain.Commands;
-using Finan.Service.Services;
-using Finan.Service.Validators;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Finan.Domain.Parameters;
+using Finan.Infra.Data.Context;
+using Finan.Service.Validators;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Finan.Application.Controllers
 {
@@ -17,70 +15,28 @@ namespace Finan.Application.Controllers
     public class UserController : ControllerBase
     {
         private IUserService _baseUserService;
-        private IBaseService<SubscriptionPlan> _subscriptionPlanService;
-        private IBaseService<Contract> _contractPlanService;
 
-
-        public UserController(IUserService baseUserService, IBaseService<SubscriptionPlan> subscriptionPlanService, IBaseService<Contract> contractPlanService)
+        public UserController(IUserService baseUserService, ISeedDataRepository seedDataRepository)
         {
             _baseUserService = baseUserService;
-            _subscriptionPlanService = subscriptionPlanService;
-            _contractPlanService = contractPlanService;
         }
 
-        [HttpPost("Admin")]
-        public async Task<IActionResult> CreateAdminAsync([FromBody] UserCommand UserParameter)
-        {
-            var subscriptionPlan = await _subscriptionPlanService.GetByIdAsync(UserParameter.SubscriptionPlanId);
-
-            if (subscriptionPlan == null)
-                return BadRequest("Plano de assinatura inválido.");
-
-            var contract = await _contractPlanService.Add<ContractValidator>(
-                new Contract
-                {
-                    SubscriptionPlanId = subscriptionPlan.Id,
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddMonths(UserParameter.Months),
-                    IsActive = true
-                });
-
-            return await ExecuteAsync(async () => await _baseUserService.Add<UserValidator>(
-                new User
-                {
-                    UserName = UserParameter.UserName,
-                    Password = UserParameter.Password,
-                    Email = UserParameter.Email,
-                    Role = UserParameter.Role,
-                    ContractId = contract.Id
-                }));
-        }
-
-        [Authorize(Roles = "Manager")]
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] UserCommand UserParameter)
-        {
-            return await ExecuteAsync(async () => await _baseUserService.Add<UserValidator>(
-                new User { UserName = UserParameter.UserName,
-                    Password = UserParameter.Password,
-                    Email = UserParameter.Email,
-                    Role = UserParameter.Role}));
-        }
+        public async Task<IActionResult> CreateAsync([FromBody] UserCommand userCommand) => await ExecuteAsync(async () => await _baseUserService.CreateUser(userCommand));
 
-        [Authorize(Roles = "Manager")]
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> UpdateAsync([FromBody] UserCommand UserParameter)
         {
             return await ExecuteAsync(async () => await _baseUserService.UpdateAsync<UserValidator>(
                 new User { Id = UserParameter.Id,
                     UserName = UserParameter.UserName,
                     Password  = UserParameter.Password,
-                    Email = UserParameter.Email,
-                    Role = UserParameter.Role }));
+                    Email = UserParameter.Email }));
         }
 
-        [Authorize(Roles = "Manager")]
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             await ExecuteAsync(async () =>
@@ -92,8 +48,8 @@ namespace Finan.Application.Controllers
             return new NoContentResult();
         }
 
-        [Authorize(Roles = "Manager")]
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAsync() 
         {
             try
@@ -107,8 +63,7 @@ namespace Finan.Application.Controllers
                 {
                     Id = x.Id,
                     UserName = x.UserName,
-                    Email = x.Email,
-                    Role = x.Role
+                    Email = x.Email
                 }));
             }
             catch (Exception ex)
@@ -117,11 +72,8 @@ namespace Finan.Application.Controllers
             }
         }
 
-        [HttpGet("Plans")]
-        public Task<IActionResult> GetPlansAsync() => ExecuteAsync(async () => await _subscriptionPlanService.GetAsync());
-
-        [Authorize(Roles = "Manager")]
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetAsync(int id) 
         {
             try
@@ -135,8 +87,7 @@ namespace Finan.Application.Controllers
                 {
                     Id = result.Id,
                     UserName = result.UserName,
-                    Email = result.UserName,
-                    Role = result.Role
+                    Email = result.UserName
                 });
             }
             catch (Exception ex)

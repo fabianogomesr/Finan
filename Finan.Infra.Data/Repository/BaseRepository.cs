@@ -53,5 +53,8 @@ namespace Finan.Infra.Data.Repository
 
         public async Task<TEntity> Select(int id) => await _dbSet.Set<TEntity>().FindAsync(id);
 
+        public IQueryable<TEntity> WithoutTenantFilter() => _dbSet.Set<TEntity>().IgnoreQueryFilters();
+
+
     }
 }

@@ -14,12 +14,12 @@ namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
+    [Authorize]
     public class BankController : ControllerBase
     {
-        private IBaseContractService<Bank> _baseBankService;
+        private IBaseService<Bank> _baseBankService;
 
-        public BankController(IBaseContractService<Bank> baseBankService)
+        public BankController(IBaseService<Bank> baseBankService)
         {
             _baseBankService = baseBankService;
         }

@@ -1,14 +1,9 @@
 ﻿using Finan.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finan.Infra.Data.Extensions
 {
-    public static class IQueryableExtensions
+    public static class QueryableExtensions
     {
         public static async Task<PagedResult<T>> ToPagedListAsync<T>(
             this IQueryable<T> query,

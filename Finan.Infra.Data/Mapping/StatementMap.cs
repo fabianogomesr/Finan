@@ -67,10 +67,6 @@ namespace Finan.Infra.Data.Mapping
 
             builder.Property(prop => prop.BankTransactionId)
                 .HasColumnName("BankTransactionId");
-
-            builder.Property(prop => prop.ContractId)
-                .IsRequired()
-                .HasColumnName("ContractId");
         }
     }
 }

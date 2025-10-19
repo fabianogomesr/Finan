@@ -16,7 +16,7 @@ namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
+    [Authorize]
     public class GroupController : ControllerBase
     {
         private IGroupService _baseGroupService;
@@ -27,24 +27,13 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] GroupCommand GroupParameter)
-        {
-            return await ExecuteAsync(async () => await _baseGroupService.Add<GroupValidator>(new Group
-            {
-                Description = GroupParameter.Description,
-                Nature = (NatureGroup)GroupParameter.NatureId
-            }));
-        }
+        public async Task<IActionResult> CreateAsync([FromBody] GroupCommand groupCommand) => await ExecuteAsync(async () => await _baseGroupService.CreateGroup(groupCommand));
+
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] GroupCommand GroupParameter)
+        public async Task<IActionResult> UpdateAsync([FromBody] GroupCommand groupCommand)
         {
-            return await ExecuteAsync(async () => await _baseGroupService.UpdateAsync<GroupValidator>(new Group
-            {
-                Id = GroupParameter.Id,
-                Description = GroupParameter.Description,
-                Nature = (NatureGroup)GroupParameter.NatureId
-            }));
+            return await ExecuteAsync(async () => await _baseGroupService.UpdateGroup(groupCommand));
         }
 
         [HttpDelete("{id}")]

@@ -29,20 +29,6 @@ namespace Finan.Infra.Data.Mapping
                 .IsRequired()
                 .HasColumnName("Password")
                 .HasColumnType("varchar(100)");
-
-            builder.Property(prop => prop.Role)
-                .HasConversion(prop => prop.ToString(), prop => prop)
-                .IsRequired()
-                .HasColumnName("Role")
-                .HasColumnType("varchar(100)");
-
-            builder.HasOne(a => a.Contract)
-               .WithMany(b => b.Users)
-               .HasForeignKey("ContractId");
-
-            builder.Property(prop => prop.ContractId)
-                .IsRequired()
-                .HasColumnName("ContractId");
         }
     }
 }

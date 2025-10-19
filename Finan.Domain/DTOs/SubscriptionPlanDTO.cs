@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Finan.Domain.Entities
+namespace Finan.Domain.DTOs
 {
-    public class Bank : MultiTenantEntity
+    public class SubscriptionPlanDTO
     {
+        public int Id { get; set; }
+
         public string? Name { get; set; }
-        public string? Code { get; set; }
-        public List<Account>? Accounts { get; set; }
     }
 }

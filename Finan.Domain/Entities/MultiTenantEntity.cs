@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Entities
 {
-    public abstract class BaseContractEntity : BaseEntity
+    public abstract class MultiTenantEntity : BaseEntity
     {
-        public virtual int ContractId { get; set; }
+        public virtual Guid TenantId { get; set; } // ou string, dependendo da sua modelagem
     }
 }

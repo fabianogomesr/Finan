@@ -30,10 +30,6 @@ namespace Finan.Infra.Data.Mapping
             builder.HasOne(a => a.Group)
                .WithMany(b => b.Classifications)
                .HasForeignKey("GroupId");
-
-            builder.Property(prop => prop.ContractId)
-                .IsRequired()
-                .HasColumnName("ContractId");
         }
     }
 }

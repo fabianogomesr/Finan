@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 
 namespace Finan.Infra.Data.Repository
 {
-    public class AccountRepository : BaseContractRepository<Account>, IAccountRepository
+    public class AccountRepository : BaseRepository<Account>, IAccountRepository
     {
         protected readonly BaseContext _dbSet;
 
-        public AccountRepository(BaseContext mySqlContext, IUserContext userContext) : base(mySqlContext, userContext)
+        public AccountRepository(BaseContext mySqlContext) : base(mySqlContext)
         {
             _dbSet = mySqlContext;
         }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Interfaces
 {
-    public interface ITransactionRepository : IBaseContractRepository<Transaction>
+    public interface ITransactionRepository : IBaseRepository<Transaction>
     {
         Task<Transaction> GetTransactionByIdAsync(int id);
         Task<List<Transaction>> GetTransactionsAsync();

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Interfaces
 {
-    public interface IGroupRepository : IBaseContractRepository<Group>
+    public interface IGroupRepository : IBaseRepository<Group>
     {
         Task<PagedResult<GroupDTO>> GetGroupsAsync(int pageNumber, int pageSize);
     }

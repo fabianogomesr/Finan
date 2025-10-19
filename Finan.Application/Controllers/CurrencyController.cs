@@ -10,12 +10,12 @@ namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
+    [Authorize]
     public class CurrencyController : ControllerBase
     {
-        private IBaseContractService<Currency> _baseCurrencyService;
+        private IBaseService<Currency> _baseCurrencyService;
 
-        public CurrencyController(IBaseContractService<Currency> baseCurrencyService)
+        public CurrencyController(IBaseService<Currency> baseCurrencyService)
         {
             _baseCurrencyService = baseCurrencyService;
         }

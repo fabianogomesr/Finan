@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Entities
 {
-    public class Statement : BaseContractEntity
+    public class Statement : MultiTenantEntity
     {
         public DateTime FlowDate { get; set; }
         public DateTime? ReconciledDate { get; set; }

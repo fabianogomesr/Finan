@@ -6,11 +6,11 @@ using Finan.Infra.Data.Extensions;
 
 namespace Finan.Infra.Data.Repository
 {
-    public class GroupRepository : BaseContractRepository<Group>, IGroupRepository
+    public class GroupRepository : BaseRepository<Group>, IGroupRepository
     {
         protected readonly BaseContext _dbSet;
 
-        public GroupRepository(BaseContext mySqlContext, IUserContext userContext) : base(mySqlContext, userContext)
+        public GroupRepository(BaseContext mySqlContext) : base(mySqlContext)
         {
             _dbSet = mySqlContext;
         }

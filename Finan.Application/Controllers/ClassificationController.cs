@@ -15,7 +15,7 @@ namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
+    [Authorize]
     public class ClassificationController : ControllerBase
     {
         private IClassificationService _baseClassificationService;

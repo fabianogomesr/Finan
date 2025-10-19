@@ -8,7 +8,7 @@ namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager, Operator")]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private IAccountService _baseAccountService;

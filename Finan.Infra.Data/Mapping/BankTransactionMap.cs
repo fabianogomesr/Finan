@@ -80,10 +80,6 @@ namespace Finan.Infra.Data.Mapping
             builder.Property(prop => prop.AccountOutId)
                 .IsRequired()
                 .HasColumnName("AccountOutId");
-
-            builder.Property(prop => prop.ContractId)
-                .IsRequired()
-                .HasColumnName("ContractId");
         }
     }
 }

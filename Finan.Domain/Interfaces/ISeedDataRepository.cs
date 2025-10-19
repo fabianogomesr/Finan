@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Interfaces
 {
-    public interface IUserContext
+    public interface ISeedDataRepository
     {
-        Guid TenantId { get; }
-        string UserName { get; }
+        public Task SeedDefaultDataAsync(Guid tenantId);
     }
 }

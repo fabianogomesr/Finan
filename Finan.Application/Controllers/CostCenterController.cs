@@ -14,12 +14,12 @@ namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
+    [Authorize]
     public class CostCenterController : ControllerBase
     {
-        private IBaseContractService<CostCenter> _baseCostCenterService;
+        private IBaseService<CostCenter> _baseCostCenterService;
 
-        public CostCenterController(IBaseContractService<CostCenter> baseCostCenterService)
+        public CostCenterController(IBaseService<CostCenter> baseCostCenterService)
         {
             _baseCostCenterService = baseCostCenterService;
         }

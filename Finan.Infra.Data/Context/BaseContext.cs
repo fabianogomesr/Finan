@@ -1,20 +1,18 @@
 ﻿using Finan.Domain.Entities;
-using Finan.Domain.Enums;
+using Finan.Domain.Interfaces;
+using Finan.Infra.Data.Extensions;
 using Finan.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design.Serialization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Finan.Infra.Data.Context
 {
     public class BaseContext : DbContext 
     {
-        public BaseContext(DbContextOptions<BaseContext> options) : base(options)
+        private readonly IUserContext _userContext;
+        public BaseContext(DbContextOptions<BaseContext> options, IUserContext userContext) : base(options)
         {
+            _userContext = userContext;
         }
 
         public DbSet<BankTransaction> BankTransaction { get; set; }
@@ -32,18 +30,31 @@ namespace Finan.Infra.Data.Context
         {
             base.OnModelCreating(modelBuilder);
             ConfigureEntityMappings(modelBuilder);
-            SeedEntities(modelBuilder);
+            ApplyGlobalQueryFilters(modelBuilder);
+
         }
-        private static void SeedEntities(ModelBuilder modelBuilder)
+
+        private void ApplyGlobalQueryFilters(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasData(GetUserSeed());
-            modelBuilder.Entity<Group>().HasData(GetGroupSeed());
-            modelBuilder.Entity<Classification>().HasData(GetClassificationSeed());
-            modelBuilder.Entity<Currency>().HasData(GetCurrencySeed());
-            modelBuilder.Entity<CostCenter>().HasData(GetCostCenterSeed());
-            modelBuilder.Entity<Bank>().HasData(GetBankSeed());
-            modelBuilder.Entity<SubscriptionPlan>().HasData(GetSubscriptionPlanSeed());
-            modelBuilder.Entity<Contract>().HasData(GetContractSeed());
+            // Aplica o filtro global para todas as entidades que implementam ITenantEntity
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (typeof(MultiTenantEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    // Cria um filtro dinâmico (lambda) em tempo de execução
+                    var method = typeof(BaseContext)
+                        .GetMethod(nameof(SetGlobalQueryFilter), BindingFlags.NonPublic | BindingFlags.Instance)
+                        .MakeGenericMethod(entityType.ClrType);
+
+                    method.Invoke(this, new object[] { modelBuilder });
+                }
+            }
+        }
+
+        private void SetGlobalQueryFilter<TEntity>(ModelBuilder builder)
+        where TEntity : MultiTenantEntity
+        {
+            builder.Entity<TEntity>().HasQueryFilter(e => e.TenantId == _userContext.TenantId);
         }
 
         private static void ConfigureEntityMappings(ModelBuilder modelBuilder)
@@ -58,92 +69,37 @@ namespace Finan.Infra.Data.Context
             modelBuilder.Entity<BankTransaction>(new BankTransactionMap().Configure);
             modelBuilder.Entity<Transaction>(new TransactionMap().Configure);
             modelBuilder.Entity<Statement>(new StatementMap().Configure);
-            modelBuilder.Entity<SubscriptionPlan>(new SubscriptionPlanMap().Configure);
-            modelBuilder.Entity<Contract>(new ContractMap().Configure);
         }
 
-        private static SubscriptionPlan[] GetSubscriptionPlanSeed() => new[]
-{
-            new SubscriptionPlan { Id = 1, Name = "Gratuito", UserQuantity = 1, Value = 0  },
-            new SubscriptionPlan { Id = 2, Name = "Profissional", UserQuantity = 5, Value = 29.90M  },
-            new SubscriptionPlan { Id = 3, Name = "Empresarial", UserQuantity = 20, Value = 99.90M  }
-        };
-
-        private static Contract[] GetContractSeed() => new[]
-        {       
-            new Contract { Id = 1, SubscriptionPlanId = 1, StartDate = DateTime.Now, EndDate = DateTime.Now.AddYears(99), IsActive = true  },
-        };
-
-        private static User[] GetUserSeed() => new[]
+        public override int SaveChanges()
         {
-            new User { Id = 1, UserName = "Finan", Password = "Finan@1234", Email = "dev.fabianorocha@gmail.com", Role = "Manager", ContractId = 1 }
-        };
+            AddTenantIdToNewEntities();
+            return base.SaveChanges();
+        }
 
-        private static Group[] GetGroupSeed() => new[]
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            new Group { Id = 1, Description = "Despesas Fixas", Nature = NatureGroup.Debit, ContractId = 0 },
-            new Group { Id = 2, Description = "Despesas Variáveis", Nature = NatureGroup.Debit, ContractId = 0  },
-            new Group { Id = 3, Description = "Receitas de Trabalho", Nature = NatureGroup.Credit, ContractId = 0  },
-            new Group { Id = 4, Description = "Receitas de Investimentos", Nature = NatureGroup.Credit, ContractId = 0  },
-            new Group { Id = 5, Description = "Receitas Eventuais ou Extraordinárias", Nature = NatureGroup.Credit, ContractId = 0  },
-        };
+            AddTenantIdToNewEntities();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
 
-        private static Classification[] GetClassificationSeed() => new[]
+        private void AddTenantIdToNewEntities()
         {
-            new Classification { Id = 1, Description = "Moradia", GroupId = 1, ContractId = 0  },
-            new Classification { Id = 2, Description = "Alimentação", GroupId = 2, ContractId = 0  },
-            new Classification { Id = 3, Description = "Transporte", GroupId = 2, ContractId = 0  },
-            new Classification { Id = 4, Description = "Lazer", GroupId = 2, ContractId = 0  },
-            new Classification { Id = 5, Description = "Viagens", GroupId = 2, ContractId = 0  },
-            new Classification { Id = 6, Description = "Salário", GroupId = 3, ContractId = 0  },
-            new Classification { Id = 7, Description = "Gratificações e Bônus", GroupId = 3, ContractId = 0  },
-            new Classification { Id = 8, Description = "Rendimentos de Poupança", GroupId = 4, ContractId = 0  },
-            new Classification { Id = 9, Description = "Dividendos", GroupId = 4, ContractId = 0  },
-            new Classification { Id = 10, Description = "Juros de Investimentos", GroupId = 4, ContractId = 0  },
-            new Classification { Id = 11, Description = "Aluguel de Imóveis", GroupId = 4, ContractId = 0  },
-            new Classification { Id = 12, Description = "Presentes", GroupId = 5, ContractId = 0  },
-            new Classification { Id = 13, Description = "Vendas de Bens", GroupId = 5, ContractId = 0  },
-            new Classification { Id = 14, Description = "Educação e Cursos", GroupId = 2, ContractId = 0  },
-            new Classification { Id = 15, Description = "Cartão de Crédito", GroupId = 2, ContractId = 0  },
-            new Classification { Id = 16, Description = "Serviços de Internet, Gás e Energia", GroupId = 2, ContractId = 0  },
-            new Classification { Id = 17, Description = "Pagamento de Impostos", GroupId = 2, ContractId = 0  },
-            new Classification { Id = 18, Description = "Restituição de Impostos", GroupId = 5, ContractId = 0  }
-        };
+            var tenantId = _userContext.TenantId;
 
-        private static Currency[] GetCurrencySeed() => new[]
-        {
-            new Currency { Id = 1, Name = "Real", Code = "BRL", Symbol = "R$", ContractId = 0  },
-            new Currency { Id = 2, Name = "Dólar", Code = "USD", Symbol = "$", ContractId = 0  }
-        };
+            // Se não há tenant no contexto (Guid.Empty), não faz nada
+            if (tenantId == Guid.Empty)
+                return;
 
-        private static CostCenter[] GetCostCenterSeed() => new[]
-        {
-            new CostCenter { Id = 1, Description = "Casa", ContractId = 0  },
-            new CostCenter { Id = 2, Description = "Transporte", ContractId = 0  },
-            new CostCenter { Id = 3, Description = "Saúde", ContractId = 0  },
-            new CostCenter { Id = 4, Description = "Educação", ContractId = 0  },
-            new CostCenter { Id = 5, Description = "Lazer", ContractId = 0  },
-            new CostCenter { Id = 6, Description = "Investimentos", ContractId = 0  },
-            new CostCenter { Id = 7, Description = "Alimentação", ContractId = 0  },
-            new CostCenter { Id = 8, Description = "Cartão de Crédito", ContractId = 0  },
-            new CostCenter { Id = 9, Description = "Doações e Presentes", ContractId = 0  },
-            new CostCenter { Id = 10, Description = "Trabalho Formal", ContractId = 0  },
-            new CostCenter { Id = 11, Description = "Trabalho Autônomo", ContractId = 0  },
-            new CostCenter { Id = 12, Description = "Aluguéis", ContractId = 0  },
-            new CostCenter { Id = 13, Description = "Outras Receitas", ContractId = 0  }
-        };
+            foreach (var entry in ChangeTracker.Entries<MultiTenantEntity>()
+                .Where(e => e.State == EntityState.Added))
+            {
+                // Se o TenantId ainda não foi definido manualmente, preenche
+                if (entry.Entity.TenantId == Guid.Empty)
+                    entry.Entity.TenantId = tenantId;
+            }
+        }
 
-        private static Bank[] GetBankSeed() => new[]
-        {
-            new Bank { Id = 1, Name = "Banco do Brasil S.A.", Code = "001", ContractId = 0  },
-            new Bank { Id = 2, Name = "Banco Santander (Brasil) S.A.", Code = "033", ContractId = 0  },
-            new Bank { Id = 3, Name = "Caixa Econômica Federal", Code = "104", ContractId = 0  },
-            new Bank { Id = 4, Name = "Banco Bradesco S.A.", Code = "237", ContractId = 0  },
-            new Bank { Id = 5, Name = "Itaú Unibanco S.A.", Code = "341", ContractId = 0  },
-            new Bank { Id = 6, Name = "Nu Pagamentos S.A.", Code = "260", ContractId = 0  },
-            new Bank { Id = 7, Name = "Banco C6 S.A.", Code = "336", ContractId = 0  },
-            new Bank { Id = 8, Name = "Banco Inter S.A.", Code = "077", ContractId = 0  }
-        };
 
     }
 }

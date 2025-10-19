@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Finan.Domain.Interfaces
 {
-    public interface IStatementRepository : IBaseContractRepository<Statement>
+    public interface IStatementRepository : IBaseRepository<Statement>
     {
         decimal GetBalanceByAccountId(int accountId);
     }

@@ -16,11 +16,11 @@ using System.Threading.Tasks;
 
 namespace Finan.Infra.Data.Repository
 {
-    public class ClassificationRepository : BaseContractRepository<Classification>, IClassificationRepository
+    public class ClassificationRepository : BaseRepository<Classification>, IClassificationRepository
     {
         protected readonly BaseContext _dbSet;
 
-        public ClassificationRepository(BaseContext mySqlContext, IUserContext userContext) : base(mySqlContext, userContext)
+        public ClassificationRepository(BaseContext mySqlContext) : base(mySqlContext)
         {
             _dbSet = mySqlContext;
         }

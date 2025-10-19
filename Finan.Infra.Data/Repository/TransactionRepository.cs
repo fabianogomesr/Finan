@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Finan.Infra.Data.Repository
 {
-    public class TransactionRepository : BaseContractRepository<Transaction>, ITransactionRepository
+    public class TransactionRepository : BaseRepository<Transaction>, ITransactionRepository
     {
         protected new readonly BaseContext _dbSet;
 
-        public TransactionRepository(BaseContext mySqlContext, IUserContext userContext) : base(mySqlContext, userContext)
+        public TransactionRepository(BaseContext mySqlContext) : base(mySqlContext)
         {
             _dbSet = mySqlContext;
         }

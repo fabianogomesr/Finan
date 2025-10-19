@@ -44,10 +44,6 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("BankId");
 
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int")
-                        .HasColumnName("ContractId");
-
                     b.Property<decimal>("CreditLimit")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("CreditLimit");
@@ -61,6 +57,9 @@ namespace Finan.Infra.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(15)")
                         .HasColumnName("Number");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -82,76 +81,17 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnType("varchar(5)")
                         .HasColumnName("Code");
 
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int")
-                        .HasColumnName("ContractId");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
                         .HasColumnName("Name");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.ToTable("Bank", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Code = "001",
-                            ContractId = 0,
-                            Name = "Banco do Brasil S.A."
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Code = "033",
-                            ContractId = 0,
-                            Name = "Banco Santander (Brasil) S.A."
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Code = "104",
-                            ContractId = 0,
-                            Name = "Caixa Econômica Federal"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Code = "237",
-                            ContractId = 0,
-                            Name = "Banco Bradesco S.A."
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Code = "341",
-                            ContractId = 0,
-                            Name = "Itaú Unibanco S.A."
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Code = "260",
-                            ContractId = 0,
-                            Name = "Nu Pagamentos S.A."
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Code = "336",
-                            ContractId = 0,
-                            Name = "Banco C6 S.A."
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Code = "077",
-                            ContractId = 0,
-                            Name = "Banco Inter S.A."
-                        });
                 });
 
             modelBuilder.Entity("Finan.Domain.Entities.BankTransaction", b =>
@@ -179,10 +119,6 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ClassificationId");
 
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int")
-                        .HasColumnName("ContractId");
-
                     b.Property<int>("CostCenterId")
                         .HasColumnType("int")
                         .HasColumnName("CostCenterId");
@@ -200,6 +136,9 @@ namespace Finan.Infra.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)")
                         .HasColumnName("Observation");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<BankTransactionType>("Type")
                         .HasColumnType("tinyint")
@@ -228,10 +167,6 @@ namespace Finan.Infra.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int")
-                        .HasColumnName("ContractId");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
@@ -241,177 +176,14 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("GroupId");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
                     b.ToTable("Classification", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ContractId = 0,
-                            Description = "Moradia",
-                            GroupId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ContractId = 0,
-                            Description = "Alimentação",
-                            GroupId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ContractId = 0,
-                            Description = "Transporte",
-                            GroupId = 2
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ContractId = 0,
-                            Description = "Lazer",
-                            GroupId = 2
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ContractId = 0,
-                            Description = "Viagens",
-                            GroupId = 2
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ContractId = 0,
-                            Description = "Salário",
-                            GroupId = 3
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ContractId = 0,
-                            Description = "Gratificações e Bônus",
-                            GroupId = 3
-                        },
-                        new
-                        {
-                            Id = 8,
-                            ContractId = 0,
-                            Description = "Rendimentos de Poupança",
-                            GroupId = 4
-                        },
-                        new
-                        {
-                            Id = 9,
-                            ContractId = 0,
-                            Description = "Dividendos",
-                            GroupId = 4
-                        },
-                        new
-                        {
-                            Id = 10,
-                            ContractId = 0,
-                            Description = "Juros de Investimentos",
-                            GroupId = 4
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ContractId = 0,
-                            Description = "Aluguel de Imóveis",
-                            GroupId = 4
-                        },
-                        new
-                        {
-                            Id = 12,
-                            ContractId = 0,
-                            Description = "Presentes",
-                            GroupId = 5
-                        },
-                        new
-                        {
-                            Id = 13,
-                            ContractId = 0,
-                            Description = "Vendas de Bens",
-                            GroupId = 5
-                        },
-                        new
-                        {
-                            Id = 14,
-                            ContractId = 0,
-                            Description = "Educação e Cursos",
-                            GroupId = 2
-                        },
-                        new
-                        {
-                            Id = 15,
-                            ContractId = 0,
-                            Description = "Cartão de Crédito",
-                            GroupId = 2
-                        },
-                        new
-                        {
-                            Id = 16,
-                            ContractId = 0,
-                            Description = "Serviços de Internet, Gás e Energia",
-                            GroupId = 2
-                        },
-                        new
-                        {
-                            Id = 17,
-                            ContractId = 0,
-                            Description = "Pagamento de Impostos",
-                            GroupId = 2
-                        },
-                        new
-                        {
-                            Id = 18,
-                            ContractId = 0,
-                            Description = "Restituição de Impostos",
-                            GroupId = 5
-                        });
-                });
-
-            modelBuilder.Entity("Finan.Domain.Entities.Contract", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SubscriptionPlanId")
-                        .HasColumnType("int")
-                        .HasColumnName("SubscriptionPlanId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubscriptionPlanId");
-
-                    b.ToTable("Contract", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            EndDate = new DateTime(2124, 10, 15, 15, 18, 59, 970, DateTimeKind.Local).AddTicks(3291),
-                            IsActive = true,
-                            StartDate = new DateTime(2025, 10, 15, 15, 18, 59, 970, DateTimeKind.Local).AddTicks(3278),
-                            SubscriptionPlanId = 1
-                        });
                 });
 
             modelBuilder.Entity("Finan.Domain.Entities.CostCenter", b =>
@@ -422,98 +194,17 @@ namespace Finan.Infra.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int")
-                        .HasColumnName("ContractId");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
                         .HasColumnName("Description");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.ToTable("CostCenter", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ContractId = 0,
-                            Description = "Casa"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ContractId = 0,
-                            Description = "Transporte"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ContractId = 0,
-                            Description = "Saúde"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ContractId = 0,
-                            Description = "Educação"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ContractId = 0,
-                            Description = "Lazer"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ContractId = 0,
-                            Description = "Investimentos"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ContractId = 0,
-                            Description = "Alimentação"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            ContractId = 0,
-                            Description = "Cartão de Crédito"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            ContractId = 0,
-                            Description = "Doações e Presentes"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            ContractId = 0,
-                            Description = "Trabalho Formal"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ContractId = 0,
-                            Description = "Trabalho Autônomo"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            ContractId = 0,
-                            Description = "Aluguéis"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            ContractId = 0,
-                            Description = "Outras Receitas"
-                        });
                 });
 
             modelBuilder.Entity("Finan.Domain.Entities.Currency", b =>
@@ -529,10 +220,6 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnType("varchar(3)")
                         .HasColumnName("Code");
 
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int")
-                        .HasColumnName("ContractId");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(50)")
@@ -543,27 +230,12 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnType("varchar(5)")
                         .HasColumnName("Symbol");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.ToTable("Currency", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Code = "BRL",
-                            ContractId = 0,
-                            Name = "Real",
-                            Symbol = "R$"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Code = "USD",
-                            ContractId = 0,
-                            Name = "Dólar",
-                            Symbol = "$"
-                        });
                 });
 
             modelBuilder.Entity("Finan.Domain.Entities.Group", b =>
@@ -574,10 +246,6 @@ namespace Finan.Infra.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int")
-                        .HasColumnName("ContractId");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
@@ -587,46 +255,12 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnType("tinyint")
                         .HasColumnName("Nature");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.ToTable("Group", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ContractId = 0,
-                            Description = "Despesas Fixas",
-                            Nature = (byte)0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ContractId = 0,
-                            Description = "Despesas Variáveis",
-                            Nature = (byte)0
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ContractId = 0,
-                            Description = "Receitas de Trabalho",
-                            Nature = (byte)1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ContractId = 0,
-                            Description = "Receitas de Investimentos",
-                            Nature = (byte)1
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ContractId = 0,
-                            Description = "Receitas Eventuais ou Extraordinárias",
-                            Nature = (byte)1
-                        });
                 });
 
             modelBuilder.Entity("Finan.Domain.Entities.Statement", b =>
@@ -650,10 +284,6 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("BankTransactionId");
 
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int")
-                        .HasColumnName("ContractId");
-
                     b.Property<DateTime>("FlowDate")
                         .HasColumnType("datetime")
                         .HasColumnName("FlowDate");
@@ -665,6 +295,9 @@ namespace Finan.Infra.Data.Migrations
                     b.Property<bool>("Reversed")
                         .HasColumnType("bit")
                         .HasColumnName("Reversed");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("TransactionId")
                         .HasColumnType("int")
@@ -683,56 +316,6 @@ namespace Finan.Infra.Data.Migrations
                     b.HasIndex("TransactionId");
 
                     b.ToTable("Statement", (string)null);
-                });
-
-            modelBuilder.Entity("Finan.Domain.Entities.SubscriptionPlan", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("Name");
-
-                    b.Property<int>("UserQuantity")
-                        .HasColumnType("int")
-                        .HasColumnName("UserQuantity");
-
-                    b.Property<decimal>("Value")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("Value");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SubscriptionPlan", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Gratuito",
-                            UserQuantity = 1,
-                            Value = 0m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Profissional",
-                            UserQuantity = 5,
-                            Value = 29.90m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Empresarial",
-                            UserQuantity = 20,
-                            Value = 99.90m
-                        });
                 });
 
             modelBuilder.Entity("Finan.Domain.Entities.Transaction", b =>
@@ -754,10 +337,6 @@ namespace Finan.Infra.Data.Migrations
                     b.Property<int>("ClassificationId")
                         .HasColumnType("int")
                         .HasColumnName("ClassificationId");
-
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int")
-                        .HasColumnName("ContractId");
 
                     b.Property<int>("CostCenterId")
                         .HasColumnType("int")
@@ -803,6 +382,9 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnType("tinyint")
                         .HasColumnName("Status");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("TotalPaid")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)")
@@ -838,10 +420,6 @@ namespace Finan.Infra.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int")
-                        .HasColumnName("ContractId");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
@@ -852,10 +430,8 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("Password");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("Role");
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -864,20 +440,7 @@ namespace Finan.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ContractId");
-
                     b.ToTable("User", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ContractId = 1,
-                            Email = "dev.fabianorocha@gmail.com",
-                            Password = "Finan@1234",
-                            Role = "Manager",
-                            UserName = "Finan"
-                        });
                 });
 
             modelBuilder.Entity("Finan.Domain.Entities.Account", b =>
@@ -927,17 +490,6 @@ namespace Finan.Infra.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Group");
-                });
-
-            modelBuilder.Entity("Finan.Domain.Entities.Contract", b =>
-                {
-                    b.HasOne("Finan.Domain.Entities.SubscriptionPlan", "SubscriptionPlan")
-                        .WithMany("Contracts")
-                        .HasForeignKey("SubscriptionPlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SubscriptionPlan");
                 });
 
             modelBuilder.Entity("Finan.Domain.Entities.Statement", b =>
@@ -998,17 +550,6 @@ namespace Finan.Infra.Data.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("Finan.Domain.Entities.User", b =>
-                {
-                    b.HasOne("Finan.Domain.Entities.Contract", "Contract")
-                        .WithMany("Users")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contract");
-                });
-
             modelBuilder.Entity("Finan.Domain.Entities.Account", b =>
                 {
                     b.Navigation("Statements");
@@ -1031,11 +572,6 @@ namespace Finan.Infra.Data.Migrations
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("Finan.Domain.Entities.Contract", b =>
-                {
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("Finan.Domain.Entities.CostCenter", b =>
                 {
                     b.Navigation("BankTransactions");
@@ -1055,11 +591,6 @@ namespace Finan.Infra.Data.Migrations
                     b.Navigation("Classifications");
 
                     b.Navigation("Transactions");
-                });
-
-            modelBuilder.Entity("Finan.Domain.Entities.SubscriptionPlan", b =>
-                {
-                    b.Navigation("Contracts");
                 });
 
             modelBuilder.Entity("Finan.Domain.Entities.Transaction", b =>

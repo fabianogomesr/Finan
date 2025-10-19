@@ -1,4 +1,6 @@
 using Finan.Application;
+using Finan.Domain.Interfaces;
+using Finan.Service.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -77,7 +79,15 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-builder.Services.AddHttpContextAccessor(); // Adicionei aqui
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy.WithOrigins("https://seu-frontend.com")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
 
 var app = builder.Build();
 
@@ -88,29 +98,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Substitua o middleware de desenvolvimento por um middleware global para adicionar o usuário padrão em todas as requisições
-app.Use(async (context, next) =>
-{
-    // Adiciona um header customizado com o Login do usuário padrão
-    context.Request.Headers["login"] = "Finan";
-
-    // Adiciona um header customizado com a Role do usuário padrão
-    context.Request.Headers["contractId"] = "1";
-
-    // Adiciona um header customizado com a Role do usuário padrão
-    context.Request.Headers["role"] = "Manager";
-
-    // Cria claims padrão para o usuário de ID 1
-    var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.NameIdentifier, "1"),
-        new Claim(ClaimTypes.Name, "admin"),
-        new Claim(ClaimTypes.Role, "Manager")
-    };
-    context.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "DefaultUser"));
-
-    await next.Invoke();
-});
+//if (app.Environment.IsDevelopment())
+//{
+//    app.Use(async (context, next) =>
+//    {
+//        var claims = new List<Claim>
+//        {
+//            new Claim(ClaimTypes.Name, "Finan"),
+//            new Claim(ClaimTypes.Role, "Manager")
+//        };
+//        context.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "Development"));
+//        await next.Invoke();
+//    });
+//}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
@@ -118,5 +118,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCors("CorsPolicy");
+app.UseCors("AllowFrontend");
 
 app.Run();
