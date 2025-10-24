@@ -16,19 +16,19 @@ namespace Finan.Infra.Data.Mapping
                 .HasConversion(prop => prop.ToString(), prop => prop)
                 .IsRequired()
                 .HasColumnName("UserName")
-                .HasColumnType("varchar(100)");
+                .HasColumnType("text");
 
             builder.Property(prop => prop.Email)
                .HasConversion(prop => prop.ToString(), prop => prop)
                .IsRequired()
                .HasColumnName("Email")
-               .HasColumnType("varchar(100)");
+               .HasColumnType("text");
 
             builder.Property(prop => prop.Password)
                 .HasConversion(prop => prop.ToString(), prop => prop)
                 .IsRequired()
                 .HasColumnName("Password")
-                .HasColumnType("varchar(100)");
+                .HasColumnType("text");
         }
     }
 }

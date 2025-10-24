@@ -41,17 +41,20 @@ namespace Finan.Service.Validators
             RuleFor(p => p.Status)
                 .IsInEnum().WithMessage("O status da transação é inválido.");
 
-            RuleFor(p => p.Group.Id)
+            RuleFor(p => p.GroupId)
                 .GreaterThan(0).WithMessage("O ID deve ser um valor positivo.");
 
-            RuleFor(p => p.Classification.Id)
+            RuleFor(p => p.ClassificationId)
                 .GreaterThan(0).WithMessage("O ID deve ser um valor positivo.");
 
-            RuleFor(p => p.CostCenter.Id)
+            RuleFor(p => p.CostCenterId)
                 .GreaterThan(0).WithMessage("O ID deve ser um valor positivo.");
 
-            RuleFor(p => p.Currency.Id)
+            RuleFor(p => p.CurrencyId)
                 .GreaterThan(0).WithMessage("O ID deve ser um valor positivo.");
+
+            RuleFor(p => p.Type.GetHashCode())
+                .Must(x => x == 0 || x == 1).WithMessage("O tipo tem que ser 0(Despesa), 1(Receita).");
         }
     }
 }

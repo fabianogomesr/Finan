@@ -21,7 +21,7 @@ namespace Finan.Infra.Data.Mapping
                 .HasConversion(prop => prop.ToString(), prop => prop)
                 .IsRequired()
                 .HasColumnName("Description")
-                .HasColumnType("varchar(100)");
+                .HasColumnType("text");
 
             builder.Property(prop => prop.GroupId)
                 .IsRequired()

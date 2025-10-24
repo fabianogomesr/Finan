@@ -5,6 +5,7 @@ using Finan.Infra.Data.Repository;
 using Finan.Service.Identity;
 using Finan.Service.Services;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Finan.Application
 {
@@ -49,7 +50,7 @@ namespace Finan.Application
         public static void AddContext(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<BaseContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseNpgsql(connectionString));
         }
     }
 }

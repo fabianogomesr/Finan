@@ -17,7 +17,7 @@ namespace Finan.Domain.Commands
         public byte TypeId { get; set; }
         public decimal Value { get; set; }
         public decimal Discount { get; set; }
-        public decimal LateTransactions { get; set; }
+        public decimal LateFee { get; set; }
         public decimal TotalPaid { get; set; }
         public DateTime IssueDate { get; set; } //Data de Emissão
         public DateTime DueDate { get; set; } //Data de Vencimento

@@ -21,19 +21,19 @@ namespace Finan.Infra.Data.Mapping
                 .HasConversion(prop => prop.ToString(), prop => prop)
                 .IsRequired()
                 .HasColumnName("Name")
-                .HasColumnType("varchar(50)");
+                .HasColumnType("text");
 
             builder.Property(prop => prop.Code)
                 .HasConversion(prop => prop.ToString(), prop => prop)
                 .IsRequired()
                 .HasColumnName("Code")
-                .HasColumnType("varchar(3)");
+                .HasColumnType("text");
 
             builder.Property(prop => prop.Symbol)
                 .HasConversion(prop => prop.ToString(), prop => prop)
                 .IsRequired()
                 .HasColumnName("Symbol")
-                .HasColumnType("varchar(5)");
+                .HasColumnType("text");
 
         }
     }

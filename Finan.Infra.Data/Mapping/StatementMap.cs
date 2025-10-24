@@ -21,30 +21,30 @@ namespace Finan.Infra.Data.Mapping
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Value")
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             builder.Property(prop => prop.Balance)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Balance")
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             builder.Property(prop => prop.FlowDate)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("FlowDate")
-                .HasColumnType("datetime");
+                .HasColumnType("timestamp");
 
             builder.Property(prop => prop.ReconciledDate)
                 .HasConversion(prop => prop, prop => prop)
                 .HasColumnName("ReconciledDate")
-                .HasColumnType("datetime");
+                .HasColumnType("timestamp");
 
             builder.Property(prop => prop.Reversed)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Reversed")
-                .HasColumnType("bit");
+                .HasColumnType("boolean");
 
             builder.HasOne(a => a.Transaction)
                .WithMany(b => b.Statements)

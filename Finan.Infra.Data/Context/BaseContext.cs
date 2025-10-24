@@ -14,18 +14,17 @@ namespace Finan.Infra.Data.Context
         {
             _userContext = userContext;
         }
-
-        public DbSet<BankTransaction> BankTransaction { get; set; }
-        public DbSet<Account> Account { get; set; }
-        public DbSet<Bank> Bank { get; set; }
-        public DbSet<CostCenter> CostCenter { get; set; }
-        public DbSet<Currency> Currency { get; set; }
-        public DbSet<Classification> Classification { get; set; }
+        public DbSet<User> User { get; set; }
         public DbSet<Group> Group { get; set; }
+        public DbSet<Classification> Classification { get; set; }
+        public DbSet<Currency> Currency { get; set; }
+        public DbSet<CostCenter> CostCenter { get; set; }
+        public DbSet<Bank> Bank { get; set; }
+        public DbSet<Account> Account { get; set; }
+        public DbSet<BankTransaction> BankTransaction { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
         public DbSet<Statement> Statement { get; set; }
-        public DbSet<User> User { get; set; }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -35,6 +35,7 @@ namespace Finan.Infra.Data.Repository
 
             // Garantir mapa de grupos (description -> id) para usar como FK nas classificações.
             var groupsMap = await _context.Group
+                .IgnoreQueryFilters()
                 .Where(g => g.TenantId == tenantId)
                 .ToDictionaryAsync(g => g.Description ?? string.Empty, g => g.Id);
 

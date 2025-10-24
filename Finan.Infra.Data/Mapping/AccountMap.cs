@@ -21,31 +21,31 @@ namespace Finan.Infra.Data.Mapping
                 .HasConversion(prop => prop.ToString(), prop => prop)
                 .IsRequired()
                 .HasColumnName("Name")
-                .HasColumnType("varchar(100)");
+                .HasColumnType("text");
 
             builder.Property(prop => prop.Agency)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Agency")
-                .HasColumnType("varchar(10)");
+                .HasColumnType("text");
 
             builder.Property(prop => prop.Number)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Number")
-                .HasColumnType("varchar(15)");
+                .HasColumnType("text");
 
             builder.Property(prop => prop.CreditLimit)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("CreditLimit")
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             builder.Property(prop => prop.Balance)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Balance")
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             builder.HasOne(a => a.Bank)
                .WithMany(b => b.Accounts)

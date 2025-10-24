@@ -106,7 +106,7 @@ namespace Finan.Service.Services
                 Type = (TransactionType)TransactionParameter.TypeId,
                 Value = TransactionParameter.Value,
                 Discount = TransactionParameter.Discount,
-                LateFee = TransactionParameter.LateTransactions,
+                LateFee = TransactionParameter.LateFee,
                 TotalPaid = TransactionParameter.TotalPaid,
                 IssueDate = TransactionParameter.IssueDate,
                 DueDate = TransactionParameter.DueDate,
@@ -145,7 +145,7 @@ namespace Finan.Service.Services
             transaction.Description = parameter.Description;
             transaction.Value = parameter.Value;
             transaction.Discount = parameter.Discount;
-            transaction.LateFee = parameter.LateTransactions;
+            transaction.LateFee = parameter.LateFee;
             transaction.TotalPaid = parameter.TotalPaid;
             transaction.IssueDate = parameter.IssueDate;
             transaction.DueDate = parameter.DueDate;

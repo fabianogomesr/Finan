@@ -21,31 +21,31 @@ namespace Finan.Infra.Data.Mapping
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Type")
-                .HasColumnType("tinyint");
+                .HasColumnType("smallint");
 
             builder.Property(prop => prop.Date)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Date")
-                .HasColumnType("datetime");
+                .HasColumnType("timestamp");
 
             builder.Property(prop => prop.Value)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Value")
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             builder.Property(prop => prop.AccrualPeriodDate)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("AccrualPeriodDate")
-                .HasColumnType("datetime");
+                .HasColumnType("timestamp");
 
             builder.Property(prop => prop.Observation)
                 .HasConversion(prop => prop, prop => prop)
                 .IsRequired()
                 .HasColumnName("Observation")
-                .HasColumnType("varchar(100)");
+                .HasColumnType("text");
 
             builder.HasOne(a => a.CostCenter)
                .WithMany(b => b.BankTransactions)

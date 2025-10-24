@@ -4,8 +4,8 @@ using Finan.Domain.Enums;
 using Finan.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -19,47 +19,47 @@ namespace Finan.Infra.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Finan.Domain.Entities.Account", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Agency")
                         .IsRequired()
-                        .HasColumnType("varchar(10)")
+                        .HasColumnType("text")
                         .HasColumnName("Agency");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("Balance");
 
                     b.Property<int>("BankId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("BankId");
 
                     b.Property<decimal>("CreditLimit")
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("CreditLimit");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("text")
                         .HasColumnName("Name");
 
                     b.Property<string>("Number")
                         .IsRequired()
-                        .HasColumnType("varchar(15)")
+                        .HasColumnType("text")
                         .HasColumnName("Number");
 
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -72,22 +72,22 @@ namespace Finan.Infra.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("varchar(5)")
+                        .HasColumnType("text")
                         .HasColumnName("Code");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("text")
                         .HasColumnName("Name");
 
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -98,54 +98,54 @@ namespace Finan.Infra.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountInId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("AccountInId");
 
                     b.Property<int>("AccountOutId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("AccountOutId");
 
                     b.Property<DateTime>("AccrualPeriodDate")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp")
                         .HasColumnName("AccrualPeriodDate");
 
                     b.Property<int?>("ClassificationId")
                         .IsRequired()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("ClassificationId");
 
                     b.Property<int>("CostCenterId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("CostCenterId");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp")
                         .HasColumnName("Date");
 
                     b.Property<int?>("GroupId")
                         .IsRequired()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("GroupId");
 
                     b.Property<string>("Observation")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("text")
                         .HasColumnName("Observation");
 
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<BankTransactionType>("Type")
-                        .HasColumnType("tinyint")
+                        .HasColumnType("smallint")
                         .HasColumnName("Type");
 
                     b.Property<decimal>("Value")
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("Value");
 
                     b.HasKey("Id");
@@ -163,21 +163,21 @@ namespace Finan.Infra.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("text")
                         .HasColumnName("Description");
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("GroupId");
 
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -190,17 +190,17 @@ namespace Finan.Infra.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("text")
                         .HasColumnName("Description");
 
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -211,27 +211,27 @@ namespace Finan.Infra.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("varchar(3)")
+                        .HasColumnType("text")
                         .HasColumnName("Code");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("text")
                         .HasColumnName("Name");
 
                     b.Property<string>("Symbol")
                         .IsRequired()
-                        .HasColumnType("varchar(5)")
+                        .HasColumnType("text")
                         .HasColumnName("Symbol");
 
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -242,21 +242,21 @@ namespace Finan.Infra.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("text")
                         .HasColumnName("Description");
 
                     b.Property<NatureGroup>("Nature")
-                        .HasColumnType("tinyint")
+                        .HasColumnType("smallint")
                         .HasColumnName("Nature");
 
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -267,44 +267,44 @@ namespace Finan.Infra.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AccountId")
                         .IsRequired()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("AccountId");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("Balance");
 
                     b.Property<int?>("BankTransactionId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("BankTransactionId");
 
                     b.Property<DateTime>("FlowDate")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp")
                         .HasColumnName("FlowDate");
 
                     b.Property<DateTime?>("ReconciledDate")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp")
                         .HasColumnName("ReconciledDate");
 
                     b.Property<bool>("Reversed")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasColumnName("Reversed");
 
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<int?>("TransactionId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("TransactionId");
 
                     b.Property<decimal>("Value")
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("Value");
 
                     b.HasKey("Id");
@@ -322,81 +322,81 @@ namespace Finan.Infra.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AccrualPeriodDate")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp")
                         .HasColumnName("AccrualPeriodDate");
 
                     b.Property<DateTime>("CashFlowDate")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp")
                         .HasColumnName("CashFlowDate");
 
                     b.Property<int>("ClassificationId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("ClassificationId");
 
                     b.Property<int>("CostCenterId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("CostCenterId");
 
                     b.Property<int>("CurrencyId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("CurrencyId");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("varchar(200)")
+                        .HasColumnType("text")
                         .HasColumnName("Description");
 
                     b.Property<decimal>("Discount")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("Discount");
 
                     b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp")
                         .HasColumnName("DueDate");
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("GroupId");
 
                     b.Property<DateTime>("IssueDate")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp")
                         .HasColumnName("IssueDate");
 
                     b.Property<decimal>("LateFee")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("LateFee");
 
                     b.Property<string>("Observation")
                         .IsRequired()
-                        .HasColumnType("varchar(500)")
+                        .HasColumnType("text")
                         .HasColumnName("Observation");
 
                     b.Property<byte>("Status")
-                        .HasColumnType("tinyint")
+                        .HasColumnType("smallint")
                         .HasColumnName("Status");
 
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("TotalPaid")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("TotalPaid");
 
                     b.Property<TransactionType>("Type")
-                        .HasColumnType("tinyint")
+                        .HasColumnType("smallint")
                         .HasColumnName("Type");
 
                     b.Property<decimal>("Value")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("Value");
 
                     b.HasKey("Id");
@@ -416,26 +416,26 @@ namespace Finan.Infra.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("text")
                         .HasColumnName("Email");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("text")
                         .HasColumnName("Password");
 
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("text")
                         .HasColumnName("UserName");
 
                     b.HasKey("Id");
