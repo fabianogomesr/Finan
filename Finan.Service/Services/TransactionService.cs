@@ -5,29 +5,27 @@ using Finan.Domain.Enums;
 using Finan.Domain.Filters;
 using Finan.Domain.Interfaces;
 using Finan.Service.Validators;
-using FluentValidation;
-using System.Data.Common;
 
 namespace Finan.Service.Services
 {
-    public class TransactionService : BaseService<Transaction>, ITransactionService
+    public class TransactionService : BaseService, ITransactionService
     {
         private readonly ITransactionRepository _baseRepository;
         private readonly IStatementRepository _statementRepository;
         private readonly IAccountRepository _accountRepository;
 
-        public TransactionService(ITransactionRepository baseRepository, IStatementRepository statementRepository, IAccountRepository accountRepository) : base(baseRepository)
+        public TransactionService(ITransactionRepository baseRepository, IStatementRepository statementRepository, IAccountRepository accountRepository)
         {
             _baseRepository = baseRepository;
             _statementRepository = statementRepository;
             _accountRepository = accountRepository;
         }
 
-        public async Task<List<TransactionDTO>> GetTransactionsAsync()
+        public async Task<List<TransactionDTO>?> GetTransactionsAsync()
         {
             var result = await _baseRepository.GetTransactionsAsync();
 
-            if (result == null)
+            if (!result.Any())
                 return null;
 
             return result.Select(x => new TransactionDTO
@@ -51,7 +49,7 @@ namespace Finan.Service.Services
             }).ToList();
         }
 
-        public async Task<TransactionDTO> GetTransactionByIdAsync(int id)
+        public async Task<TransactionDTO?> GetTransactionByIdAsync(int id)
         {
             var result = await _baseRepository.GetTransactionByIdAsync(id);
 
@@ -80,16 +78,25 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<TransactionDTO> AddTransaction(TransactionCommand transactionParameter)
+        public async Task<TransactionDTO?> AddTransaction(TransactionCommand transactionCommand)
         {
-            var transaction = CreateTransactionFields(transactionParameter);
+            if (!Validate(transactionCommand, new TransactionValidator()))
+                return null;
 
-            Validate(transaction, new TransactionValidator());
+            var transaction = CreateTransactionFields(transactionCommand);
 
             await _baseRepository.Insert(transaction);
 
-            // Gerencia os efeitos colaterais de acordo com o status
-            await HandleTransactionStatusEffects(transaction, transactionParameter);
+            try
+            {
+                // Gerencia os efeitos colaterais de acordo com o status
+                await HandleTransactionStatusEffects(transaction, transactionCommand);
+            }
+            catch (Exception ex)
+            {
+                Messages.Error(ex.Message);
+                return null;
+            }
 
             return MapToTransactionDTO(transaction);
         }
@@ -117,20 +124,35 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<TransactionDTO> UpdateTransaction(TransactionCommand transactionParameter)
+        public async Task<TransactionDTO?> UpdateTransaction(TransactionCommand transactionCommand)
         {
+            if (!Validate(transactionCommand, new TransactionValidator()))
+                return null;
+
             // Recupera a transação existente
-            var transaction = await _baseRepository.Select(transactionParameter.Id);
+            var transaction = await _baseRepository.Select(transactionCommand.Id);
+
             if (transaction == null)
-                throw new Exception("Transação não localizada.");
+            {
+                Messages.Error("Transação não encontrada.");
+                return null;
+            }
 
             // Atualiza os campos da transação
-            UpdateTransactionFields(transaction, transactionParameter);
+            UpdateTransactionFields(transaction, transactionCommand);
 
             await _baseRepository.Update(transaction);
 
-            // Gerencia os efeitos colaterais de acordo com o status
-            await HandleTransactionStatusEffects(transaction, transactionParameter);
+            try
+            {
+                // Gerencia os efeitos colaterais de acordo com o status
+                await HandleTransactionStatusEffects(transaction, transactionCommand);
+            }
+            catch (Exception ex)
+            {
+                Messages.Error(ex.Message);
+                return null;
+            }
 
             return MapToTransactionDTO(transaction);
         }
@@ -218,7 +240,15 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<PagedResult<TransactionDTO>> GetTransactionsAsync(TransactionFilter filter) => await _baseRepository.GetTransactionsAsync(filter);
+        public async Task<PagedResult<TransactionDTO>?> GetTransactionsAsync(TransactionFilter filter) 
+        {
+            var result = await _baseRepository.GetTransactionsAsync(filter);
+
+            if (!result.Items.Any())
+                return null;
+
+            return result;
+        } 
 
         public List<TransactionTypeDTO> GetTypeList()
         {
@@ -251,7 +281,6 @@ namespace Finan.Service.Services
                 TypeId = x.Value,
                 Name = x.Description
             }).ToList();
-
         }
 
     }

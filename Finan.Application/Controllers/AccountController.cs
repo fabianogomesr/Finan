@@ -1,6 +1,5 @@
-﻿using Finan.Domain.Interfaces;
-using Finan.Domain.Commands;
-using Finan.Service.Validators;
+﻿using Finan.Domain.Commands;
+using Finan.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,105 +8,60 @@ namespace Finan.Application.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseController
     {
-        private IAccountService _baseAccountService;
-
+        private readonly IAccountService _baseAccountService;
         public AccountController(IAccountService baseAccountService)
         {
             _baseAccountService = baseAccountService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] AccountCommand AccountParameter) => await ExecuteAsync(async () => await _baseAccountService.AddAccount<AccountValidator>(AccountParameter));
+        public async Task<IActionResult> CreateAsync([FromBody] AccountCommand accountCommand) 
+        {
+            var response = await _baseAccountService.CreateAsync(accountCommand);
+
+            return TreatObjectResultCreated(response?.Id, _baseAccountService.Messages);
+        }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] AccountCommand AccountParameter) => await ExecuteAsync(async () => await _baseAccountService.UpdateAccount<AccountValidator>(AccountParameter));
+        public async Task<IActionResult> UpdateAsync([FromBody] AccountCommand accountCommand)
+        {
+            var response = await _baseAccountService.UpdateAsync(accountCommand);
+
+            return TreatObjectResultOk(response, _baseAccountService.Messages);
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            await ExecuteAsync(async () =>
-            {
-                await _baseAccountService.DeleteAsync(id);
-                return true;
-            });
+            await _baseAccountService.DeleteAsync(id);
 
-            return new NoContentResult();
+            return TreatObjectResultOk(id, _baseAccountService.Messages);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            try
-            {
-                var result = await _baseAccountService.GetAccountsAsync();
+            var response = await _baseAccountService.GetAsync();
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            return TreatObjectResultOk(response, _baseAccountService.Messages);
         }
 
         [HttpGet("Paged/{pageNumber}/{pageSize}")]
         public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
         {
-            try
-            {
-                var result = await _baseAccountService.GetAccountsAsync(pageNumber, pageSize);
+            var response = await _baseAccountService.GetAsync(pageNumber, pageSize);
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            return TreatObjectResultOk(response, _baseAccountService.Messages);
         }
-
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            try
-            {
-                var result = await _baseAccountService.GetAccountByIdAsync(id);
+            var response = await _baseAccountService.GetAsync(id);
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        private async Task<IActionResult> ExecuteAsync(Func<Task<object>> func)
-        {
-            try
-            {
-                var result = await func();
-
-                if (result == null || result.Equals(string.Empty))
-                {
-                    return NotFound();
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            return TreatObjectResultOk(response, _baseAccountService.Messages);
         }
     }
 }

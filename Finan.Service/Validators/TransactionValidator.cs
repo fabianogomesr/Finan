@@ -1,10 +1,9 @@
-﻿using Finan.Domain.Entities;
+﻿using Finan.Domain.Commands;
 using FluentValidation;
-using System;
 
 namespace Finan.Service.Validators
 {
-    public class TransactionValidator : AbstractValidator<Transaction>
+    public class TransactionValidator : AbstractValidator<TransactionCommand>
     {
         public TransactionValidator()
         {
@@ -38,7 +37,7 @@ namespace Finan.Service.Validators
             RuleFor(p => p.AccrualPeriodDate)
                 .NotEmpty().WithMessage("A data de competência é obrigatória.");
 
-            RuleFor(p => p.Status)
+            RuleFor(p => p.StatusId)
                 .IsInEnum().WithMessage("O status da transação é inválido.");
 
             RuleFor(p => p.GroupId)
@@ -53,7 +52,7 @@ namespace Finan.Service.Validators
             RuleFor(p => p.CurrencyId)
                 .GreaterThan(0).WithMessage("O ID deve ser um valor positivo.");
 
-            RuleFor(p => p.Type.GetHashCode())
+            RuleFor(p => p.TypeId.GetHashCode())
                 .Must(x => x == 0 || x == 1).WithMessage("O tipo tem que ser 0(Despesa), 1(Receita).");
         }
     }

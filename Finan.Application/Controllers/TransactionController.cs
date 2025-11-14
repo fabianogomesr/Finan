@@ -1,22 +1,15 @@
-﻿using Finan.Domain.DTOs;
-using Finan.Domain.Entities;
-using Finan.Domain.Interfaces;
-using Finan.Domain.Commands;
-using Finan.Service.Services;
-using Finan.Service.Validators;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Finan.Domain.Parameters;
+﻿using Finan.Domain.Commands;
 using Finan.Domain.Filters;
+using Finan.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class TransactionController : ControllerBase
+    public class TransactionController : BaseController
     {
         private ITransactionService _baseTransactionService;
 
@@ -26,118 +19,60 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] TransactionCommand TransactionParameter) => await ExecuteAsync(async () => await _baseTransactionService.AddTransaction(TransactionParameter));
+        public async Task<IActionResult> CreateAsync([FromBody] TransactionCommand transactionCommand)
+        {
+            var response = await _baseTransactionService.AddTransaction(transactionCommand);
+
+            return TreatObjectResultCreated(response?.Id, _baseTransactionService.Messages);
+
+        }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] TransactionCommand TransactionParameter) => await ExecuteAsync(async () => await _baseTransactionService.UpdateTransaction(TransactionParameter));
+        public async Task<IActionResult> UpdateAsync([FromBody] TransactionCommand transactionCommand) 
+        {
+            var response = await _baseTransactionService.UpdateTransaction(transactionCommand);
+
+            return TreatObjectResultOk(response, _baseTransactionService.Messages);
+        }
 
         [HttpGet("Status")]
         public IActionResult GetStatus()
         {
-            try
-            {
-                var result = _baseTransactionService.GetStatusList();
+            var response = _baseTransactionService.GetStatusList();
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return TreatObjectResultOk(response, _baseTransactionService.Messages);
         }
 
         [HttpGet("Types")]
         public IActionResult GetTypes()
         {
-            try
-            {
-                var result = _baseTransactionService.GetTypeList();
+            var response = _baseTransactionService.GetTypeList();
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return TreatObjectResultOk(response, _baseTransactionService.Messages);
         }
 
         [HttpGet("DateTypes")]
         public IActionResult GetDateTypes()
         {
-            try
-            {
-                var result = _baseTransactionService.GetDateTypeList();
+            var response = _baseTransactionService.GetDateTypeList();
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return TreatObjectResultOk(response, _baseTransactionService.Messages);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAsync([FromQuery]TransactionFilter filter)
         {
-            try
-            {
-                var result = await _baseTransactionService.GetTransactionsAsync(filter);
+            var response = await _baseTransactionService.GetTransactionsAsync(filter);
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return TreatObjectResultOk(response, _baseTransactionService.Messages);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            try
-            {
-                var result = await _baseTransactionService.GetTransactionByIdAsync(id);
+            var response = await _baseTransactionService.GetTransactionByIdAsync(id);
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        private async Task<IActionResult> ExecuteAsync(Func<Task<object>> func)
-        {
-            try
-            {
-                var result = await func();
-
-                if (result == null || result.Equals(string.Empty))
-                {
-                    return NotFound();
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return TreatObjectResultOk(response, _baseTransactionService.Messages);
         }
     }
 }

@@ -4,12 +4,14 @@ using Finan.Domain.Entities;
 
 namespace Finan.Domain.Interfaces
 {
-    public interface IAccountService : IBaseService<Account>
+    public interface IAccountService : IBaseService
     {
-        Task<AccountDTO> AddAccount<AccountValidator>(AccountCommand AccountParameter);
-        Task<AccountDTO> GetAccountByIdAsync(int id);
-        Task<IEnumerable<AccountDTO>> GetAccountsAsync();
-        Task<PagedResult<AccountDTO>> GetAccountsAsync(int pageNumber = 1, int pageSize = 5);
-        Task<AccountDTO> UpdateAccount<AccountValidator>(AccountCommand AccountParameter);
+        Task<AccountDTO?> CreateAsync(AccountCommand AccountParameter);
+        Task<AccountDTO?> UpdateAsync(AccountCommand AccountParameter);
+        Task<AccountDTO?> GetByIdAsync(int id);
+        Task<List<AccountDTO?>> GetAsync();
+        Task<PagedResult<AccountDTO>?> GetAsync(int pageNumber = 1, int pageSize = 5);
+        Task DeleteAsync(int id);
+
     }
 }

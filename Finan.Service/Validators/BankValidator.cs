@@ -1,14 +1,9 @@
-﻿using Finan.Domain.Entities;
+﻿using Finan.Domain.Commands;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finan.Service.Validators
 {
-    public class BankValidator : AbstractValidator<Bank>
+    public class BankValidator : AbstractValidator<BankCommand>
     {
         public BankValidator()
         {

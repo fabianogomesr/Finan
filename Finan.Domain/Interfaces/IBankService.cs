@@ -1,16 +1,16 @@
-﻿using Finan.Domain.DTOs;
+﻿using Finan.Domain.Commands;
+using Finan.Domain.DTOs;
 using Finan.Domain.Entities;
-using Finan.Domain.Parameters;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finan.Domain.Interfaces
 {
-    public interface IBankService : IBaseService<Bank>
+    public interface IBankService : IBaseService
     {
+        Task<BankDTO?> CreateAsync(BankCommand bankCommand);
+        Task<BankDTO?> UpdateAsync(BankCommand bankCommand);
+        Task<BankDTO?> GetByIdAsync(int id);
+        Task<List<BankDTO?>> GetAsync();
+        Task<PagedResult<BankDTO>?> GetAsync(int pageNumber = 1, int pageSize = 5);
+        Task DeleteAsync(int id);
     }
 }

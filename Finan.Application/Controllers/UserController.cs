@@ -1,10 +1,5 @@
-﻿using Finan.Domain.DTOs;
-using Finan.Domain.Entities;
-using Finan.Domain.Interfaces;
+﻿using Finan.Domain.Interfaces;
 using Finan.Domain.Parameters;
-using Finan.Infra.Data.Context;
-using Finan.Service.Validators;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,107 +7,40 @@ namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
         private IUserService _baseUserService;
 
-        public UserController(IUserService baseUserService, ISeedDataRepository seedDataRepository)
+        public UserController(IUserService baseUserService)
         {
             _baseUserService = baseUserService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] UserCommand userCommand) => await ExecuteAsync(async () => await _baseUserService.CreateUser(userCommand));
+        public async Task<IActionResult> CreateAsync([FromBody] UserCommand userCommand) 
+        {
+            var response = await _baseUserService.CreateUser(userCommand);
+
+            return TreatObjectResultCreated(response?.Id, _baseUserService.Messages);
+        } 
 
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> UpdateAsync([FromBody] UserCommand UserParameter)
+        public async Task<IActionResult> UpdateAsync([FromBody] UserCommand userCommand)
         {
-            return await ExecuteAsync(async () => await _baseUserService.UpdateAsync<UserValidator>(
-                new User { Id = UserParameter.Id,
-                    UserName = UserParameter.UserName,
-                    Password  = UserParameter.Password,
-                    Email = UserParameter.Email }));
+            var response = await _baseUserService.UpdateUser(userCommand);
+
+            return TreatObjectResultOk(response, _baseUserService.Messages);
         }
 
-        [HttpDelete("{id}")]
+        [HttpGet("{login}")]
         [Authorize]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> GetAsync(string login) 
         {
-            await ExecuteAsync(async () =>
-            {
-                await _baseUserService.DeleteAsync(id);
-                return true;
-            });
+            var response = await _baseUserService.GetByUserNameAsync(login);
 
-            return new NoContentResult();
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetAsync() 
-        {
-            try
-            {
-                var result = await _baseUserService.GetAsync();
-
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result.Select(x => new UserDTO
-                {
-                    Id = x.Id,
-                    UserName = x.UserName,
-                    Email = x.Email
-                }));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        [HttpGet("{id}")]
-        [Authorize]
-        public async Task<IActionResult> GetAsync(int id) 
-        {
-            try
-            {
-                var result = await _baseUserService.GetByIdAsync(id);
-
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(new UserDTO
-                {
-                    Id = result.Id,
-                    UserName = result.UserName,
-                    Email = result.UserName
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            return TreatObjectResultOk(response, _baseUserService.Messages);
         } 
-
-
-        private async Task<IActionResult> ExecuteAsync(Func<Task<object>> func)
-        {
-            try
-            {
-                var result = await func();
-
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
     }
 }
 

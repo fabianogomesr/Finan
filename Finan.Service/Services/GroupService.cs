@@ -1,34 +1,31 @@
 ﻿using Finan.Domain.DTOs;
 using Finan.Domain.Entities;
+using Finan.Domain.Enums;
 using Finan.Domain.Interfaces;
 using Finan.Domain.Parameters;
 using Finan.Service.Validators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finan.Service.Services
 {
-    public class GroupService : BaseService<Group>, IGroupService
+    public class GroupService : BaseService, IGroupService
     {
         private readonly IGroupRepository _baseRepository;
 
-        public GroupService(IGroupRepository baseRepository) : base(baseRepository)
+        public GroupService(IGroupRepository baseRepository) 
         {
             _baseRepository = baseRepository;
         }
 
-        public async Task<GroupDTO> CreateGroup(GroupCommand groupCommand)
+        public async Task<GroupDTO?> CreateGroup(GroupCommand groupCommand)
         {
+            if (!Validate(groupCommand, new GroupValidator()))
+                return null;
+
             var group = new Group
             {
                 Description = groupCommand.Description,
-                Nature = (Domain.Enums.NatureGroup)groupCommand.NatureId
+                Nature = groupCommand.NatureId
             };
-
-            Validate(group, new GroupValidator());
 
             await _baseRepository.Insert(group);
 
@@ -41,19 +38,106 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<PagedResult<GroupDTO>> GetGroupsAsync(int pageNumber, int pageSize) => await _baseRepository.GetGroupsAsync(pageNumber, pageSize);
-
-        public async Task<GroupDTO> UpdateGroup(GroupCommand groupCommand)
+        public async Task DeleteAsync(int id)
         {
+            var result = await _baseRepository.Select(id);
+
+            if (result == null)
+            {
+                Messages.Error("Grupo não encontrada.");
+                return;
+            }
+
+            await _baseRepository.Delete(id);
+        }
+
+        public async Task<List<GroupDTO>?> GetAsync()
+        {
+            var result = await _baseRepository.Select();
+
+            if (!result.Any())
+                return null;
+
+            return result.Select(x => new GroupDTO
+            {
+                Id = x.Id,
+                Description = x.Description,
+                Nature = x.Nature.GetDescription(),
+                NatureId = (byte)x.Nature
+            }).ToList();
+        }
+
+        public async Task<GroupDTO?> GetAsync(int id)
+        {
+            var result = await _baseRepository.Select(id);
+
+            if (result == null)
+                return null;
+
+            return new GroupDTO
+            {
+                Id = result.Id,
+                Description = result.Description,
+                Nature = result.Nature.GetDescription(),
+                NatureId = (byte)result.Nature
+            };
+        }
+
+        public async Task<PagedResult<GroupDTO>?> GetGroupsAsync(int pageNumber, int pageSize) 
+        {
+            var result = await _baseRepository.GetGroupsAsync(pageNumber, pageSize);
+
+            if (!result.Items.Any())
+                return null;
+
+            return result;
+        }
+
+        public async Task<List<GroupDTO>?> GetGroupsByNatureId(NatureGroup natureId)
+        {
+            var result = _baseRepository.GetAll().Where(x => x.Nature == natureId).ToList();
+
+            if (!result.Any())
+                return null;
+
+            return result.Select(x => new GroupDTO
+            {
+                Id = x.Id,
+                Description = x.Description,
+                Nature = x.Nature.GetDescription(),
+                NatureId = (byte)x.Nature
+            }).ToList();
+        }
+
+        public List<NatureDTO>? GetNatureList()
+        {
+            var result = EnumExtensions.GetEnumList<NatureGroup>();
+
+            if (!result.Any())
+                return null;
+
+            return result.Select(x => new NatureDTO
+            {
+                Id = x.Value,
+                Description = x.Description
+            }).ToList();
+        }
+
+        public async Task<GroupDTO?> UpdateGroup(GroupCommand groupCommand)
+        {
+            if (!Validate(groupCommand, new GroupValidator()))
+                return null;
+
             var group = await _baseRepository.Select(groupCommand.Id);
 
             if (group == null)
-                throw new KeyNotFoundException("Group not found.");
+            {
+                Messages.Error("Grupo não encontrado.");
+                return null;
+            }
 
             group.Description = groupCommand.Description;
-            group.Nature = (Domain.Enums.NatureGroup)groupCommand.NatureId;
-
-            Validate(group, new GroupValidator());
+            group.Nature = groupCommand.NatureId;
 
             await _baseRepository.Update(group);
 

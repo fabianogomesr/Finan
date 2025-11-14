@@ -1,13 +1,16 @@
 using Finan.Application;
-using Finan.Domain.Interfaces;
-using Finan.Service.Identity;
+using Finan.Application.Middlewares;
+using Finan.Service.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<JwtOptions>(
+    builder.Configuration.GetSection("Jwt")
+);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -91,26 +94,17 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Middleware global de tratamento de exceções
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.Services.AddMigrations();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-//if (app.Environment.IsDevelopment())
-//{
-//    app.Use(async (context, next) =>
-//    {
-//        var claims = new List<Claim>
-//        {
-//            new Claim(ClaimTypes.Name, "Finan"),
-//            new Claim(ClaimTypes.Role, "Manager")
-//        };
-//        context.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "Development"));
-//        await next.Invoke();
-//    });
-//}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

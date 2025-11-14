@@ -1,47 +1,71 @@
-﻿using Finan.Domain.Entities;
+﻿using Finan.CrossCutting.Encrypt;
+using Finan.Domain.DTOs;
 using Finan.Domain.Interfaces;
 using Finan.Domain.Parameters;
+using Finan.Service.Mappers;
 using Finan.Service.Validators;
-using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finan.Service.Services
 {
-    public class UserService : BaseService<User>, IUserService
+    public class UserService : BaseService, IUserService
     {
         private readonly IUserRepository _baseRepository;
-        private ISeedDataRepository _seedDataRepository;
+        private readonly ISeedDataRepository _seedDataRepository;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public UserService(IUserRepository baseRepository, ISeedDataRepository seedDataRepository) : base(baseRepository)
+        public UserService(IUserRepository baseRepository,
+            ISeedDataRepository seedDataRepository,
+            IPasswordHasher passwordHasher)
         {
             _baseRepository = baseRepository;
             _seedDataRepository = seedDataRepository;
+            _passwordHasher = passwordHasher;
         }
 
-        public async Task<User> CreateUser(UserCommand userCommand)
+        public async Task<UserDTO?> CreateUser(UserCommand userCommand)
         {
-            var user = new User
-            {
-                UserName = userCommand.UserName,
-                Password = userCommand.Password,
-                Email = userCommand.Email,
-                TenantId = Guid.NewGuid()
-            };
+            if (!Validate(userCommand, new UserValidator()))
+                return null;
 
-            Validate(user, new UserValidator());
+            var user = UserMap.CommandToEntity(userCommand);
+
+            user.Password = _passwordHasher.Hash(user.Password!);
 
             await _baseRepository.Insert(user);
 
             await _seedDataRepository.SeedDefaultDataAsync(user.TenantId);
 
-            return user;
+            return UserMap.EntityToDto(user);
         }
 
-        public async Task<User> GetByUserNameAsync(string userName) =>
-            await _baseRepository.GetUserByUserName(userName);
+        public async Task<UserDTO?> GetByUserNameAsync(string userName) 
+        {
+            var result = await _baseRepository.GetUserByUserName(userName);
+
+            if (result == null)
+                return null;
+
+            return UserMap.EntityToDto(result);
+        }
+
+        public async Task<UserDTO?> UpdateUser(UserCommand userCommand)
+        {
+            if (Validate(userCommand, new UserValidator()))
+                return null;
+
+            var user = await _baseRepository.GetUserByUserName(userCommand.UserName!);
+
+            if (user == null)
+            {
+                Messages.Error("Usuário não encontrado.");
+                return null;
+            }
+
+            user.Password = _passwordHasher.Hash(user.Password!);
+
+            await _baseRepository.Insert(user);
+
+            return UserMap.EntityToDto(user);
+        }
     }
 }

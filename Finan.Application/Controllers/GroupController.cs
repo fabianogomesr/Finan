@@ -1,23 +1,15 @@
-﻿using Finan.Domain.DTOs;
-using Finan.Domain.Entities;
+﻿using Finan.Domain.Enums;
 using Finan.Domain.Interfaces;
-using Finan.Domain.Commands;
-using Finan.Service.Services;
-using Finan.Service.Validators;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Finan.Domain.Parameters;
-using Finan.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class GroupController : ControllerBase
+    public class GroupController : BaseController
     {
         private IGroupService _baseGroupService;
 
@@ -27,147 +19,70 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] GroupCommand groupCommand) => await ExecuteAsync(async () => await _baseGroupService.CreateGroup(groupCommand));
+        public async Task<IActionResult> CreateAsync([FromBody] GroupCommand groupCommand)
+        {
+            var response = await _baseGroupService.CreateGroup(groupCommand);
+
+            return TreatObjectResultCreated(response?.Id, _baseGroupService.Messages);
+        }
+            
 
 
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] GroupCommand groupCommand)
         {
-            return await ExecuteAsync(async () => await _baseGroupService.UpdateGroup(groupCommand));
+            var response = await _baseGroupService.UpdateGroup(groupCommand);
+
+            return TreatObjectResultCreated(response, _baseGroupService.Messages);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            await ExecuteAsync(async () =>
-            {
-                await _baseGroupService.DeleteAsync(id);
-                return true;
-            });
+            await _baseGroupService.DeleteAsync(id);
 
-            return new NoContentResult();
+            return TreatObjectResultCreated(id, _baseGroupService.Messages);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAsync() 
         {
-            try
-            {
-                var result = await _baseGroupService.GetAsync();
+            var response = await _baseGroupService.GetAsync();
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result.Select(x => new GroupDTO
-                {
-                    Id = x.Id,
-                    Description = x.Description,
-                    Nature = x.Nature.GetDescription(),
-                    NatureId = (byte)x.Nature
-                }));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            return TreatObjectResultCreated(response, _baseGroupService.Messages);
         }
 
         [HttpGet("Nature/{natureId}")]
         public async Task<IActionResult> GetGroupsByNatureId(NatureGroup natureId)
         {
-            try
-            {
-                var result = await _baseGroupService.GetAll().Where(x => x.Nature == natureId).ToListAsync();
+            var response = await _baseGroupService.GetGroupsByNatureId(natureId);
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result.Select(x => new GroupDTO
-                {
-                    Id = x.Id,
-                    Description = x.Description,
-                    Nature = x.Nature.GetDescription(),
-                    NatureId = (byte)x.Nature
-                }));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            return TreatObjectResultCreated(response, _baseGroupService.Messages);
         }
 
         [HttpGet("Natures")]
         public IActionResult GetNatureList()
         {
-            var result = EnumExtensions.GetEnumList<NatureGroup>();
+            var response = _baseGroupService.GetNatureList();
 
-            return Ok(result.Select(x => new NatureDTO
-            {
-                Id = x.Value,
-                Description = x.Description
-            }).ToList());
+            return TreatObjectResultCreated(response, _baseGroupService.Messages);
         }
 
         [HttpGet("Paged/{pageNumber}/{pageSize}")]
         public async Task<IActionResult> GetAsync(int pageNumber = 1, int pageSize = 5)
         {
-            try
-            {
-                var result = await _baseGroupService.GetGroupsAsync(pageNumber, pageSize);
+            var response = await _baseGroupService.GetGroupsAsync(pageNumber, pageSize);
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            return TreatObjectResultCreated(response, _baseGroupService.Messages);
         }
 
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            try
-            {
-                var result = await _baseGroupService.GetByIdAsync(id);
+            var response = await _baseGroupService.GetAsync(id);
 
-                if (result == null || result.Equals(string.Empty))
-                    return NotFound();
-
-                return Ok( new GroupDTO
-                {
-                    Id = result.Id,
-                    Description = result.Description,
-                    Nature = result.Nature.GetDescription(),
-                    NatureId = (byte)result.Nature
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        private async Task<IActionResult> ExecuteAsync(Func<Task<object>> func)
-        {
-            try
-            {
-                var result = await func();
-
-                if (result == null || result.Equals(string.Empty))
-                {
-                    return NotFound();
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            return TreatObjectResultCreated(response, _baseGroupService.Messages);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Finan.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ namespace Finan.Domain.Commands
         public int ClassificationId { get; set; }
         public int CurrencyId { get; set; }
         public string? Description { get; set; }
-        public byte TypeId { get; set; }
+        public TransactionType TypeId { get; set; }
         public decimal Value { get; set; }
         public decimal Discount { get; set; }
         public decimal LateFee { get; set; }
@@ -25,7 +26,7 @@ namespace Finan.Domain.Commands
         public DateTime AccrualPeriodDate { get; set; } //Data de Competencia
         public int PayerId { get; set; }
         public string? Observation { get; set; }
-        public byte StatusId { get; set; }
+        public TransactionStatus StatusId { get; set; }
         public PaidTransactionCommand? PaidTransaction { get; set; }
 
     }

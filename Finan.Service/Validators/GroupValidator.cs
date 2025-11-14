@@ -1,14 +1,9 @@
-﻿using Finan.Domain.Entities;
+﻿using Finan.Domain.Parameters;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finan.Service.Validators
 {
-    public class GroupValidator : AbstractValidator<Group>
+    public class GroupValidator : AbstractValidator<GroupCommand>
     {
         public GroupValidator()
         {
@@ -16,7 +11,7 @@ namespace Finan.Service.Validators
             .NotEmpty().WithMessage("O nome é obrigatório.")
             .Length(1, 100).WithMessage("O nome deve ter entre 1 e 100 caracteres.");
 
-            RuleFor(p => p.Nature.GetHashCode())
+            RuleFor(p => p.NatureId.GetHashCode())
             .Must(x => x == 0 || x == 1).WithMessage("A natureza tem que ser 0(Saida), 1(Entrada).");
         }
     }

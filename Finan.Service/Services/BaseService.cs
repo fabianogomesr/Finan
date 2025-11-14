@@ -1,53 +1,33 @@
-﻿using Finan.Domain.Entities;
+﻿using Finan.Domain.Enums;
 using Finan.Domain.Interfaces;
+using Finan.Domain.Messages;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finan.Service.Services
 {
-    public class BaseService<TEntity> : IBaseService<TEntity> where TEntity : BaseEntity
+    public class BaseService : IBaseService
     {
-        private readonly IBaseRepository<TEntity> _baseRepository;
+        public MessageCollection Messages { get; set; } = new();
 
-        public BaseService(IBaseRepository<TEntity> baseRepository)
-        {
-            _baseRepository = baseRepository;
-        }
-
-        public async Task<TEntity> Add<TValidator>(TEntity obj) where TValidator : AbstractValidator<TEntity>
-        {
-            Validate(obj, Activator.CreateInstance<TValidator>());
-            await _baseRepository.Insert(obj);
-            return obj;
-        }
-
-        public async Task DeleteAsync(int id) => await _baseRepository.Delete(id);
-
-        public async Task<IEnumerable<TEntity>> GetAsync() => await _baseRepository.Select();
-
-        public async Task<TEntity> GetByIdAsync(int id) => await _baseRepository.Select(id);
-
-        public async Task<PagedResult<TEntity>> GetAsync(int pageNumber, int pageSize) => await _baseRepository.Select(pageNumber, pageSize);
-
-        public IQueryable<TEntity> GetAll() => _baseRepository.GetAll();
-
-        public async Task<TEntity> UpdateAsync<TValidator>(TEntity obj) where TValidator : AbstractValidator<TEntity>
-        {
-            Validate(obj, Activator.CreateInstance<TValidator>());
-            await _baseRepository.Update(obj);
-            return obj;
-        }
-
-        public void Validate(TEntity obj, AbstractValidator<TEntity> validator)
+        public bool Validate<TEntity>(TEntity obj, IValidator<TEntity> validator)
         {
             if (obj == null)
-                throw new Exception("Registros não detectados!");
+                throw new ArgumentNullException(nameof(obj), "Registros não detectados!");
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator), "Validador não pode ser nulo!");
 
-            validator.ValidateAndThrow(obj);
+            // Limpa mensagens de validação anteriores
+            Messages.Clear();
+
+            var result = validator.Validate(obj);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                    Messages.Add(MessageRecord.Create(MessageType.Error, error.ErrorMessage));
+            }
+
+            return result.IsValid;
         }
     }
 }

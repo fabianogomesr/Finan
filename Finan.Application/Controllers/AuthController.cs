@@ -1,42 +1,26 @@
-﻿using Finan.Domain.DTOs;
-using Finan.Domain.Entities;
-using Finan.Domain.Interfaces;
+﻿using Finan.Domain.Interfaces;
 using Finan.Domain.Parameters;
-using Finan.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Finan.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseController
     {
-        private readonly ITokenService _tokenService;
+        private readonly IAuthService _tokenService;
 
-        public AuthController(ITokenService tokenService)
+        public AuthController(IAuthService tokenService)
         {
             _tokenService = tokenService;
         }
 
         [HttpPost("Login", Name = "Login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginCommand loginParameter) => await ExecuteAsync(async () => await _tokenService.GenerateTokenAsync(loginParameter));
-        private async Task<IActionResult> ExecuteAsync(Func<Task<object>> func)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginCommand loginCommand) 
         {
-            try
-            {
-                var result = await func();
+            var response = await _tokenService.GenerateTokenAsync(loginCommand);
 
-                if (result == null || result.Equals(string.Empty))
-                {
-                    return Unauthorized();
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
+            return TreatObjectResultOk(response, _tokenService.Messages);
+        } 
     }
 }
