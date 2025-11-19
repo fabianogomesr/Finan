@@ -22,7 +22,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseCostCenterService.CreateAsync(costCenterCommand);
 
-            return TreatObjectResultCreated(response?.Id, _baseCostCenterService.Messages);
+            return TreatObjectResultCreated(response, _baseCostCenterService.Messages);
         }
 
         [HttpPut]
@@ -30,7 +30,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseCostCenterService.UpdateAsync(costCenterCommand);
 
-            return TreatObjectResultCreated(response, _baseCostCenterService.Messages);
+            return TreatObjectResultOk(response, _baseCostCenterService.Messages);
         }
 
         [HttpDelete("{id}")]
@@ -38,7 +38,7 @@ namespace Finan.Application.Controllers
         {
             await _baseCostCenterService.DeleteAsync(id);
 
-            return TreatObjectResultCreated(id, _baseCostCenterService.Messages);
+            return TreatObjectResultOk(id, _baseCostCenterService.Messages);
         }
 
         [HttpGet]
@@ -46,7 +46,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseCostCenterService.GetAsync();
 
-            return TreatObjectResultCreated(response, _baseCostCenterService.Messages);
+            return TreatObjectResultOk(response, _baseCostCenterService.Messages);
         }
 
         [HttpGet("Paged/{pageNumber}/{pageSize}")]
@@ -54,7 +54,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseCostCenterService.GetAsync(pageNumber, pageSize);
 
-            return TreatObjectResultCreated(response, _baseCostCenterService.Messages);
+            return TreatObjectResultOk(response, _baseCostCenterService.Messages);
         }
 
 
@@ -63,7 +63,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseCostCenterService.GetByIdAsync(id);
 
-            return TreatObjectResultCreated(response, _baseCostCenterService.Messages);
+            return TreatObjectResultOk(response, _baseCostCenterService.Messages);
         }
     }
 }

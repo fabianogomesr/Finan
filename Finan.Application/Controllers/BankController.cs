@@ -21,7 +21,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseBankService.CreateAsync(bankCommand);
 
-            return TreatObjectResultCreated(response.Id, _baseBankService.Messages);
+            return TreatObjectResultCreated(response, _baseBankService.Messages);
         }
 
         [HttpPut]

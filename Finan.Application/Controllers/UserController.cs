@@ -21,7 +21,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseUserService.CreateUser(userCommand);
 
-            return TreatObjectResultCreated(response?.Id, _baseUserService.Messages);
+            return TreatObjectResultCreated(response, _baseUserService.Messages);
         } 
 
         [HttpPut]

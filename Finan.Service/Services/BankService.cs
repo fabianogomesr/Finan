@@ -115,9 +115,6 @@ namespace Finan.Service.Services
         {
             var result = await _baseRepository.GetBanksAsync(pageNumber, pageSize);
 
-            if (!result.Items.Any())
-                return null;
-       
             return result;
         }
     }

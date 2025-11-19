@@ -22,7 +22,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseClassificationService.AddClassification(ClassificationParameter);
 
-            return TreatObjectResultCreated(response?.Id, _baseClassificationService.Messages);
+            return TreatObjectResultCreated(response, _baseClassificationService.Messages);
         } 
 
 

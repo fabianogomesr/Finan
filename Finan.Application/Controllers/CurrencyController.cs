@@ -23,7 +23,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseCurrencyService.CreateAsync(currencyCommand);
 
-            return TreatObjectResultCreated(response?.Id, _baseCurrencyService.Messages);
+            return TreatObjectResultCreated(response, _baseCurrencyService.Messages);
         }
 
         [HttpPut]

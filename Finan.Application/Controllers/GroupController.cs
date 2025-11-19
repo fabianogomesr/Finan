@@ -23,17 +23,15 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseGroupService.CreateGroup(groupCommand);
 
-            return TreatObjectResultCreated(response?.Id, _baseGroupService.Messages);
+            return TreatObjectResultCreated(response, _baseGroupService.Messages);
         }
-            
-
 
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] GroupCommand groupCommand)
         {
             var response = await _baseGroupService.UpdateGroup(groupCommand);
 
-            return TreatObjectResultCreated(response, _baseGroupService.Messages);
+            return TreatObjectResultOk(response, _baseGroupService.Messages);
         }
 
         [HttpDelete("{id}")]
@@ -41,7 +39,7 @@ namespace Finan.Application.Controllers
         {
             await _baseGroupService.DeleteAsync(id);
 
-            return TreatObjectResultCreated(id, _baseGroupService.Messages);
+            return TreatObjectResultOk(id, _baseGroupService.Messages);
         }
 
         [HttpGet]
@@ -49,7 +47,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseGroupService.GetAsync();
 
-            return TreatObjectResultCreated(response, _baseGroupService.Messages);
+            return TreatObjectResultOk(response, _baseGroupService.Messages);
         }
 
         [HttpGet("Nature/{natureId}")]
@@ -57,7 +55,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseGroupService.GetGroupsByNatureId(natureId);
 
-            return TreatObjectResultCreated(response, _baseGroupService.Messages);
+            return TreatObjectResultOk(response, _baseGroupService.Messages);
         }
 
         [HttpGet("Natures")]
@@ -65,7 +63,7 @@ namespace Finan.Application.Controllers
         {
             var response = _baseGroupService.GetNatureList();
 
-            return TreatObjectResultCreated(response, _baseGroupService.Messages);
+            return TreatObjectResultOk(response, _baseGroupService.Messages);
         }
 
         [HttpGet("Paged/{pageNumber}/{pageSize}")]
@@ -73,7 +71,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseGroupService.GetGroupsAsync(pageNumber, pageSize);
 
-            return TreatObjectResultCreated(response, _baseGroupService.Messages);
+            return TreatObjectResultOk(response, _baseGroupService.Messages);
         }
 
 
@@ -82,7 +80,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseGroupService.GetAsync(id);
 
-            return TreatObjectResultCreated(response, _baseGroupService.Messages);
+            return TreatObjectResultOk(response, _baseGroupService.Messages);
         }
     }
 }

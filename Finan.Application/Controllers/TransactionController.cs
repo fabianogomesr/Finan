@@ -23,7 +23,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseTransactionService.AddTransaction(transactionCommand);
 
-            return TreatObjectResultCreated(response?.Id, _baseTransactionService.Messages);
+            return TreatObjectResultCreated(response, _baseTransactionService.Messages);
 
         }
 

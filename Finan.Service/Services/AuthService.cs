@@ -26,7 +26,6 @@ namespace Finan.Service.Services
 
             if (user == null)
             {
-                Messages.Error("Usuário ou senha inválidos.");
                 return null;
             }
 

@@ -91,9 +91,6 @@ namespace Finan.Service.Services
         {
             var result = await _baseRepository.GetAccountsAsync(pageNumber, pageSize);
 
-            if (!result.Items.Any())
-                return null;
-
             return result;
         }
         #endregion

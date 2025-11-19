@@ -72,9 +72,6 @@ namespace Finan.Service.Services
         {
             var result = await _baseRepository.GetBanksAsync(pageNumber, pageSize);
 
-            if (!result.Items.Any())
-                return null;
-
             var items = result.Items.Select(x => new BankDTO
             {
                 Id = x.Id,
