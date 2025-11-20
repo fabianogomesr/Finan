@@ -1,0 +1,68 @@
+# ============================================================
+# BASE: Runtime do .NET para Desenvolvimento
+# ============================================================
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+
+# Apenas produção usa usuário non-root para segurança
+ARG ENVIRONMENT=Development
+ENV ASPNETCORE_ENVIRONMENT=$ENVIRONMENT
+
+EXPOSE 8080
+EXPOSE 8081
+
+
+# ============================================================
+# BUILD: SDK para restaurar, compilar e publicar
+# ============================================================
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copia somente csproj primeiro (para otimizar cache)
+COPY ./Finan.Application/*.csproj ./Finan.Application/
+COPY ./Finan.Domain/*.csproj ./Finan.Domain/
+COPY ./Finan.Infra/*.csproj ./Finan.Infra/
+# Adicione mais projetos conforme necessário
+
+# Restore com cache
+RUN dotnet restore "./Finan.Application/Finan.Application.csproj"
+
+# Copia todo o restante
+COPY . .
+
+ARG BUILD_CONFIGURATION=Release
+WORKDIR "/src/Finan.Application"
+RUN dotnet build "Finan.Application.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+
+# ============================================================
+# PUBLISH: pacote final otimizado
+# ============================================================
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish \
+    "Finan.Application.csproj" \
+    -c $BUILD_CONFIGURATION \
+    -o /app/publish \
+    /p:UseAppHost=false
+
+
+# ============================================================
+# FINAL: imagem final para produção
+# ============================================================
+FROM base AS final
+WORKDIR /app
+
+# Copia o publish final da aplicação
+COPY --from=publish /app/publish .
+
+# Se ambiente for produção, usa usuário "app"
+ARG ENVIRONMENT=Production
+RUN if [ "$ENVIRONMENT" = "Production" ]; then \
+        adduser --disabled-password appuser && chown -R appuser /app; \
+    fi
+
+# Só aplica o usuário no runtime final
+USER $([ "$ENVIRONMENT" = "Production" ] && echo "appuser" || echo "root")
+
+ENTRYPOINT ["dotnet", "Finan.Application.dll"]
