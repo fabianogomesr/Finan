@@ -21,7 +21,7 @@ namespace Finan.Application.Controllers
         {
             var response = await _baseAccountService.CreateAsync(accountCommand);
 
-            return TreatObjectResultCreated(response?.Id, _baseAccountService.Messages);
+            return TreatObjectResultCreated(response, _baseAccountService.Messages);
         }
 
         [HttpPut]
@@ -59,7 +59,7 @@ namespace Finan.Application.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            var response = await _baseAccountService.GetAsync(id);
+            var response = await _baseAccountService.GetByIdAsync(id);
 
             return TreatObjectResultOk(response, _baseAccountService.Messages);
         }
