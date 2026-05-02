@@ -24,6 +24,7 @@ namespace Finan.Infra.Data.Repository
                 .Include(x => x.Group)
                 .Include(x => x.Classification)
                 .Include(x => x.Currency)
+                .Include(x => x.Statements)
                 .Where(x => x.Id == id);
 
             return await result.FirstAsync();

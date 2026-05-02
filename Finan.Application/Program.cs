@@ -112,7 +112,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        policy => policy.WithOrigins("https://seu-frontend.com")
+        policy => policy.WithOrigins("https://finan-web.onrender.com")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
 });

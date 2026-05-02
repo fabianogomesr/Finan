@@ -31,5 +31,13 @@ namespace Finan.Domain.DTOs
         public string? Observation { get; set; }
         public byte StatusId { get; set; }
         public string? StatusName { get; set; }
+        public PaidTransaction? PaidTransaction { get; set; }
+    }
+
+    public class PaidTransaction
+    {
+        public DateTime PaidDate { get; set; }
+        public decimal PaidValue { get; set; }
+        public int AccountId { get; set; }
     }
 }

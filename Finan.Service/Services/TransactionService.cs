@@ -5,6 +5,8 @@ using Finan.Domain.Enums;
 using Finan.Domain.Filters;
 using Finan.Domain.Interfaces;
 using Finan.Service.Validators;
+using System.Data.Common;
+using System.Reflection.Metadata;
 
 namespace Finan.Service.Services
 {
@@ -74,7 +76,13 @@ namespace Finan.Service.Services
                 CashFlowDate = result.CashFlowDate,
                 AccrualPeriodDate = result.AccrualPeriodDate,
                 Observation = result.Observation,
-                StatusId = (byte)result.Status.GetHashCode()
+                StatusId = (byte)result.Status.GetHashCode(),
+                PaidTransaction = new PaidTransaction
+                {
+                    PaidDate = result.Statements.FirstOrDefault().FlowDate,
+                    PaidValue = result.Statements.FirstOrDefault().Value,
+                    AccountId = result.Statements.FirstOrDefault().AccountId.GetValueOrDefault(),
+                },
             };
         }
 
@@ -138,21 +146,27 @@ namespace Finan.Service.Services
                 return null;
             }
 
+            bool alreadyPaid = false;
+            if(transactionCommand.StatusId == TransactionStatus.Paid && transactionCommand.StatusId == transaction.Status)
+            {
+                alreadyPaid = true;
+            }
+
             // Atualiza os campos da transação
             UpdateTransactionFields(transaction, transactionCommand);
-
-            await _baseRepository.Update(transaction);
 
             try
             {
                 // Gerencia os efeitos colaterais de acordo com o status
-                await HandleTransactionStatusEffects(transaction, transactionCommand);
+                await HandleTransactionStatusEffects(transaction, transactionCommand, alreadyPaid);
             }
             catch (Exception ex)
             {
                 Messages.Error(ex.Message);
                 return null;
             }
+
+            await _baseRepository.Update(transaction);
 
             return MapToTransactionDTO(transaction);
         }
@@ -177,8 +191,13 @@ namespace Finan.Service.Services
             transaction.Status = (TransactionStatus)parameter.StatusId;
         }
 
-        private async Task HandleTransactionStatusEffects(Transaction transaction, TransactionCommand parameter)
+        private async Task HandleTransactionStatusEffects(Transaction transaction, TransactionCommand parameter, bool alreadyPaid)
         {
+            if (alreadyPaid)
+            {
+                await HandleCanceledOrOpenTransaction(transaction);
+            }
+
             if (transaction.Status == TransactionStatus.Paid)
             {
                 await HandlePaidTransaction(transaction, parameter);
@@ -195,8 +214,11 @@ namespace Finan.Service.Services
             if (account == null)
                 throw new Exception("Conta não localizada.");
 
+            transaction.TotalPaid = parameter.PaidTransaction.PaidValue;
+
             var balance = _statementRepository.GetBalanceByAccountId(parameter.PaidTransaction.AccountId);
             var statement = new Statement(parameter.PaidTransaction.PaidDate, parameter.PaidTransaction.PaidValue, balance, parameter.PaidTransaction.AccountId, transaction);
+            await _statementRepository.Insert(statement);
 
             account.Balance = statement.Balance;
             await _accountRepository.Update(account);
@@ -215,6 +237,16 @@ namespace Finan.Service.Services
                 statement.Reversed = true;
                 await _statementRepository.Update(statement);
             }
+
+            transaction.TotalPaid = 0;
+
+            var account = await _accountRepository.GetAccountByIdAsync(statement.AccountId.GetValueOrDefault());
+            if (account == null)
+                throw new Exception("Conta não localizada.");
+
+            var balance = _statementRepository.GetBalanceByAccountId(account.Id);
+            account.Balance = balance;
+            await _accountRepository.Update(account);
         }
 
         private TransactionDTO MapToTransactionDTO(Transaction transaction)

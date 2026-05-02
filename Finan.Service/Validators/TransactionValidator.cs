@@ -61,21 +61,21 @@ namespace Finan.Service.Validators
                 .NotNull().WithMessage("As informações de pagamento são obrigatórias quando o status é Pago.")
                 .When(p => p.StatusId.GetHashCode() == Finan.Domain.Enums.TransactionStatus.Paid.GetHashCode());
 
-            // Validações que só se aplicam quando o status é 2 (Pago)
-            RuleFor(p => p.PaidTransaction.PaidDate)
-                .NotEmpty().WithMessage("A data de pagamento é obrigatória quando o status é Pago.")
-                .LessThanOrEqualTo(DateTime.Now).WithMessage("A data de pagamento não pode ser no futuro.")
-                .When(p => p.StatusId.GetHashCode() == Finan.Domain.Enums.TransactionStatus.Paid.GetHashCode());
+            //// Validações que só se aplicam quando o status é 2 (Pago)
+            //RuleFor(p => p.PaidTransaction.PaidDate)
+            //    .NotEmpty().WithMessage("A data de pagamento é obrigatória quando o status é Pago.")
+            //    .LessThanOrEqualTo(DateTime.Now).WithMessage("A data de pagamento não pode ser no futuro.")
+            //    .When(p => p.StatusId.GetHashCode() == Finan.Domain.Enums.TransactionStatus.Paid.GetHashCode());
 
-            RuleFor(p => p.PaidTransaction.PaidValue)
-                .NotNull().WithMessage("O valor pago é obrigatório quando o status é Pago.")
-                .GreaterThan(0).WithMessage("O valor pago deve ser maior que zero.")
-                .ScalePrecision(2, 18).WithMessage("O valor pago deve ter no máximo 2 casas decimais e até 18 dígitos totais.")
-                .When(p => p.StatusId.GetHashCode() == Finan.Domain.Enums.TransactionStatus.Paid.GetHashCode());
+            //RuleFor(p => p.PaidTransaction.PaidValue)
+            //    .NotNull().WithMessage("O valor pago é obrigatório quando o status é Pago.")
+            //    .GreaterThan(0).WithMessage("O valor pago deve ser maior que zero.")
+            //    .ScalePrecision(2, 18).WithMessage("O valor pago deve ter no máximo 2 casas decimais e até 18 dígitos totais.")
+            //    .When(p => p.StatusId.GetHashCode() == Finan.Domain.Enums.TransactionStatus.Paid.GetHashCode());
 
-            RuleFor(p => p.PaidTransaction.AccountId)
-                .GreaterThan(0).WithMessage("A conta corrente é obrigatória quando o status é Pago.")
-                .When(p => p.StatusId.GetHashCode() == Finan.Domain.Enums.TransactionStatus.Paid.GetHashCode());
+            //RuleFor(p => p.PaidTransaction.AccountId)
+            //    .GreaterThan(0).WithMessage("A conta corrente é obrigatória quando o status é Pago.")
+            //    .When(p => p.StatusId.GetHashCode() == Finan.Domain.Enums.TransactionStatus.Paid.GetHashCode());
         }
     }
 }

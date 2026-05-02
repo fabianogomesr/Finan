@@ -34,7 +34,8 @@ namespace Finan.Service.Services
             {
                 Id = result.Id,
                 Name = result.Name,
-                Code = result.Code
+                Code = result.Code,
+                Symbol = result.Symbol
             };
         }
 
@@ -64,7 +65,8 @@ namespace Finan.Service.Services
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    Code = x.Code
+                    Code = x.Code,
+                    Symbol = x.Symbol
                 }).ToList();
         }
 
@@ -72,11 +74,12 @@ namespace Finan.Service.Services
         {
             var result = await _baseRepository.GetBanksAsync(pageNumber, pageSize);
 
-            var items = result.Items.Select(x => new BankDTO
+            var items = result.Items.Select(x => new CurrencyDTO
             {
                 Id = x.Id,
                 Name = x.Name,
-                Code = x.Code
+                Code = x.Code,
+                Symbol = x.Symbol
             });
 
             return result;
@@ -93,7 +96,8 @@ namespace Finan.Service.Services
             {
                 Id = result.Id,
                 Name = result.Name,
-                Code = result.Code
+                Code = result.Code,
+                Symbol = result.Symbol
             };
         }
 
@@ -112,6 +116,7 @@ namespace Finan.Service.Services
 
             currency.Name = currencyCommand.Name;
             currency.Code = currencyCommand.Code;
+            currency.Symbol = currencyCommand.Symbol;
 
             await _baseRepository.Update(currency);
 
@@ -119,7 +124,8 @@ namespace Finan.Service.Services
             {
                 Id = currency.Id,
                 Name = currency.Name,
-                Code = currency.Code
+                Code = currency.Code,
+                Symbol = currency.Symbol
             };
         }
     }
