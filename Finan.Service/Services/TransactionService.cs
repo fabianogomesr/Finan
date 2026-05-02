@@ -98,7 +98,7 @@ namespace Finan.Service.Services
             try
             {
                 // Gerencia os efeitos colaterais de acordo com o status
-                await HandleTransactionStatusEffects(transaction, transactionCommand);
+                await HandleTransactionStatusEffects(transaction, transactionCommand, false);
             }
             catch (Exception ex)
             {
