@@ -54,6 +54,10 @@ namespace Finan.Service.Validators
 
             RuleFor(p => p.TypeId.GetHashCode())
                 .Must(x => x == 0 || x == 1).WithMessage("O tipo tem que ser 0(Despesa), 1(Receita).");
+
+
+
+
         }
     }
 }

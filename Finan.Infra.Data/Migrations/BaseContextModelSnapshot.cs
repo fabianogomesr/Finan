@@ -374,11 +374,10 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnName("LateFee");
 
                     b.Property<string>("Observation")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("Observation");
 
-                    b.Property<byte>("Status")
+                    b.Property<short>("Status")
                         .HasColumnType("smallint")
                         .HasColumnName("Status");
 

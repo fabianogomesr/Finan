@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Finan.Infra.Data.Migrations
 {
     [DbContext(typeof(BaseContext))]
-    [Migration("20251024203513_InitialCreate")]
+    [Migration("20260502032658_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -377,11 +377,10 @@ namespace Finan.Infra.Data.Migrations
                         .HasColumnName("LateFee");
 
                     b.Property<string>("Observation")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("Observation");
 
-                    b.Property<byte>("Status")
+                    b.Property<short>("Status")
                         .HasColumnType("smallint")
                         .HasColumnName("Status");
 

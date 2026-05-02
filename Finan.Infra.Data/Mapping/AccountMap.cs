@@ -37,13 +37,11 @@ namespace Finan.Infra.Data.Mapping
 
             builder.Property(prop => prop.CreditLimit)
                 .HasConversion(prop => prop, prop => prop)
-                .IsRequired()
                 .HasColumnName("CreditLimit")
                 .HasColumnType("numeric(18,2)");
 
             builder.Property(prop => prop.Balance)
                 .HasConversion(prop => prop, prop => prop)
-                .IsRequired()
                 .HasColumnName("Balance")
                 .HasColumnType("numeric(18,2)");
 

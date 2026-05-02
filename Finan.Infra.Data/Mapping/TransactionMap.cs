@@ -37,19 +37,16 @@ namespace Finan.Infra.Data.Mapping
 
             builder.Property(prop => prop.Discount)
                 .HasPrecision(18, 2) // Configuração para aceitar valores decimais
-                .IsRequired()
                 .HasColumnName("Discount")
                 .HasColumnType("numeric(18,2)");
 
             builder.Property(prop => prop.LateFee)
                 .HasPrecision(18, 2) // Configuração para aceitar valores decimais
-                .IsRequired()
                 .HasColumnName("LateFee")
                 .HasColumnType("numeric(18,2)");
 
             builder.Property(prop => prop.TotalPaid)
                 .HasPrecision(18, 2) // Configuração para aceitar valores decimais
-                .IsRequired()
                 .HasColumnName("TotalPaid")
                 .HasColumnType("numeric(18,2)");
 
@@ -74,7 +71,6 @@ namespace Finan.Infra.Data.Mapping
                 .HasColumnType("timestamp");
 
             builder.Property(prop => prop.Observation)
-                .IsRequired()
                 .HasColumnName("Observation")
                 .HasColumnType("text");
 

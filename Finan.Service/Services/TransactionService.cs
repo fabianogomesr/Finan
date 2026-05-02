@@ -79,9 +79,9 @@ namespace Finan.Service.Services
                 StatusId = (byte)result.Status.GetHashCode(),
                 PaidTransaction = new PaidTransaction
                 {
-                    PaidDate = result.Statements.FirstOrDefault().FlowDate,
-                    PaidValue = result.Statements.FirstOrDefault().Value,
-                    AccountId = result.Statements.FirstOrDefault().AccountId.GetValueOrDefault(),
+                    PaidDate = result.Statements.FirstOrDefault() != null ? result.Statements.FirstOrDefault().FlowDate : default,
+                    PaidValue = result.Statements.FirstOrDefault() != null ? result.Statements.FirstOrDefault().Value : default,
+                    AccountId = result.Statements.FirstOrDefault() != null ? result.Statements.FirstOrDefault().AccountId.GetValueOrDefault() : default,
                 },
             };
         }
@@ -229,14 +229,14 @@ namespace Finan.Service.Services
             var statement = _statementRepository.GetAll()
                 .FirstOrDefault(x => x.TransactionId == transaction.Id && !x.Reversed);
 
-            if (statement != null)
-            {
-                if (statement.ReconciledDate != null)
-                    throw new Exception("Não é possível cancelar uma transação conciliada. Favor desfazer a conciliação antes de cancelar.");
+            if (statement == null)
+                return;
 
-                statement.Reversed = true;
-                await _statementRepository.Update(statement);
-            }
+            if (statement.ReconciledDate != null)
+                throw new Exception("Não é possível cancelar uma transação conciliada. Favor desfazer a conciliação antes de cancelar.");
+
+            statement.Reversed = true;
+            await _statementRepository.Update(statement);
 
             transaction.TotalPaid = 0;
 

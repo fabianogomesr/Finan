@@ -195,8 +195,8 @@ namespace Finan.Infra.Data.Migrations
                     DueDate = table.Column<DateTime>(type: "timestamp", nullable: false),
                     CashFlowDate = table.Column<DateTime>(type: "timestamp", nullable: false),
                     AccrualPeriodDate = table.Column<DateTime>(type: "timestamp", nullable: false),
-                    Observation = table.Column<string>(type: "text", nullable: false),
-                    Status = table.Column<byte>(type: "smallint", nullable: false),
+                    Observation = table.Column<string>(type: "text", nullable: true),
+                    Status = table.Column<short>(type: "smallint", nullable: false),
                     TenantId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
