@@ -1,14 +1,15 @@
-﻿using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Entities;
-using Finan.Domain.Parameters;
 
-namespace Finan.Service.Mappers
+namespace Finan.Application.Mappers
 {
     public class UserMap
     {
-        public static UserDTO EntityToDto(User user)
+        public static UserResponse EntityToDto(User user)
         {
-            return new UserDTO
+            return new UserResponse
             {
                 Id = user.Id,
                 UserName = user.UserName,
@@ -16,7 +17,7 @@ namespace Finan.Service.Mappers
             };
         }
 
-        public static User CommandToEntity(UserCommand userCommand)
+        public static User CommandToEntity(UserRequest userCommand)
         {
             return new User
             {

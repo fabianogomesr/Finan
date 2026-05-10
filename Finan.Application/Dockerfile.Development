@@ -15,22 +15,22 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ./Finan.Application/*.csproj ./Finan.Application/
+COPY ./Finan.Api/*.csproj ./Finan.Api/
 COPY ./Finan.Domain/*.csproj ./Finan.Domain/
 COPY ./Finan.Infra.Data/*.csproj ./Finan.Infra.Data/
 
-RUN dotnet restore ./Finan.Application/Finan.Application.csproj
+RUN dotnet restore ./Finan.Api/Finan.Api.csproj
 
 COPY . .
 
-WORKDIR /src/Finan.Application
+WORKDIR /src/Finan.Api
 RUN dotnet build -c Release -o /app/build
 
 # ============================================================
 # PUBLISH
 # ============================================================
 FROM build AS publish
-RUN dotnet publish "Finan.Application.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Finan.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 
 # ============================================================
@@ -43,4 +43,4 @@ COPY --from=publish /app/publish .
 
 ENV ASPNETCORE_URLS=http://+:8080
 
-ENTRYPOINT ["dotnet", "Finan.Application.dll"]
+ENTRYPOINT ["dotnet", "Finan.Api.dll"]

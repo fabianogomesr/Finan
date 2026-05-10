@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Finan.Contracts\Finan.Contracts.csproj" />
+    <ProjectReference Include="..\Finan.CrossCutting\Finan.CrossCutting.csproj" />
+    <ProjectReference Include="..\Finan.Domain\Finan.Domain.csproj" />
+    <ProjectReference Include="..\Finan.Infra.Identity\Finan.Infra.Identity.csproj" />
+  </ItemGroup>
+
+</Project>

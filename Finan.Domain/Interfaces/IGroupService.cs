@@ -1,19 +1,19 @@
-﻿using Finan.Domain.DTOs;
-using Finan.Domain.Entities;
-using Finan.Domain.Enums;
-using Finan.Domain.Parameters;
+﻿using Finan.Domain.Entities;
+using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 
 namespace Finan.Domain.Interfaces
 {
     public interface IGroupService : IBaseService
     {
-        Task<GroupDTO?> CreateGroup(GroupCommand groupCommand);
+        Task<GroupResponse?> CreateGroup(GroupRequest groupCommand);
         Task DeleteAsync(int id);
-        Task<List<GroupDTO>?> GetAsync();
-        Task<GroupDTO?> GetAsync(int id);
-        Task<PagedResult<GroupDTO>?> GetGroupsAsync(int pageNumber, int pageSize);
-        Task<List<GroupDTO>?> GetGroupsByNatureId(NatureGroup natureId);
-        List<NatureDTO?> GetNatureList();
-        Task<GroupDTO?> UpdateGroup(GroupCommand groupCommand);
+        Task<List<GroupResponse>?> GetAsync();
+        Task<GroupResponse?> GetAsync(int id);
+        Task<PagedResult<GroupResponse>?> GetGroupsAsync(int pageNumber, int pageSize);
+        Task<List<GroupResponse>?> GetGroupsByNatureId(NatureGroup natureId);
+        List<NatureResponse?> GetNatureList();
+        Task<GroupResponse?> UpdateGroup(GroupRequest groupCommand);
     }
 }

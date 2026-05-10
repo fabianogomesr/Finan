@@ -1,5 +1,7 @@
 ﻿using Finan.Domain.Entities;
-using Finan.Domain.Enums;
+using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;

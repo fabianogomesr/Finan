@@ -1,11 +1,11 @@
-﻿using Finan.Domain.Commands;
-using Finan.Domain.DTOs;
-using Finan.Domain.Entities;
+﻿using Finan.Domain.Entities;
 using Finan.Domain.Interfaces;
-using Finan.Service.Mappers;
-using Finan.Service.Validators;
+using Finan.Application.Mappers;
+using Finan.Application.Validators;
+using Finan.Contracts.Response;
+using Finan.Contracts.Request;
 
-namespace Finan.Service.Services
+namespace Finan.Application.Services
 {
     public class AccountService : BaseService, IAccountService
     {
@@ -17,7 +17,7 @@ namespace Finan.Service.Services
         }
 
         #region Action
-        public async Task<AccountDTO?> CreateAsync(AccountCommand accountCommand)
+        public async Task<AccountResponse?> CreateAsync(AccountRequest accountCommand)
         {
             if (!Validate(accountCommand, new AccountValidator()))
                 return null;
@@ -31,7 +31,7 @@ namespace Finan.Service.Services
             return AccountMap.EntityToDto(result);
         }
 
-        public async Task<AccountDTO?> UpdateAsync(AccountCommand accountCommand)
+        public async Task<AccountResponse?> UpdateAsync(AccountRequest accountCommand)
         {
             if (!Validate(accountCommand, new AccountValidator()))
                 return null;
@@ -67,7 +67,7 @@ namespace Finan.Service.Services
 
         #region Get
 
-        public async Task<AccountDTO?> GetByIdAsync(int id)
+        public async Task<AccountResponse?> GetByIdAsync(int id)
         {
             var result = await _baseRepository.GetAccountByIdAsync(id);
 
@@ -77,7 +77,7 @@ namespace Finan.Service.Services
             return AccountMap.EntityToDto(result);
         }
 
-        public async Task<List<AccountDTO>?> GetAsync()
+        public async Task<List<AccountResponse>?> GetAsync()
         {
             var result = await _baseRepository.GetAccountsAsync();
 
@@ -87,7 +87,7 @@ namespace Finan.Service.Services
             return result.Select(AccountMap.EntityToDto).ToList();
         }
 
-        public async Task<PagedResult<AccountDTO>?> GetAsync(int pageNumber = 1, int pageSize = 5)
+        public async Task<PagedResult<AccountResponse>?> GetAsync(int pageNumber = 1, int pageSize = 5)
         {
             var result = await _baseRepository.GetAccountsAsync(pageNumber, pageSize);
 

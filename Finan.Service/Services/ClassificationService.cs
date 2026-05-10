@@ -1,10 +1,10 @@
-﻿using Finan.Domain.DTOs;
-using Finan.Domain.Entities;
+﻿using Finan.Domain.Entities;
 using Finan.Domain.Interfaces;
-using Finan.Domain.Parameters;
-using Finan.Service.Validators;
+using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Application.Validators;
 
-namespace Finan.Service.Services
+namespace Finan.Application.Services
 {
     public class ClassificationService : BaseService, IClassificationService
     {
@@ -15,7 +15,7 @@ namespace Finan.Service.Services
             _baseRepository = baseRepository;
         }
 
-        public async Task<ClassificationDTO?> AddClassification(ClassificationCommand classificationCommand)
+        public async Task<ClassificationResponse?> AddClassification(ClassificationRequest classificationCommand)
         {
             if (!Validate(classificationCommand, new ClassificationValidator()))
                 return null;
@@ -30,7 +30,7 @@ namespace Finan.Service.Services
 
             var result = await _baseRepository.GetClassificationByIdAsync(classification.Id);
 
-            return new ClassificationDTO
+            return new ClassificationResponse
             {
                 Id = result.Id,
                 Description = result.Description,
@@ -38,7 +38,7 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<ClassificationDTO?> UpdateClassification(ClassificationCommand classificationCommand)
+        public async Task<ClassificationResponse?> UpdateClassification(ClassificationRequest classificationCommand)
         {
             if (!Validate(classificationCommand, new ClassificationValidator()))
                 return null;
@@ -56,7 +56,7 @@ namespace Finan.Service.Services
 
             await _baseRepository.Update(classification);
 
-            return new ClassificationDTO
+            return new ClassificationResponse
             {
                 Id = classification.Id,
                 Description = classification.Description,
@@ -65,14 +65,14 @@ namespace Finan.Service.Services
 
         }
 
-        public async Task<List<ClassificationDTO>?> GetClassificationsByGroupIdAsync(int GroupId)
+        public async Task<List<ClassificationResponse>?> GetClassificationsByGroupIdAsync(int GroupId)
         {
             var result = await _baseRepository.GetClassificationsByGroupIdAsync(GroupId);
 
             if (result == null)
                 return null;
 
-            return result.Select(x => new ClassificationDTO
+            return result.Select(x => new ClassificationResponse
             {
                 Id = x.Id,
                 Description = x.Description,
@@ -81,14 +81,14 @@ namespace Finan.Service.Services
             }).ToList();
         }
 
-        public async Task<ClassificationDTO?> GetClassificationByIdAsync(int id)
+        public async Task<ClassificationResponse?> GetClassificationByIdAsync(int id)
         {
             var result = await _baseRepository.GetClassificationByIdAsync(id);
 
             if (result == null)
                 return null;
 
-            return new ClassificationDTO
+            return new ClassificationResponse
             {
                 Id = result.Id,
                 Description = result.Description,
@@ -97,14 +97,14 @@ namespace Finan.Service.Services
             };
         } 
 
-        public async Task<List<ClassificationDTO>?> GetClassificationsAsync() {
+        public async Task<List<ClassificationResponse>?> GetClassificationsAsync() {
 
             var result = await _baseRepository.GetClassificationsAsync();
 
             if (!result.Any())
                 return null;
 
-            return result.Select(x => new ClassificationDTO
+            return result.Select(x => new ClassificationResponse
             {
                 Id = x.Id,
                 Description = x.Description,
@@ -113,7 +113,7 @@ namespace Finan.Service.Services
             }).ToList();
         }
   
-        public async Task<PagedResult<ClassificationDTO>?> GetClassificationsAsync(int pageNumber = 1, int pageSize = 5) 
+        public async Task<PagedResult<ClassificationResponse>?> GetClassificationsAsync(int pageNumber = 1, int pageSize = 5) 
         {
             var result = await _baseRepository.GetClassificationsAsync(pageNumber, pageSize);
 

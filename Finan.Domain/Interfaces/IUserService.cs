@@ -1,12 +1,13 @@
-﻿using Finan.Domain.DTOs;
-using Finan.Domain.Parameters;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 
 namespace Finan.Domain.Interfaces
 {
     public interface IUserService : IBaseService
     {
-        Task<UserDTO?> GetByUserNameAsync(string email);
-        Task<UserDTO?> CreateUser(UserCommand userCommand);
-        Task<UserDTO?> UpdateUser(UserCommand userCommand);
+        Task<UserResponse?> GetByUserNameAsync(string email);
+        Task<UserResponse?> CreateUser(UserRequest userCommand);
+        Task<UserResponse?> UpdateUser(UserRequest userCommand);
     }
 }

@@ -1,10 +1,10 @@
-﻿using Finan.Domain.Commands;
-using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
 using Finan.Domain.Entities;
 using Finan.Domain.Interfaces;
-using Finan.Service.Validators;
+using Finan.Application.Validators;
 
-namespace Finan.Service.Services
+namespace Finan.Application.Services
 {
     public class BankService : BaseService, IBankService
     {
@@ -15,7 +15,7 @@ namespace Finan.Service.Services
             _baseRepository = baseRepository;
         }
 
-        public async Task<BankDTO?> CreateAsync(BankCommand bankCommand)
+        public async Task<BankResponse?> CreateAsync(BankRequest bankCommand)
         {
             if (!Validate(bankCommand, new BankValidator()))
                 return null;
@@ -30,7 +30,7 @@ namespace Finan.Service.Services
 
             var result = await _baseRepository.Select(bank.Id);
 
-            return new BankDTO
+            return new BankResponse
             {
                 Id = result.Id,
                 Name = result.Name,
@@ -38,7 +38,7 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<BankDTO?> UpdateAsync(BankCommand bankCommand)
+        public async Task<BankResponse?> UpdateAsync(BankRequest bankCommand)
         {
 
             if (!Validate(bankCommand, new BankValidator()))
@@ -57,7 +57,7 @@ namespace Finan.Service.Services
 
             await _baseRepository.Update(result);
 
-            return new BankDTO
+            return new BankResponse
             {
                 Id = result.Id,
                 Name = result.Name,
@@ -65,14 +65,14 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<BankDTO?> GetByIdAsync(int id)
+        public async Task<BankResponse?> GetByIdAsync(int id)
         {
             var result = await _baseRepository.Select(id);
 
             if (result == null)
                 return null;
 
-            return new BankDTO
+            return new BankResponse
             {
                 Id = result.Id,
                 Name = result.Name,
@@ -93,7 +93,7 @@ namespace Finan.Service.Services
             await _baseRepository.Delete(id);
         }
 
-        public async Task<List<BankDTO>?> GetAsync()
+        public async Task<List<BankResponse>?> GetAsync()
         {
 
             var result = await _baseRepository.Select();
@@ -102,7 +102,7 @@ namespace Finan.Service.Services
                 return null;
 
             return result.Select(x => 
-                new BankDTO 
+                new BankResponse 
                 { 
                     Id = x.Id,
                     Name = x.Name,
@@ -111,7 +111,7 @@ namespace Finan.Service.Services
             ).ToList();
         }
 
-        public async Task<PagedResult<BankDTO>?> GetAsync(int pageNumber = 1, int pageSize = 5)
+        public async Task<PagedResult<BankResponse>?> GetAsync(int pageNumber = 1, int pageSize = 5)
         {
             var result = await _baseRepository.GetBanksAsync(pageNumber, pageSize);
 

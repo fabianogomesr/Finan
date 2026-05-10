@@ -1,9 +1,11 @@
 ﻿using Finan.Domain.Interfaces;
-using Finan.Domain.Parameters;
-using Finan.Service.Jwt;
-using Finan.Service.Validators;
+using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Application.Validators;
+using Finan.Infra.JWT;
+using Finan.Infra.Identity.JWT;
 
-namespace Finan.Service.Services
+namespace Finan.Application.Services
 {
     public class AuthService : BaseService, IAuthService
     {
@@ -17,7 +19,7 @@ namespace Finan.Service.Services
             _jwtTokenGenerator = jwtTokenGenerator ?? throw new ArgumentNullException(nameof(jwtTokenGenerator));
         }
 
-        public async Task<string?> GenerateTokenAsync(LoginCommand loginCommand)
+        public async Task<string?> GenerateTokenAsync(LoginRequest loginCommand)
         {
             if (!Validate(loginCommand, new LoginValidator()))
                 return null;

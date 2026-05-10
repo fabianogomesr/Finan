@@ -1,4 +1,6 @@
-﻿using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Entities;
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
@@ -15,9 +17,9 @@ namespace Finan.Infra.Data.Repository
             _dbSet = mySqlContext;
         }
 
-        public async Task<PagedResult<CostCenterDTO>> GetBanksAsync(int pageNumber = 1, int pageSize = 5)
+        public async Task<PagedResult<CostCenterResponse>> GetBanksAsync(int pageNumber = 1, int pageSize = 5)
         {
-            return await GetAll().Select(x => new CostCenterDTO 
+            return await GetAll().Select(x => new CostCenterResponse 
             {
                 Id = x.Id,
                 Description = x.Description

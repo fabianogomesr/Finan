@@ -1,4 +1,6 @@
-﻿using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Entities;
 
 namespace Finan.Domain.Interfaces
@@ -7,6 +9,6 @@ namespace Finan.Domain.Interfaces
     {
         Task<Account> GetAccountByIdAsync(int id);
         Task<IEnumerable<Account>> GetAccountsAsync();
-        Task<PagedResult<AccountDTO>> GetAccountsAsync(int pageNumber = 1, int pageSize = 5);
+        Task<PagedResult<AccountResponse>> GetAccountsAsync(int pageNumber = 1, int pageSize = 5);
     }
 }

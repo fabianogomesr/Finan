@@ -1,10 +1,10 @@
-﻿using Finan.Domain.Commands;
-using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
 using Finan.Domain.Entities;
 using Finan.Domain.Interfaces;
-using Finan.Service.Validators;
+using Finan.Application.Validators;
 
-namespace Finan.Service.Services
+namespace Finan.Application.Services
 {
     public class CurrencyService : BaseService, ICurrencyService
     {
@@ -14,7 +14,7 @@ namespace Finan.Service.Services
         {
             _baseRepository = baseRepository;
         }
-        public async Task<CurrencyDTO?> CreateAsync(CurrencyCommand currencyCommand)
+        public async Task<CurrencyResponse?> CreateAsync(CurrencyRequest currencyCommand)
         {
             if (!Validate(currencyCommand, new CurrencyValidator()))
                 return null;
@@ -30,7 +30,7 @@ namespace Finan.Service.Services
 
             var result = await _baseRepository.Select(currency.Id);
 
-            return new CurrencyDTO 
+            return new CurrencyResponse 
             {
                 Id = result.Id,
                 Name = result.Name,
@@ -53,7 +53,7 @@ namespace Finan.Service.Services
 
         }
 
-        public async Task<List<CurrencyDTO>?> GetAsync()
+        public async Task<List<CurrencyResponse>?> GetAsync()
         {
             var result = await _baseRepository.Select();
 
@@ -61,7 +61,7 @@ namespace Finan.Service.Services
                 return null;
 
             return result.Select(x =>
-                new CurrencyDTO
+                new CurrencyResponse
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -70,11 +70,11 @@ namespace Finan.Service.Services
                 }).ToList();
         }
 
-        public async Task<PagedResult<CurrencyDTO>?> GetAsync(int pageNumber = 1, int pageSize = 5)
+        public async Task<PagedResult<CurrencyResponse>?> GetAsync(int pageNumber = 1, int pageSize = 5)
         {
             var result = await _baseRepository.GetBanksAsync(pageNumber, pageSize);
 
-            var items = result.Items.Select(x => new CurrencyDTO
+            var items = result.Items.Select(x => new CurrencyResponse
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -85,14 +85,14 @@ namespace Finan.Service.Services
             return result;
         }
 
-        public async Task<CurrencyDTO?> GetByIdAsync(int id)
+        public async Task<CurrencyResponse?> GetByIdAsync(int id)
         {
             var result = await _baseRepository.Select(id);
 
             if (result == null)
                 return null;
 
-            return new CurrencyDTO
+            return new CurrencyResponse
             {
                 Id = result.Id,
                 Name = result.Name,
@@ -101,7 +101,7 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<CurrencyDTO?> UpdateAsync(CurrencyCommand currencyCommand)
+        public async Task<CurrencyResponse?> UpdateAsync(CurrencyRequest currencyCommand)
         {
             if (!Validate(currencyCommand, new CurrencyValidator()))
                 return null;
@@ -120,7 +120,7 @@ namespace Finan.Service.Services
 
             await _baseRepository.Update(currency);
 
-            return new CurrencyDTO
+            return new CurrencyResponse
             {
                 Id = currency.Id,
                 Name = currency.Name,

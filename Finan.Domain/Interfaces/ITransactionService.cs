@@ -1,19 +1,20 @@
-﻿using Finan.Domain.Commands;
-using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Entities;
-using Finan.Domain.Filters;
+using Finan.Contracts.Filters;
 
 namespace Finan.Domain.Interfaces
 {
     public interface ITransactionService : IBaseService
     {
-        Task<TransactionDTO> AddTransaction(TransactionCommand TransactionParameter);
-        Task<TransactionDTO> GetTransactionByIdAsync(int id);
-        Task<List<TransactionDTO>> GetTransactionsAsync();
-        Task<PagedResult<TransactionDTO>> GetTransactionsAsync(TransactionFilter filter);
-        List<TransactionTypeDTO> GetTypeList();
-        List<TransactionStatusDTO> GetStatusList();
-        Task<TransactionDTO> UpdateTransaction(TransactionCommand TransactionParameter);
-        List<DateTypeDTO> GetDateTypeList();
+        Task<TransactionResponse> AddTransaction(TransactionRequest TransactionParameter);
+        Task<TransactionResponse> GetTransactionByIdAsync(int id);
+        Task<List<TransactionResponse>> GetTransactionsAsync();
+        Task<PagedResult<TransactionResponse>> GetTransactionsAsync(TransactionFilter filter);
+        List<TransactionTypeResponse> GetTypeList();
+        List<TransactionStatusResponse> GetStatusList();
+        Task<TransactionResponse> UpdateTransaction(TransactionRequest TransactionParameter);
+        List<DateTypeResponse> GetDateTypeList();
     }
 }

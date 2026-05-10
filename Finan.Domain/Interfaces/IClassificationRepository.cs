@@ -1,6 +1,7 @@
-﻿using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Entities;
-using Finan.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Finan.Domain.Interfaces
         Task<IEnumerable<Classification>> GetClassificationsByGroupIdAsync(int GroupId);
         Task<Classification> GetClassificationByIdAsync(int id);
         Task<IEnumerable<Classification>> GetClassificationsAsync();
-        Task<PagedResult<ClassificationDTO>> GetClassificationsAsync(int pageNumber = 1, int pageSize = 5);
+        Task<PagedResult<ClassificationResponse>> GetClassificationsAsync(int pageNumber = 1, int pageSize = 5);
 
     }
 }

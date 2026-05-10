@@ -1,11 +1,12 @@
-﻿using Finan.Domain.DTOs;
-using Finan.Domain.Entities;
-using Finan.Domain.Enums;
+﻿using Finan.Domain.Entities;
 using Finan.Domain.Interfaces;
-using Finan.Domain.Parameters;
-using Finan.Service.Validators;
+using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
+using Finan.Application.Validators;
 
-namespace Finan.Service.Services
+
+namespace Finan.Application.Services
 {
     public class GroupService : BaseService, IGroupService
     {
@@ -16,7 +17,7 @@ namespace Finan.Service.Services
             _baseRepository = baseRepository;
         }
 
-        public async Task<GroupDTO?> CreateGroup(GroupCommand groupCommand)
+        public async Task<GroupResponse?> CreateGroup(GroupRequest groupCommand)
         {
             if (!Validate(groupCommand, new GroupValidator()))
                 return null;
@@ -29,7 +30,7 @@ namespace Finan.Service.Services
 
             await _baseRepository.Insert(group);
 
-            return new GroupDTO
+            return new GroupResponse
             {
                 Id = group.Id,
                 Description = group.Description,
@@ -51,14 +52,14 @@ namespace Finan.Service.Services
             await _baseRepository.Delete(id);
         }
 
-        public async Task<List<GroupDTO>?> GetAsync()
+        public async Task<List<GroupResponse>?> GetAsync()
         {
             var result = await _baseRepository.Select();
 
             if (!result.Any())
                 return null;
 
-            return result.Select(x => new GroupDTO
+            return result.Select(x => new GroupResponse
             {
                 Id = x.Id,
                 Description = x.Description,
@@ -67,14 +68,14 @@ namespace Finan.Service.Services
             }).ToList();
         }
 
-        public async Task<GroupDTO?> GetAsync(int id)
+        public async Task<GroupResponse?> GetAsync(int id)
         {
             var result = await _baseRepository.Select(id);
 
             if (result == null)
                 return null;
 
-            return new GroupDTO
+            return new GroupResponse
             {
                 Id = result.Id,
                 Description = result.Description,
@@ -83,21 +84,21 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<PagedResult<GroupDTO>?> GetGroupsAsync(int pageNumber, int pageSize) 
+        public async Task<PagedResult<GroupResponse>?> GetGroupsAsync(int pageNumber, int pageSize) 
         {
             var result = await _baseRepository.GetGroupsAsync(pageNumber, pageSize);
 
             return result;
         }
 
-        public async Task<List<GroupDTO>?> GetGroupsByNatureId(NatureGroup natureId)
+        public async Task<List<GroupResponse>?> GetGroupsByNatureId(NatureGroup natureId)
         {
             var result = _baseRepository.GetAll().Where(x => x.Nature == natureId).ToList();
 
             if (!result.Any())
                 return null;
 
-            return result.Select(x => new GroupDTO
+            return result.Select(x => new GroupResponse
             {
                 Id = x.Id,
                 Description = x.Description,
@@ -106,21 +107,21 @@ namespace Finan.Service.Services
             }).ToList();
         }
 
-        public List<NatureDTO>? GetNatureList()
+        public List<NatureResponse>? GetNatureList()
         {
             var result = EnumExtensions.GetEnumList<NatureGroup>();
 
             if (!result.Any())
                 return null;
 
-            return result.Select(x => new NatureDTO
+            return result.Select(x => new NatureResponse
             {
                 Id = x.Value,
                 Description = x.Description
             }).ToList();
         }
 
-        public async Task<GroupDTO?> UpdateGroup(GroupCommand groupCommand)
+        public async Task<GroupResponse?> UpdateGroup(GroupRequest groupCommand)
         {
             if (!Validate(groupCommand, new GroupValidator()))
                 return null;
@@ -138,7 +139,7 @@ namespace Finan.Service.Services
 
             await _baseRepository.Update(group);
 
-            return new GroupDTO
+            return new GroupResponse
             {
                 Id = group.Id,
                 Description = group.Description,

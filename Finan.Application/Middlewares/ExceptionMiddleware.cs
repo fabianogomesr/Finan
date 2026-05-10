@@ -1,8 +1,8 @@
-﻿using Finan.Application.Common;
+﻿using Finan.Contracts.Response;
 using System.Net;
 using System.Text.Json;
 
-namespace Finan.Application.Middlewares
+namespace Finan.Api.Middlewares
 {
     public class ExceptionMiddleware
     {
@@ -33,7 +33,7 @@ namespace Finan.Application.Middlewares
 
         private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            var response = new ApiResponse(messages: new[] { "Ocorreu um erro interno no servidor: " + ex.Message }, success:false);
+            var response = new ApiResponse<object>(messages: new[] { "Ocorreu um erro interno no servidor: " + ex.Message }, success:false);
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

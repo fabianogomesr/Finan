@@ -1,11 +1,12 @@
-﻿using Finan.Domain.DTOs;
-using Finan.Domain.Entities;
-using Finan.Domain.Enums;
-using Finan.Domain.Filters;
+﻿using Finan.Domain.Entities;
+using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
 using Finan.Infra.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Finan.Contracts.Filters;
 
 namespace Finan.Infra.Data.Repository
 {
@@ -40,7 +41,7 @@ namespace Finan.Infra.Data.Repository
                 .ToListAsync();
         }
 
-        public async Task<PagedResult<TransactionDTO>> GetTransactionsAsync(TransactionFilter filter)
+        public async Task<PagedResult<TransactionResponse>> GetTransactionsAsync(TransactionFilter filter)
         {
             var query = GetAll();
 
@@ -75,7 +76,7 @@ namespace Finan.Infra.Data.Repository
                 query = query.Where(x => x.Status != TransactionStatus.Canceled);
             }
 
-            return await query.Select(x => new TransactionDTO
+            return await query.Select(x => new TransactionResponse
             {
                 Id = x.Id,
                 Description = x.Description,

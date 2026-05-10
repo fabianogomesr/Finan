@@ -1,4 +1,6 @@
-﻿using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Entities;
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
@@ -15,11 +17,11 @@ namespace Finan.Infra.Data.Repository
             _dbSet = mySqlContext;
         }
 
-        public async Task<PagedResult<GroupDTO>> GetGroupsAsync(int pageNumber, int pageSize)
+        public async Task<PagedResult<GroupResponse>> GetGroupsAsync(int pageNumber, int pageSize)
         {
             var query = GetAll();
 
-            return await query.Select(x => new GroupDTO
+            return await query.Select(x => new GroupResponse
             {
                 Id = x.Id,
                 Description = x.Description,

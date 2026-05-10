@@ -1,11 +1,12 @@
 ﻿using Finan.CrossCutting.Encrypt;
-using Finan.Domain.DTOs;
+using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Interfaces;
-using Finan.Domain.Parameters;
-using Finan.Service.Mappers;
-using Finan.Service.Validators;
+using Finan.Application.Mappers;
+using Finan.Application.Validators;
 
-namespace Finan.Service.Services
+namespace Finan.Application.Services
 {
     public class UserService : BaseService, IUserService
     {
@@ -22,7 +23,7 @@ namespace Finan.Service.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<UserDTO?> CreateUser(UserCommand userCommand)
+        public async Task<UserResponse?> CreateUser(UserRequest userCommand)
         {
             if (!Validate(userCommand, new UserValidator()))
                 return null;
@@ -38,7 +39,7 @@ namespace Finan.Service.Services
             return UserMap.EntityToDto(user);
         }
 
-        public async Task<UserDTO?> GetByUserNameAsync(string userName) 
+        public async Task<UserResponse?> GetByUserNameAsync(string userName) 
         {
             var result = await _baseRepository.GetUserByUserName(userName);
 
@@ -48,7 +49,7 @@ namespace Finan.Service.Services
             return UserMap.EntityToDto(result);
         }
 
-        public async Task<UserDTO?> UpdateUser(UserCommand userCommand)
+        public async Task<UserResponse?> UpdateUser(UserRequest userCommand)
         {
             if (Validate(userCommand, new UserValidator()))
                 return null;

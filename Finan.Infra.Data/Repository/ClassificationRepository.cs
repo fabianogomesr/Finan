@@ -1,6 +1,7 @@
-﻿using Finan.Domain.DTOs;
-using Finan.Domain.Entities;
-using Finan.Domain.Enums;
+﻿using Finan.Domain.Entities;
+using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
 using Finan.Infra.Data.Extensions;
@@ -28,9 +29,9 @@ namespace Finan.Infra.Data.Repository
         public async Task<IEnumerable<Classification>> GetClassificationsByGroupIdAsync(int GroupId) => await GetAll().Include(x => x.Group).Where(x => x.GroupId == GroupId).ToListAsync();
         public async Task<Classification> GetClassificationByIdAsync(int id) => await GetAll().Include(x => x.Group).FirstAsync(x => x.Id == id);
         public async Task<IEnumerable<Classification>> GetClassificationsAsync() => await GetAll().Include(x => x.Group).ToListAsync();
-        public async Task<PagedResult<ClassificationDTO>> GetClassificationsAsync(int pageNumber = 1, int pageSize = 5) 
+        public async Task<PagedResult<ClassificationResponse>> GetClassificationsAsync(int pageNumber = 1, int pageSize = 5) 
         {
-            var result = GetAll().Select(x => new ClassificationDTO
+            var result = GetAll().Select(x => new ClassificationResponse
             {
                 Id = x.Id,
                 Description = x.Description,

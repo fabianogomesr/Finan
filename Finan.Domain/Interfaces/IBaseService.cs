@@ -1,4 +1,4 @@
-﻿using Finan.Domain.Messages;
+﻿using Finan.Contracts.Messages;
 
 namespace Finan.Domain.Interfaces
 {

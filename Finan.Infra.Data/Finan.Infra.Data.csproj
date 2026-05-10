@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Finan.CrossCutting\Finan.CrossCutting.csproj" />
     <ProjectReference Include="..\Finan.Domain\Finan.Domain.csproj" />
+    <ProjectReference Include="..\Finan.Infra.Identity\Finan.Infra.Identity.csproj" />
   </ItemGroup>
 
 </Project>

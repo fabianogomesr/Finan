@@ -1,9 +1,9 @@
-﻿using Finan.Domain.Commands;
+﻿using Finan.Contracts.Request;
 using Finan.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Finan.Application.Controllers
+namespace Finan.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -19,7 +19,7 @@ namespace Finan.Application.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] CurrencyCommand currencyCommand)
+        public async Task<IActionResult> CreateAsync([FromBody] CurrencyRequest currencyCommand)
         {
             var response = await _baseCurrencyService.CreateAsync(currencyCommand);
 
@@ -27,7 +27,7 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] CurrencyCommand currencyCommand)
+        public async Task<IActionResult> UpdateAsync([FromBody] CurrencyRequest currencyCommand)
         {
             var response = await _baseCurrencyService.UpdateAsync(currencyCommand);
 

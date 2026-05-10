@@ -1,6 +1,6 @@
-using Finan.Application;
-using Finan.Application.Middlewares;
-using Finan.Service.Jwt;
+using Finan.Api;
+using Finan.Api.Middlewares;
+using Finan.Infra.Identity.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

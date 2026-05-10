@@ -1,9 +1,9 @@
-﻿using Finan.Domain.Commands;
+﻿using Finan.Contracts.Request;
 using Finan.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Finan.Application.Controllers
+namespace Finan.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -17,7 +17,7 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] BankCommand bankCommand)
+        public async Task<IActionResult> CreateAsync([FromBody] BankRequest bankCommand)
         {
             var response = await _baseBankService.CreateAsync(bankCommand);
 
@@ -25,7 +25,7 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] BankCommand bankCommand)
+        public async Task<IActionResult> UpdateAsync([FromBody] BankRequest bankCommand)
         {
             var response = await _baseBankService.UpdateAsync(bankCommand);
 

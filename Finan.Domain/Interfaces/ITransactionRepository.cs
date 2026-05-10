@@ -1,11 +1,13 @@
-﻿using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Entities;
-using Finan.Domain.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Finan.Contracts.Filters;
 
 namespace Finan.Domain.Interfaces
 {
@@ -13,6 +15,6 @@ namespace Finan.Domain.Interfaces
     {
         Task<Transaction> GetTransactionByIdAsync(int id);
         Task<List<Transaction>> GetTransactionsAsync();
-        Task<PagedResult<TransactionDTO>> GetTransactionsAsync(TransactionFilter filter);
+        Task<PagedResult<TransactionResponse>> GetTransactionsAsync(TransactionFilter filter);
     }
 }

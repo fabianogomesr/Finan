@@ -1,9 +1,9 @@
-﻿using Finan.Domain.Enums;
+﻿using Finan.Contracts.Enums;
+using Finan.Contracts.Messages;
 using Finan.Domain.Interfaces;
-using Finan.Domain.Messages;
 using FluentValidation;
 
-namespace Finan.Service.Services
+namespace Finan.Application.Services
 {
     public class BaseService : IBaseService
     {

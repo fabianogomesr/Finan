@@ -1,14 +1,15 @@
-﻿using Finan.Domain.Commands;
-using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Entities;
 
-namespace Finan.Service.Mappers
+namespace Finan.Application.Mappers
 {
     public class AccountMap
     {
-        public static AccountDTO EntityToDto(Account account)
+        public static AccountResponse EntityToDto(Account account)
         {
-            return new AccountDTO
+            return new AccountResponse
             {
                 Id = account.Id,
                 BankId = account.BankId,
@@ -21,7 +22,7 @@ namespace Finan.Service.Mappers
             };
         }
 
-        public static Account CommandToEntity(AccountCommand accountCommand, Account? account = null)
+        public static Account CommandToEntity(AccountRequest accountCommand, Account? account = null)
         {
             if (account == null)
             {

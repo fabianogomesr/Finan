@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
-using Finan.Domain.Parameters;
+using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 
-namespace Finan.Service.Validators
+namespace Finan.Application.Validators
 {
-    public class UserValidator : AbstractValidator<UserCommand>
+    public class UserValidator : AbstractValidator<UserRequest>
     {
         public UserValidator()
         {

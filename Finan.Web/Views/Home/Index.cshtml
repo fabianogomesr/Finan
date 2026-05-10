@@ -1,0 +1,153 @@
+﻿<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+
+@* @model TransactionViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    
+    var Years = ViewBag.Years;
+    var Months = ViewBag.Months;
+    
+    var ReceivableSummary = ViewBag.ReceivableSummary;
+    var TransactionSummary = ViewBag.TransactionSummary;
+    var Balance = ViewBag.Balance;
+
+    var ReceivableSummaryClassification = ViewBag.ReceivableSummaryClassification;
+    var TransactionSummaryClassification = ViewBag.TransactionSummaryClassification;
+
+    var SelectedYear = ViewBag.SelectedYear;
+    var SelectedMonth = ViewBag.SelectedMonth;
+}
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #f8fafc;
+    }
+    .dashboard-card {
+        border: none;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .dashboard-card.receitas {
+        background: linear-gradient(135deg, #2ecc71 60%, #27ae60 100%);
+        color: #fff;
+    }
+    .dashboard-card.despesas {
+        background: linear-gradient(135deg, #e74c3c 60%, #c0392b 100%);
+        color: #fff;
+    }
+    .dashboard-card.saldo {
+        background: linear-gradient(135deg, #2980b9 60%, #6dd5fa 100%);
+        color: #fff;
+    }
+    .dashboard-section-title {
+        color: #34495e;
+        font-weight: 600;
+    }
+    .table thead th {
+        background-color: #f1f3f6;
+        color: #34495e;
+        border-bottom: 2px solid #dee2e6;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f8fafc;
+    }
+</style>
+
+<div class="container mt-5">
+    <h3 class="mb-4 dashboard-section-title">Dashboard Mensal</h3>
+    <div class="container mt-4 d-flex justify-content-center">
+        <form method="get" action="/Home/Index" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                @await Component.InvokeAsync("Label", new { name = "Month", Text = "Mês:" })
+                @await Component.InvokeAsync("Dropdown", new { name = "Month", items = Months, selectedValue = SelectedMonth.ToString() })
+            </div>
+            <div class="col-md-3">
+                @await Component.InvokeAsync("Label", new { name = "Year", Text = "Ano:" })
+                @await Component.InvokeAsync("Dropdown", new { name = "Year", items = Years, selectedValue = SelectedYear.ToString() })
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Pesquisar
+                </button>
+            </div>
+        </form>
+    </div>
+    <hr />
+    <div class="row mb-4 mt-5">
+        <div class="col-md-4">
+            <div class="card dashboard-card receitas mb-3">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-cash-stack"></i> Receitas</h5>
+                    <p class="card-text display-6">R$ @ReceivableSummary.TotalAmount.ToString("N2")</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card despesas mb-3">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-credit-card-2-front"></i> Despesas</h5>
+                    <p class="card-text display-6">R$ @TransactionSummary.TotalAmount.ToString("N2")</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card saldo mb-3">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-wallet2"></i> Saldo</h5>
+                    <p class="card-text display-6">R$ @Balance.ToString("N2")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-4 mt-5 dashboard-section-title">Receitas por Classificação</h3>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Classificação</th>
+                <th>Valor Recebido (R$)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ReceivableSummaryClassification != null && ReceivableSummaryClassification.Count > 0)
+            {
+                @foreach (var item in ReceivableSummaryClassification)
+                {
+                    <tr>
+                        <td>@item.Classification</td>
+                        <td>@item.TotalAmount.ToString("N2")</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <h3 class="mb-4 dashboard-section-title">Despesas por Classificação</h3>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Classificação</th>
+                <th>Valor Gasto (R$)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (TransactionSummaryClassification != null && TransactionSummaryClassification.Count > 0)
+            {
+                @foreach (var item in TransactionSummaryClassification)
+                {
+                    <tr>
+                        <td>@item.Classification</td>
+                        <td>@item.TotalAmount.ToString("N2")</td>
+                    </tr>
+                }
+            }
+            
+        </tbody>
+    </table>
+</div>
+ *@

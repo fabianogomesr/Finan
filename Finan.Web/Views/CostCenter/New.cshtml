@@ -1,0 +1,38 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Custo</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<main>
+    <div class="container">
+        <div class="d-flex align-items-center p-0 mb-4">
+            <h1 class="h3 mb-0 me-2">Centros de Custos</h1>
+            <span class="text-muted fs-6">> Novo</span>
+        </div>
+
+        <div class="text-end mb-3">
+            <a href="/CostCenter" class="btn btn-secondary btn-sm" style="font-size:small;">Voltar</a>
+        </div>
+
+        <form action="/CostCenter/Create" method="post" class="needs-validation" novalidate>
+            <div class="card shadow-sm p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="Description" class="form-label">Descrição:</label>
+                        @await Component.InvokeAsync("TextInput", new { name = "Description", maxlength = 100, placeholder = "Digite a descrição do Grupo" })
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4" style="font-size:small;">
+                <button class="btn btn-primary btn-sm" type="submit">Salvar</button>
+            </div>
+        </form>
+    </div>
+</main>

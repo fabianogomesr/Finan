@@ -1,14 +1,14 @@
-﻿using Finan.Domain.Commands;
-using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Entities;
-using Finan.Domain.Enums;
-using Finan.Domain.Filters;
 using Finan.Domain.Interfaces;
-using Finan.Service.Validators;
+using Finan.Application.Validators;
 using System.Data.Common;
 using System.Reflection.Metadata;
+using Finan.Contracts.Filters;
 
-namespace Finan.Service.Services
+namespace Finan.Application.Services
 {
     public class TransactionService : BaseService, ITransactionService
     {
@@ -23,14 +23,14 @@ namespace Finan.Service.Services
             _accountRepository = accountRepository;
         }
 
-        public async Task<List<TransactionDTO>?> GetTransactionsAsync()
+        public async Task<List<TransactionResponse>?> GetTransactionsAsync()
         {
             var result = await _baseRepository.GetTransactionsAsync();
 
             if (!result.Any())
                 return null;
 
-            return result.Select(x => new TransactionDTO
+            return result.Select(x => new TransactionResponse
             {
                 Id = x.Id,
                 CostCenterId = x.CostCenterId,
@@ -51,14 +51,14 @@ namespace Finan.Service.Services
             }).ToList();
         }
 
-        public async Task<TransactionDTO?> GetTransactionByIdAsync(int id)
+        public async Task<TransactionResponse?> GetTransactionByIdAsync(int id)
         {
             var result = await _baseRepository.GetTransactionByIdAsync(id);
 
             if (result == null)
                 return null;
 
-            return new TransactionDTO
+            return new TransactionResponse
             {
                 Id = result.Id,
                 CostCenterId = result.CostCenterId,
@@ -86,7 +86,7 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<TransactionDTO?> AddTransaction(TransactionCommand transactionCommand)
+        public async Task<TransactionResponse?> AddTransaction(TransactionRequest transactionCommand)
         {
             if (!Validate(transactionCommand, new TransactionValidator()))
                 return null;
@@ -109,7 +109,7 @@ namespace Finan.Service.Services
             return MapToTransactionDTO(transaction);
         }
 
-        private static Transaction CreateTransactionFields(TransactionCommand TransactionParameter)
+        private static Transaction CreateTransactionFields(TransactionRequest TransactionParameter)
         {
             return new Transaction
             {
@@ -132,7 +132,7 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<TransactionDTO?> UpdateTransaction(TransactionCommand transactionCommand)
+        public async Task<TransactionResponse?> UpdateTransaction(TransactionRequest transactionCommand)
         {
             if (!Validate(transactionCommand, new TransactionValidator()))
                 return null;
@@ -171,7 +171,7 @@ namespace Finan.Service.Services
             return MapToTransactionDTO(transaction);
         }
 
-        private void UpdateTransactionFields(Transaction transaction, TransactionCommand parameter)
+        private void UpdateTransactionFields(Transaction transaction, TransactionRequest parameter)
         {
             transaction.CostCenterId = parameter.CostCenterId;
             transaction.GroupId = parameter.GroupId;
@@ -191,7 +191,7 @@ namespace Finan.Service.Services
             transaction.Status = (TransactionStatus)parameter.StatusId;
         }
 
-        private async Task HandleTransactionStatusEffects(Transaction transaction, TransactionCommand parameter, bool alreadyPaid)
+        private async Task HandleTransactionStatusEffects(Transaction transaction, TransactionRequest parameter, bool alreadyPaid)
         {
             if (alreadyPaid)
             {
@@ -208,7 +208,7 @@ namespace Finan.Service.Services
             }
         }
 
-        private async Task HandlePaidTransaction(Transaction transaction, TransactionCommand parameter)
+        private async Task HandlePaidTransaction(Transaction transaction, TransactionRequest parameter)
         {
             var account = await _accountRepository.Select(parameter.PaidTransaction.AccountId);
             if (account == null)
@@ -249,9 +249,9 @@ namespace Finan.Service.Services
             await _accountRepository.Update(account);
         }
 
-        private TransactionDTO MapToTransactionDTO(Transaction transaction)
+        private TransactionResponse MapToTransactionDTO(Transaction transaction)
         {
-            return new TransactionDTO
+            return new TransactionResponse
             {
                 Id = transaction.Id,
                 CostCenterId = transaction.CostCenterId,
@@ -272,40 +272,40 @@ namespace Finan.Service.Services
             };
         }
 
-        public async Task<PagedResult<TransactionDTO>?> GetTransactionsAsync(TransactionFilter filter) 
+        public async Task<PagedResult<TransactionResponse>?> GetTransactionsAsync(TransactionFilter filter) 
         {
             var result = await _baseRepository.GetTransactionsAsync(filter);
 
             return result;
         } 
 
-        public List<TransactionTypeDTO> GetTypeList()
+        public List<TransactionTypeResponse> GetTypeList()
         {
             var result = EnumExtensions.GetEnumList<TransactionType>();
 
-            return result.Select(x => new TransactionTypeDTO
+            return result.Select(x => new TransactionTypeResponse
             {
                 Id = x.Value,
                 Description = x.Description
             }).ToList();
         }
 
-        public List<TransactionStatusDTO> GetStatusList()
+        public List<TransactionStatusResponse> GetStatusList()
         {
             var result = EnumExtensions.GetEnumList<TransactionStatus>();
 
-            return result.Select(x => new TransactionStatusDTO
+            return result.Select(x => new TransactionStatusResponse
             {
                 Id = x.Value,
                 Description = x.Description
             }).ToList();
         }
 
-        public List<DateTypeDTO> GetDateTypeList()
+        public List<DateTypeResponse> GetDateTypeList()
         {
             var result = EnumExtensions.GetEnumList<DateType>();
 
-            return result.Select(x => new DateTypeDTO
+            return result.Select(x => new DateTypeResponse
             {
                 TypeId = x.Value,
                 Name = x.Description

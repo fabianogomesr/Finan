@@ -1,10 +1,10 @@
-﻿using Finan.Domain.Commands;
-using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
 using Finan.Domain.Entities;
 using Finan.Domain.Interfaces;
-using Finan.Service.Validators;
+using Finan.Application.Validators;
 
-namespace Finan.Service.Services
+namespace Finan.Application.Services
 {
     public class CostCenterService : BaseService, ICostCenterService
     {
@@ -14,7 +14,7 @@ namespace Finan.Service.Services
             _baseRepository = baseRepository;
         }
 
-        public async Task<CostCenterDTO?> CreateAsync(CostCenterCommand costCenterCommand)
+        public async Task<CostCenterResponse?> CreateAsync(CostCenterRequest costCenterCommand)
         {
             if (!Validate(costCenterCommand, new CostCenterValidator()))
                 return null;
@@ -28,7 +28,7 @@ namespace Finan.Service.Services
 
             var result = await _baseRepository.Select(bank.Id);
 
-            return new CostCenterDTO
+            return new CostCenterResponse
             {
                 Id = result.Id,
                 Description = result.Description
@@ -48,7 +48,7 @@ namespace Finan.Service.Services
             await _baseRepository.Delete(id);
         }
 
-        public async Task<List<CostCenterDTO>?> GetAsync()
+        public async Task<List<CostCenterResponse>?> GetAsync()
         {
             var result = await _baseRepository.Select();
 
@@ -56,35 +56,35 @@ namespace Finan.Service.Services
                 return null;
 
             return result.Select(x =>
-            new CostCenterDTO
+            new CostCenterResponse
             {
                 Id = x.Id,
                 Description = x.Description
             }).ToList();
         }
 
-        public async Task<PagedResult<CostCenterDTO>?> GetAsync(int pageNumber = 1, int pageSize = 5)
+        public async Task<PagedResult<CostCenterResponse>?> GetAsync(int pageNumber = 1, int pageSize = 5)
         {
             var result = await _baseRepository.GetBanksAsync(pageNumber, pageSize);
 
             return result;
         }
 
-        public async Task<CostCenterDTO?> GetByIdAsync(int id)
+        public async Task<CostCenterResponse?> GetByIdAsync(int id)
         {
             var result = await _baseRepository.Select(id);
 
             if (result == null)
                 return null;
 
-            return new CostCenterDTO
+            return new CostCenterResponse
             {
                 Id = result.Id,
                 Description = result.Description
             };
         }
 
-        public async Task<CostCenterDTO?> UpdateAsync(CostCenterCommand costCenterCommand)
+        public async Task<CostCenterResponse?> UpdateAsync(CostCenterRequest costCenterCommand)
         {
             if (!Validate(costCenterCommand, new CostCenterValidator()))
                 return null;
@@ -101,7 +101,7 @@ namespace Finan.Service.Services
 
             await _baseRepository.Update(costCenter);
 
-            return new CostCenterDTO
+            return new CostCenterResponse
             {
                 Id = costCenter.Id,
                 Description = costCenter.Description

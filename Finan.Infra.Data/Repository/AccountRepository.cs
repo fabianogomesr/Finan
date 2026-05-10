@@ -1,6 +1,7 @@
-﻿using Finan.Domain.DTOs;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using Finan.Domain.Entities;
-using Finan.Domain.Enums;
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
 using Finan.Infra.Data.Extensions;
@@ -25,9 +26,9 @@ namespace Finan.Infra.Data.Repository
 
         public async Task<Account> GetAccountByIdAsync(int id) => await _dbSet.Set<Account>().Include(x => x.Bank).FirstAsync(x => x.Id == id);
         public async Task<IEnumerable<Account>> GetAccountsAsync() => await _dbSet.Set<Account>().Include(x => x.Bank).ToListAsync();
-        public async Task<PagedResult<AccountDTO>> GetAccountsAsync(int pageNumber = 1, int pageSize = 5) 
+        public async Task<PagedResult<AccountResponse>> GetAccountsAsync(int pageNumber = 1, int pageSize = 5) 
         {
-            return await GetAll().Select(x => new AccountDTO
+            return await GetAll().Select(x => new AccountResponse
             {
                 Id = x.Id,
                 BankId = x.BankId,

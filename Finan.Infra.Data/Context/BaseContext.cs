@@ -2,6 +2,7 @@
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Extensions;
 using Finan.Infra.Data.Mapping;
+using Finan.Infra.Identity.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 

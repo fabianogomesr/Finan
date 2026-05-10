@@ -1,4 +1,4 @@
-﻿using Finan.Domain.Enums;
+﻿using Finan.Contracts.Enums;
 
 namespace Finan.Domain.Entities
 {

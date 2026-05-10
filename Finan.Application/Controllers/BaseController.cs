@@ -1,7 +1,8 @@
-﻿using Finan.Application.Common;
-using Finan.Domain.Messages;
+﻿using Finan.Contracts.Messages;
+using Finan.Contracts.Response;
 using Microsoft.AspNetCore.Mvc;
-namespace Finan.Application.Controllers
+
+namespace Finan.Api.Controllers
 {
     public class BaseController : ControllerBase
     {
@@ -10,19 +11,19 @@ namespace Finan.Application.Controllers
             if (messages?.HasErrors() == true)
             {
                 return StatusCode(StatusCodes.Status400BadRequest,
-                    new ApiResponse(data, messages.GetErros(), false));
+                    new ApiResponse<object>(data, messages.GetErros(), false));
             }
 
             if (data == null)
             {
-                return new ObjectResult(new ApiResponse(data))
+                return new ObjectResult(new ApiResponse<object>(data))
                 {
                     StatusCode = StatusCodes.Status204NoContent
                 };
             }
 
             return StatusCode(successStatusCode,
-                    new ApiResponse(data));
+                    new ApiResponse<object>(data));
         }
 
         protected IActionResult TreatObjectResultOk(object? data = null, MessageCollection? messages = null)

@@ -1,10 +1,10 @@
-﻿using Finan.Domain.Enums;
+﻿using Finan.Contracts.Enums;
+using Finan.Contracts.Request;
 using Finan.Domain.Interfaces;
-using Finan.Domain.Parameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Finan.Application.Controllers
+namespace Finan.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -19,7 +19,7 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] GroupCommand groupCommand)
+        public async Task<IActionResult> CreateAsync([FromBody] GroupRequest groupCommand)
         {
             var response = await _baseGroupService.CreateGroup(groupCommand);
 
@@ -27,7 +27,7 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] GroupCommand groupCommand)
+        public async Task<IActionResult> UpdateAsync([FromBody] GroupRequest groupCommand)
         {
             var response = await _baseGroupService.UpdateGroup(groupCommand);
 

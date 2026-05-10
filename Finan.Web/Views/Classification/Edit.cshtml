@@ -1,0 +1,47 @@
+﻿@*  
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860  
+*@  
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var p = ViewBag.Data;
+    var g = ViewBag.Groups;
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classificações</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<main>
+    <div class="container">
+        <div class="d-flex align-items-center mb-4">
+            <h1 class="h3 me-2">Classificações</h1>
+            <span class="text-muted fs-6">> Editar</span>
+        </div>
+
+        <div class="text-end mb-3">
+            <a href="/Classification" class="btn btn-secondary btn-sm" style="font-size:small;">Voltar</a>
+        </div>
+
+        <form action="/Classification/Update/@p.Id" method="post">
+            <div class="card shadow-sm p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="Description" class="form-label">Descrição:</label>
+                        @await Component.InvokeAsync("TextInput", new { name = "Description", value = p.Description, maxlength = 100, placeholder = "Digite a descrição da Classificação" })
+                    </div>
+                    <div class="col-md-6">
+                        <label for="GroupId" class="form-label">Grupo:</label>
+                        @await Component.InvokeAsync("Dropdown", new { name = "GroupId", items = g, selectedValue = p.GroupId.ToString() })
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4" style="font-size:small;">
+                <button class="btn btn-primary btn-sm" type="submit">Salvar</button>
+            </div>
+        </form>
+    </div>
+</main>

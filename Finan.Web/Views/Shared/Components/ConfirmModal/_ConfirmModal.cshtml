@@ -1,0 +1,43 @@
+﻿@using Finan.Web.Components.ConfirmModal
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model ConfirmModalModel
+
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="font-size:small;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Model.Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>@Model.Message</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Sim</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showConfirmModal(message, callback) {
+        document.querySelector(".modal-body p").textContent = message;
+
+        const confirmBtn = document.getElementById("confirmDeleteBtn");
+        confirmBtn.onclick = function () {
+            callback();
+            var modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            modal.hide();
+        };
+
+        var modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        modal.show();
+    }
+</script>

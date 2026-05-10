@@ -1,0 +1,15 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@* Default.cshtml - View para o View Component *@
+@model Microsoft.AspNetCore.Mvc.ViewFeatures.ModelExplorer
+<input asp-for="@Model.Metadata.Name" type="text" class="form-control" style="font-size:small;"
+       name="@ViewBag.Name"
+       id="@ViewBag.Name"
+       value="@ViewBag.Value"
+       maxlength="@ViewBag.Maxlength"
+       placeholder="@ViewBag.Placeholder"
+       required="@ViewBag.Required" />
+
+
+<span asp-validation-for="@Model.Metadata.Name" class="text-danger small"></span>

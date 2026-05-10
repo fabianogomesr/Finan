@@ -1,0 +1,26 @@
+﻿@* Componente Razor *@
+@model Microsoft.AspNetCore.Mvc.ViewFeatures.ModelExplorer
+<input asp-for="@Model.Metadata.Name"
+       type="text"
+       class="form-control decimal-input"
+       style="font-size:small;"
+       name="@ViewBag.Name"
+       id="@ViewBag.Name"
+       value="@ViewBag.Value?.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))"
+       placeholder="@ViewBag.Placeholder"
+       step="@ViewBag.Step" />
+
+<span asp-validation-for="@Model.Metadata.Name" class="text-danger small"></span>
+
+<script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+      new Cleave('.decimal-input', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand',
+        numeralDecimalMark: ',',
+        delimiter: '.',
+        numeralDecimalScale: 2
+      });
+    });
+</script>

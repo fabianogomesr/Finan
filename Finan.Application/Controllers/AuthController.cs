@@ -1,8 +1,8 @@
-﻿using Finan.Domain.Interfaces;
-using Finan.Domain.Parameters;
+﻿using Finan.Contracts.Request;
+using Finan.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Finan.Application.Controllers
+namespace Finan.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -16,7 +16,7 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPost("Login", Name = "Login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginCommand loginCommand) 
+        public async Task<IActionResult> LoginAsync([FromBody] LoginRequest loginCommand) 
         {
             var response = await _tokenService.GenerateTokenAsync(loginCommand);
 

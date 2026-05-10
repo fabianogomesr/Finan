@@ -1,0 +1,16 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@* Default.cshtml - View para o View Component *@
+<select class="form-select" name="@ViewBag.Name" id="@ViewBag.Name" required="@ViewBag.Required" style="font-size:small;" for="ViewBag.Name">
+    <option value="">Selecione uma opção</option>
+    @if (ViewBag.Items != null)
+    {
+        @foreach (var item in ViewBag.Items)
+        {
+            <option value="@item.Value" selected="@(item.Value == ViewBag.SelectedValue ? "selected" : null)">@item.Text</option>
+        }
+    }
+</select>

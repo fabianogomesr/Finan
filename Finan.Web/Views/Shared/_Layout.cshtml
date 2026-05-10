@@ -1,0 +1,371 @@
+﻿@using System.Text.Json
+@using Finan.Web.Components.MessageModal
+@{
+    var messages = TempData["ModalMessages"];
+    var modalTitle = TempData["ModalTitle"]?.ToString();
+    var modalType = TempData["ModalType"]?.ToString();
+}
+
+@await Html.PartialAsync("Components/MessageModal/_MessageModal", new MessageModalModel { Id = "alertModal" })
+
+<!DOCTYPE html>
+<html lang="en">
+<head>  
+  <meta charset="utf-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+  <title>@ViewData["Title"]Finan</title>  
+  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />  
+  <link rel="stylesheet" href="~/Finan.Web.styles.css" asp-append-version="true" />
+
+    <style>
+        /* ======= Tema Azul Moderno ======= */
+
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* ======= Navbar ======= */
+        .navbar {
+            background: linear-gradient(90deg, #0d6efd 0%, #0b5ed7 100%);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Ajuste do icon-box para alinhamento à esquerda sem margens negativas */
+        .icon-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0; /* removido margin negativo */
+            padding: 8px; /* padding menor para caber bem no navbar */
+            width: 35px;
+            height: 35px;
+            background-color: #28a745;
+            border-radius: 6px;
+        }
+
+        /* ======= Tabelas Tema Azul ======= */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+            .table thead {
+                background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+                color: #ffffff;
+                font-weight: 600;
+                border-bottom: 3px solid #0b5ed7;
+            }
+
+                .table thead th {
+                    border: none;
+                    letter-spacing: 0.5px;
+                    padding: 0.9rem 1rem;
+                    vertical-align: middle;
+                }
+
+            .table tbody tr {
+                transition: background-color 0.2s ease-in-out;
+            }
+
+                .table tbody tr:hover {
+                    background-color: #e9f3ff;
+                }
+
+            .table td {
+                border-top: 1px solid #dee2e6;
+                vertical-align: middle;
+                padding: 0.8rem 1rem;
+                color: #212529;
+            }
+
+                .table td:first-child,
+                .table th:first-child {
+                    border-top-left-radius: 0.75rem;
+                }
+
+                .table td:last-child,
+                .table th:last-child {
+                    border-top-right-radius: 0.75rem;
+                }
+
+        /* ======= Linhas alternadas (zebra) ======= */
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f8f9fa;
+        }
+
+        /* ======= Hover Azul Suave ======= */
+        .table-hover tbody tr:hover {
+            background-color: #e3f2fd;
+        }
+
+        /* ======= Ações dentro da tabela ======= */
+        .table .btn {
+            border-radius: 0.4rem;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.85rem;
+        }
+
+        .table .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+        }
+
+            .table .btn-primary:hover {
+                background-color: #0b5ed7;
+            }
+
+        .table .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+
+            .table .btn-danger:hover {
+                background-color: #bb2d3b;
+            }
+
+        .table .btn-outline-primary {
+            border-color: #0d6efd;
+            color: #0d6efd;
+        }
+
+            .table .btn-outline-primary:hover {
+                background-color: #0d6efd;
+                color: #ffffff;
+            }
+
+        /* ======= Responsividade ======= */
+        .table-responsive {
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: #ffffff !important;
+        }
+
+        .navbar .nav-link {
+            color: #e3f2fd !important;
+            font-weight: 500;
+            transition: color 0.2s ease-in-out;
+        }
+
+            .navbar .nav-link:hover,
+            .navbar .dropdown-item:hover {
+                color: #ffffff !important;
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+        .navbar .dropdown-menu {
+            background-color: #e3f2fd;
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .dropdown-item a.nav-link {
+            color: #0b5ed7 !important;
+        }
+
+            .dropdown-item a.nav-link:hover {
+                color: #084298 !important;
+            }
+
+        /* ======= Botões de Usuário ======= */
+        .btn-outline-light {
+            border-color: #ffffff;
+            color: #ffffff !important;
+            transition: all 0.2s ease-in-out;
+        }
+
+            .btn-outline-light:hover {
+                background-color: #ffffff;
+                color: #0d6efd !important;
+            }
+
+        /* ======= Footer ======= */
+        footer.theme-primary {
+            background: linear-gradient(90deg, #0b5ed7, #0a58ca);
+            color: #ffffff;
+            padding: 0.2rem 0;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #bbd9ff;
+            text-decoration: none;
+        }
+
+            footer a:hover {
+                color: #ffffff;
+            }
+
+        /* ======= Cookie Consent ======= */
+        #cookieConsent {
+            background: #0b5ed7 !important;
+            border-radius: 0.5rem;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+            #cookieConsent .btn {
+                background-color: #ffffff;
+                color: #0b5ed7;
+                border: none;
+                transition: 0.2s;
+            }
+
+                #cookieConsent .btn:hover {
+                    background-color: #e3f2fd;
+                    color: #084298;
+                }
+
+        /* ======= Ícones ======= */
+        i.bi {
+            margin-right: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    @if ((ViewContext.RouteData.Values["action"].ToString() != "Login" && ViewContext.RouteData.Values["action"].ToString() != "Register") || ViewContext.RouteData.Values["controller"].ToString() != "Auth")
+    {
+    <header>
+       <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
+           <div class="container-fluid">
+               <a class="navbar-brand d-flex align-items-center me-3 text-light" asp-area="" asp-controller="Home" asp-action="Index" title="Início">
+                   <span class="icon-box">
+                       <i class="bi bi-coin" style="margin-left:5px" aria-hidden="true"></i>
+                   </span>
+                   <span class="ms-1 d-sm-inline small">Finan</span>
+               </a>
+
+               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                       aria-expanded="false" aria-label="Toggle navigation">
+                   <span class="navbar-toggler-icon"></span>
+               </button>
+               <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                   <ul class="navbar-nav flex-grow-1">
+@*                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-fill"></i> Dashboard
+                            </a>
+                       </li> *@
+                       <li class="nav-item dropdown">
+                           <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-house-gear"></i> Cadastro Financeiro
+                           </a>
+                           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                               <li class="dropdown-item"><a class="nav-link text-dark" href="/Group">Grupos</a></li>
+                               <li class="dropdown-item"><a class="nav-link text-dark" href="/Classification">Classificações</a></li>
+                               <li class="dropdown-item"><a class="nav-link text-dark" href="/CostCenter">Centros de Custos</a></li>
+                               <li class="dropdown-item"><a class="nav-link text-dark" href="/Currency">Moedas</a></li>
+                               <li class="dropdown-item"><a class="nav-link text-dark" href="/Bank">Bancos</a></li>
+                           </ul>
+                       </li>
+
+                       <li class="nav-item">
+                           <a class="nav-link text-light" href="/Transaction">
+                                <i class="bi bi-arrow-left-right"></i> Movimentação Financeira
+                           </a>
+                       </li>
+
+                       <li class="nav-item">
+                           <a class="nav-link text-light" href="/Account">
+                                <i class="bi bi-bank"></i> Movimentação Bancária
+                           </a>
+                       </li>
+                   </ul>
+               </div>
+               <div>
+                   <div class="d-flex align-items-center">
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-outline-light text-light btn-lg">
+                                <i class="bi bi-person"></i> @User.Identity.Name
+                            </a>
+                            <a href="/Auth/Logout" class="btn btn-outline-light text-light btn-lg align-content-center" role="button" aria-label="Sair">
+                                <i class="bi bi-box-arrow-right"></i>
+                            </a>
+                        </div>
+                   </div>
+               </div>  
+           </div>
+       </nav>
+    </header>
+    }
+
+    <div class="container">
+        <main role="main" class="pb-5 m-5">
+            @RenderBody()
+            @if (messages != null)
+            {
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+
+                        const msgs = @Html.Raw(JsonSerializer.Serialize(messages));
+
+                        showMessageModal("alertModal",
+                            '@modalTitle',
+                            msgs,
+                            '@modalType'
+                        );
+                    });
+                </script>
+            }
+        </main>
+    </div>
+
+    <div id="cookieConsent" class="toast align-items-center text-white bg-primary border-0 position-fixed bottom-0 start-0 m-4" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 1080;">
+        <div class="d-flex">
+            <div class="toast-body">
+                Utilizamos cookies para melhorar sua experiência. Ao continuar navegando, você concorda com a nossa <a href="/Home/Privacy">Política de Privacidade</a>.
+            </div>
+            <button type="button" class="btn btn-light btn-sm me-2 my-auto" id="acceptCookies">
+                Aceitar
+            </button>
+        </div>
+    </div>
+
+    @if ((ViewContext.RouteData.Values["action"].ToString() != "Login" && ViewContext.RouteData.Values["action"].ToString() != "Register") || ViewContext.RouteData.Values["controller"].ToString() != "Auth")
+    {
+        <footer class="border-top footer text-muted theme-primary">
+            <div class="container text-white">
+                &copy; 2024 - Finan - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-white">Política de Privacidade</a>
+            </div>
+        </footer>
+    }
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cookieConsent = document.getElementById("cookieConsent");
+            const acceptBtn = document.getElementById("acceptCookies");
+
+            if (!localStorage.getItem("cookiesAccepted")) {
+                const toast = new bootstrap.Toast(cookieConsent, { delay: 5000 });
+                toast.show();
+            }
+
+            acceptBtn.addEventListener("click", function () {
+                localStorage.setItem("cookiesAccepted", "true");
+                const toast = bootstrap.Toast.getInstance(cookieConsent);
+                toast.hide();
+            });
+        });
+    </script>
+    <script src="~/js/message-modal.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

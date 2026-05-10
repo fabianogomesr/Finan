@@ -1,0 +1,157 @@
+﻿@using Finan.Web.Components.ConfirmModal
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var GroupList = ViewBag.Data;
+}
+
+@await Html.PartialAsync("Components/ConfirmModal/_ConfirmModal", new ConfirmModalModel())
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<main>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">Grupos</h1>
+        </div>
+
+        <div class="text-end mb-3">
+            <a href="/Group/New" class="btn btn-success btn-sm" style="font-size:small;">
+                <i class="bi bi-plus-square-fill"></i> Novo Grupo
+            </a>
+        </div>
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                @TempData["Message"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <table class="table table-hover table-bordered text-center align-middle mb-0" style="font-size:small;">
+            <thead>
+                <tr>
+                    <th class="visually-hidden">#</th>
+                    <th>Descrição</th>
+                    <th>Natureza</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (GroupList.Items != null && GroupList.Items.Count > 0)
+                {
+                    @foreach (var p in GroupList.Items)
+                    {
+                        <tr>
+                            <td class="visually-hidden">@p.Id</td>
+                            <td>@p.Description</td>
+                            <td>@p.Nature</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="editItem(@p.Id)">
+                                        <i class="bi bi-pencil-square"></i> Editar
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="showConfirmModal('Deseja realmente excluir este item?', function() { deleteItem(@p.Id); })">
+                                        <i class="bi bi-trash"></i> Excluir
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="12" class="text-center">Nenhum grupo encontrado.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <nav class="mt-4" style="font-size:small;">
+            <ul class="pagination justify-content-center">
+                @if (GroupList.Items != null && GroupList.Items.Count > 0)
+                {
+                    <li class="page-item @(GroupList.Page == 1 ? "disabled" : "")">
+                        <a class="page-link" href="/Group/Page/@(GroupList.Page - 1)" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    @* Define o limite de páginas visíveis *@    
+                    int maxVisiblePages = 5;
+                    int startPage = Math.Max(1, GroupList.Page - (maxVisiblePages / 2));
+                    int endPage = Math.Min(GroupList.TotalPages, startPage + maxVisiblePages - 1);
+
+                    if (endPage - startPage + 1 < maxVisiblePages)
+                    {
+                        startPage = Math.Max(1, endPage - maxVisiblePages + 1);
+                    }
+
+
+                    @if (startPage > 1)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+
+                    @for (int i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(GroupList.Page == i ? "active" : "")">
+                            <a class="page-link" href="/Group/Page/@(i)">@i</a>
+                        </li>
+                    }
+
+                    @if (endPage < GroupList.TotalPages)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+
+                    <li class="page-item @(GroupList.Page == GroupList.TotalPages ? "disabled" : "")">
+                        <a class="page-link" href="/Group/Page/@(GroupList.Page + 1)" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</main>
+
+<script>
+    function deleteItem(id) {
+        fetch(`/Group/Delete/${id}`, { method: 'POST' })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                }
+            });
+    }
+    function editItem(id) {
+        window.location.href = `/Group/Edit/${id}`;
+    }
+</script>

@@ -1,0 +1,43 @@
+﻿@model BankViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bancos</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<main>
+    <div class="container">
+        <div class="d-flex align-items-center p-0 mb-4">
+            <h1 class="h3 mb-0 me-2">Bancos</h1>
+            <span class="text-muted fs-6">> Novo</span>
+        </div>
+
+        <div class="text-end mb-3">
+            <a href="/Bank" class="btn btn-secondary btn-sm" style="font-size:small;">Voltar</a>
+        </div>
+
+        <form action="/Bank/Create" method="post" class="needs-validation" novalidate>
+            <div class="card shadow-sm p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="Name" class="form-label">Nome:</label>
+                        @await Component.InvokeAsync("TextInput", new { name = "Name", maxlength = 100, placeholder = "Digite o nome do banco" })
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Code" class="form-label">Código:</label>
+                        @await Component.InvokeAsync("TextInput", new { name = "Code", maxlength = 100, placeholder = "Digite o código do banco" })
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4" style="font-size:small;">
+                <button class="btn btn-primary btn-sm" type="submit">Salvar</button>
+            </div>
+        </form>
+    </div>
+</main>

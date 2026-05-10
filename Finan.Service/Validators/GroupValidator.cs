@@ -1,9 +1,11 @@
-﻿using Finan.Domain.Parameters;
+﻿using Finan.Contracts.Response;
+using Finan.Contracts.Request;
+using Finan.Contracts.Enums;
 using FluentValidation;
 
-namespace Finan.Service.Validators
+namespace Finan.Application.Validators
 {
-    public class GroupValidator : AbstractValidator<GroupCommand>
+    public class GroupValidator : AbstractValidator<GroupRequest>
     {
         public GroupValidator()
         {

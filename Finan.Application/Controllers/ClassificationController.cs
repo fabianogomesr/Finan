@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Finan.Domain.Parameters;
 using Finan.Domain.Interfaces;
+using Finan.Contracts.Request;
 
-namespace Finan.Application.Controllers
+namespace Finan.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -18,7 +18,7 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] ClassificationCommand ClassificationParameter)
+        public async Task<IActionResult> CreateAsync([FromBody] ClassificationRequest ClassificationParameter)
         {
             var response = await _baseClassificationService.AddClassification(ClassificationParameter);
 
@@ -27,7 +27,7 @@ namespace Finan.Application.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] ClassificationCommand ClassificationParameter) 
+        public async Task<IActionResult> UpdateAsync([FromBody] ClassificationRequest ClassificationParameter) 
         {
             var response = await _baseClassificationService.UpdateClassification(ClassificationParameter);
 

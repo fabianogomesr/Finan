@@ -1,6 +1,6 @@
-@Finan.Application_HostAddress = http://localhost:5086
+@Finan.Api_HostAddress = http://localhost:5086
 
-GET {{Finan.Application_HostAddress}}/weatherforecast/
+GET {{Finan.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

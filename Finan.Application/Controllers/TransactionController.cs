@@ -1,10 +1,11 @@
-﻿using Finan.Domain.Commands;
-using Finan.Domain.Filters;
+﻿using Finan.Contracts.Filters;
+using Finan.Contracts.Request;
+using Finan.Contracts.Response;
 using Finan.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Finan.Application.Controllers
+namespace Finan.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -19,7 +20,7 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] TransactionCommand transactionCommand)
+        public async Task<IActionResult> CreateAsync([FromBody] TransactionRequest transactionCommand)
         {
             var response = await _baseTransactionService.AddTransaction(transactionCommand);
 
@@ -28,7 +29,7 @@ namespace Finan.Application.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] TransactionCommand transactionCommand) 
+        public async Task<IActionResult> UpdateAsync([FromBody] TransactionRequest transactionCommand) 
         {
             var response = await _baseTransactionService.UpdateTransaction(transactionCommand);
 

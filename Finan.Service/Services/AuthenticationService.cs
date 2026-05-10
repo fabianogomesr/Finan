@@ -1,9 +1,9 @@
 ﻿using Finan.Domain.Entities;
 using Finan.Domain.Interfaces;
-using Finan.Domain.Parameters;
 using Finan.CrossCutting.Encrypt;
+using Finan.Contracts.Request;
 
-namespace Finan.Service.Services
+namespace Finan.Application.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
@@ -16,7 +16,7 @@ namespace Finan.Service.Services
             _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
         }
 
-        public async Task<User?> AuthenticateAsync(LoginCommand loginParameter)
+        public async Task<User?> AuthenticateAsync(LoginRequest loginParameter)
         {
             if (loginParameter == null) return null;
             if (string.IsNullOrWhiteSpace(loginParameter.UserName) || string.IsNullOrWhiteSpace(loginParameter.Password))

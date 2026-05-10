@@ -1,13 +1,14 @@
-﻿using Finan.CrossCutting.Encrypt;
+﻿using Finan.Application.Services;
+using Finan.CrossCutting.Encrypt;
 using Finan.Domain.Interfaces;
 using Finan.Infra.Data.Context;
 using Finan.Infra.Data.Repository;
-using Finan.Service.Identity;
-using Finan.Service.Jwt;
-using Finan.Service.Services;
+using Finan.Infra.Identity.Context;
+using Finan.Infra.Identity.JWT;
+using Finan.Infra.JWT;
 using Microsoft.EntityFrameworkCore;
 
-namespace Finan.Application
+namespace Finan.Api
 {
     public static class DependencyInjection
     {
