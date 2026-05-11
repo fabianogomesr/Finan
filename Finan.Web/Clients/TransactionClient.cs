@@ -37,7 +37,7 @@ namespace Finan.Web.Clients
         public async Task DeleteAsync(int id) => await DeleteAsync(_baseUrl + "/" + id, "");
         public async Task<ApiResponse<PagedResponse<TransactionResponse>>?> GetPageAsync(TransactionFilter filter) 
         {
-            var response = await GetAsync<PagedResponse<TransactionResponse>>($"{_baseUrl}/?DateType={filter.DateType}&StartDate={filter.StartDate.ToString("yyyy/MM/dd")}&EndDate={filter.EndDate.ToString("yyyy/MM/dd")}&PageNumber={filter.PageNumber}&PageSize={filter.PageSize}&Canceled={filter.Canceled}");
+            var response = await GetAsync<PagedResponse<TransactionResponse>>($"{_baseUrl}?TransactionType={filter.TransactionType.GetHashCode()}&DateType={filter.DateType}&StartDate={filter.StartDate.ToString("yyyy/MM/dd")}&EndDate={filter.EndDate.ToString("yyyy/MM/dd")}&PageNumber={filter.PageNumber}&PageSize={filter.PageSize}&Canceled={filter.Canceled}");
             return response;
         }
         public async Task<ApiResponse<List<FinancialTypeResponse>>?> GetFinancialTypeList() 
