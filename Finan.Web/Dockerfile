@@ -17,8 +17,7 @@ WORKDIR /src
 
 COPY ./Finan.Web/*.csproj ./Finan.Web/
 COPY ./Finan.Domain/*.csproj ./Finan.Domain/
-COPY ./Finan.Service/*.csproj ./Finan.Service/
-COPY ./Finan.Web.Clients/*.csproj ./Finan.Web.Clients/
+COPY ./Finan.Infra.Data/*.csproj ./Finan.Infra.Data/
 
 RUN dotnet restore ./Finan.Web/Finan.Web.csproj
 
