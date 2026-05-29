@@ -30,21 +30,21 @@ A aplicação possui separação entre Front-End e Back-End, permitindo evoluç�
 
 flowchart TD
 
-    WEB["Finan.Web<br/>Razor Pages"]
-    API["Finan.Api<br/>ASP.NET Core Web API"]
+WEB["Finan.Web<br/>Razor Pages"]
+API["Finan.Api<br/>ASP.NET Core Web API"]
 
-    CONTRACTS["Contracts<br/>Requests, Responses, Filters"]
-    APP["Application<br/>Services, Validators, Use Cases"]
-    DOMAIN["Domain<br/>Entities, Business Rules"]
-    INFRA["Infrastructure<br/>EF Core, Repositories"]
-    DB["PostgreSQL"]
+CONTRACTS["Contracts<br/>Requests, Responses, Filters"]
+APP["Application<br/>Services, Validators, Use Cases"]
+DOMAIN["Domain<br/>Entities, Business Rules"]
+INFRA["Infrastructure<br/>EF Core, Repositories"]
+DB["PostgreSQL"]
 
-    WEB --> API
-    API --> CONTRACTS
-    CONTRACTS --> APP
-    APP --> DOMAIN
-    APP --> INFRA
-    INFRA --> DB
+WEB --> API
+API --> CONTRACTS
+CONTRACTS --> APP
+APP --> DOMAIN
+APP --> INFRA
+INFRA --> DB
 
 ---
 
