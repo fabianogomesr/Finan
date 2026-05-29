@@ -28,23 +28,23 @@ A aplicação possui separação entre Front-End e Back-End, permitindo evoluç�
 
 ## Arquitetura da Solução
 
-flowchart TD
+```mermaid
+flowchart LR
 
-WEB["Finan.Web<br/>Razor Pages"]
-API["Finan.Api<br/>ASP.NET Core Web API"]
+    WEB["🌐 Finan.Web<br/>Razor Pages"]
+    API["⚙️ Finan.Api<br/>.NET 8 Web API"]
 
-CONTRACTS["Contracts<br/>Requests, Responses, Filters"]
-APP["Application<br/>Services, Validators, Use Cases"]
-DOMAIN["Domain<br/>Entities, Business Rules"]
-INFRA["Infrastructure<br/>EF Core, Repositories"]
-DB["PostgreSQL"]
+    APP["📋 Application<br/>Services & Validators"]
+    DOMAIN["🏦 Domain<br/>Business Rules"]
+    INFRA["🔧 Infrastructure<br/>EF Core"]
+    DB["🐘 PostgreSQL"]
 
-WEB --> API
-API --> CONTRACTS
-CONTRACTS --> APP
-APP --> DOMAIN
-APP --> INFRA
-INFRA --> DB
+    WEB --> API
+    API --> APP
+    APP --> DOMAIN
+    APP --> INFRA
+    INFRA --> DB
+```
 
 ---
 
