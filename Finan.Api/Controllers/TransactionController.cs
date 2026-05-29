@@ -60,10 +60,18 @@ namespace Finan.Api.Controllers
             return TreatObjectResultOk(response, _baseTransactionService.Messages);
         }
 
-        [HttpGet]
+        [HttpGet("Filtered")]
         public async Task<IActionResult> GetAsync([FromQuery]TransactionFilter filter)
         {
             var response = await _baseTransactionService.GetTransactionsAsync(filter);
+
+            return TreatObjectResultOk(response, _baseTransactionService.Messages);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAsync()
+        {
+            var response = await _baseTransactionService.GetTransactionsAsync();
 
             return TreatObjectResultOk(response, _baseTransactionService.Messages);
         }

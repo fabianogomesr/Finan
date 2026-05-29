@@ -17,7 +17,7 @@ namespace Finan.Infra.Data.Repository
             _dbSet = mySqlContext;
         }
 
-        public decimal GetBalanceByAccountId(int accountId) => GetAll().Where(s => s.AccountId == accountId && !s.Reversed && s.ReconciledDate != null).Sum(s => s.Value);
+        public decimal GetBalanceByAccountId(int accountId) => GetAll().Where(s => s.AccountId == accountId && !s.Reversed).Sum(s => s.Value);
 
     }
 }

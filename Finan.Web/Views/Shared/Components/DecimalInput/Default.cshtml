@@ -8,7 +8,8 @@
        id="@ViewBag.Name"
        value="@ViewBag.Value?.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))"
        placeholder="@ViewBag.Placeholder"
-       step="@ViewBag.Step" />
+       step="@ViewBag.Step"
+       required="@ViewBag.Required" />
 
 <span asp-validation-for="@Model.Metadata.Name" class="text-danger small"></span>
 

@@ -42,7 +42,7 @@ namespace Finan.Domain.Entities
                 throw new Exception("Tipo de transação inválida para lançamento no extrato.");
             }
 
-            Balance += Value;
+            Balance = balance += Value;
             TransactionId = transaction.Id;
             AccountId = accountId;
             Reversed = false;

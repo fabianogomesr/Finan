@@ -2,7 +2,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 
-@* @model TransactionViewModel
+@model TransactionViewModel
 @{
     ViewData["Title"] = "Dashboard";
     
@@ -119,7 +119,7 @@
                 @foreach (var item in ReceivableSummaryClassification)
                 {
                     <tr>
-                        <td>@item.Classification</td>
+                        <td>@item.ClassificationName</td>
                         <td>@item.TotalAmount.ToString("N2")</td>
                     </tr>
                 }
@@ -141,7 +141,7 @@
                 @foreach (var item in TransactionSummaryClassification)
                 {
                     <tr>
-                        <td>@item.Classification</td>
+                        <td>@item.ClassificationName</td>
                         <td>@item.TotalAmount.ToString("N2")</td>
                     </tr>
                 }
@@ -150,4 +150,3 @@
         </tbody>
     </table>
 </div>
- *@
