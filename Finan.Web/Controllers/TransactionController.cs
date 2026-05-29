@@ -74,8 +74,8 @@ namespace Finan.Web.Controllers
 
         public async Task<IActionResult> UpdateAsync(TransactionViewModel Transaction)
         {
-            if (!ModelState.IsValid)
-                return ValidateModel("Edit");
+            //if (!ModelState.IsValid)
+            //    return ValidateModel("Edit");
 
             var transaction = new TransactionRequest
             {
@@ -110,8 +110,8 @@ namespace Finan.Web.Controllers
 
         public async Task<IActionResult> CreateAsync(TransactionViewModel Transaction)
         {
-            if (!ModelState.IsValid)
-                return ValidateModel("New");
+            //if (!ModelState.IsValid)
+            //    return ValidateModel("New");
 
             var transaction = new TransactionRequest
             {
