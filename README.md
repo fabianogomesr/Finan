@@ -28,29 +28,23 @@ A aplicação possui separação entre Front-End e Back-End, permitindo evoluç�
 
 ## Arquitetura da Solução
 
-┌─────────────┐
-│ Razor Pages │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│ .NET API    │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│ Application │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│ Domain      │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│ PostgreSQL  │
-└─────────────┘
+```mermaid
+flowchart LR
+
+    WEB["🌐 Finan.Web<br/>Razor Pages"]
+    API["⚙️ Finan.Api<br/>.NET 8 Web API"]
+
+    APP["📋 Application<br/>Services & Validators"]
+    DOMAIN["🏦 Domain<br/>Business Rules"]
+    INFRA["🔧 Infrastructure<br/>EF Core"]
+    DB["🐘 PostgreSQL"]
+
+    WEB --> API
+    API --> APP
+    APP --> DOMAIN
+    APP --> INFRA
+    INFRA --> DB
+```
 
 ---
 
