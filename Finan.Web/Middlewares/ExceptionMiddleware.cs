@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Finan.Web.Middlewares
 {
@@ -63,7 +64,20 @@ namespace Finan.Web.Middlewares
             if (wantsHtml)
             {
                 context.Response.ContentType = "text/html; charset=utf-8";
+
+                var correlationId = context?.TraceIdentifier ?? Guid.NewGuid().ToString();
+
+                if (Debugger.IsAttached)
+                {
+                    message = $"Ocorreu um erro inesperado (CorrelationId: {correlationId}): {ex.Message}" ;
+                }
+                else
+                {
+                    message = $"Ocorreu um erro inesperado. CorrelationId: {correlationId}";
+                }
+
                 var encodedMessage = JsonSerializer.Serialize(message);
+
                 var html = $@"<!doctype html>
                     <html>
                       <head>

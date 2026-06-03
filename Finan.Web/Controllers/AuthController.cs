@@ -131,42 +131,42 @@ public class AuthController : BaseController
     }
 
     //// Processa o registro
-    //[HttpPost]
-    //[AllowAnonymous]
-    //public async Task<IActionResult> Register(RegisterViewModel model)
-    //{
-    //    if (User.Identity.IsAuthenticated)
-    //    {
-    //        return RedirectToAction("Index", "Home");
-    //    }
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        if (User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Index", "Home");
+        }
 
-    //    if (ModelState.IsValid)
-    //    {
-    //        // Aqui você pode colocar a lógica de registro
-    //        // Por exemplo: criar um novo usuário no banco de dados
+        if (ModelState.IsValid)
+        {
+            // Aqui você pode colocar a lógica de registro
+            // Por exemplo: criar um novo usuário no banco de dados
 
-    //        var user = new UserRequest
-    //        {
-    //            UserName = model.Name,
-    //            Email = model.Email,
-    //            Password = model.Password
-    //        };
+            var user = new UserRequest
+            {
+                UserName = model.Name,
+                Email = model.Email,
+                Password = model.Password
+            };
 
-    //        var result = await _userClient.CreateAdminUserAsync(user);
+            var result = await _userClient.CreateAdminUserAsync(user);
 
-    //        if (result !=  null)
-    //        {
-    //            // Redireciona para a página de login após o registro bem-sucedido
-    //            TempData["Message"] = "Usuário cadastrado!";
-    //            return RedirectToAction("Login", "Auth");
-    //        }
-    //        else
-    //        {
-    //            ModelState.AddModelError("", "Erro ao registrar usuário.");
-    //        }
-    //    }
-    //    return View(model);
-    //}
+            if (result != null)
+            {
+                // Redireciona para a página de login após o registro bem-sucedido
+                TempData["Message"] = "Usuário cadastrado!";
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Erro ao registrar usuário.");
+            }
+        }
+        return View(model);
+    }
 
     // Método para realizar o logout
     [HttpGet]

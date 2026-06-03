@@ -23,7 +23,7 @@ namespace Finan.Web.Controllers
         [Authorize]
         public async Task<IActionResult> IndexAsync(DashBoardViewModel dashBoardViewModel)
         {
-            var months = System.Globalization.DateTimeFormatInfo.CurrentInfo.MonthNames
+             var months = System.Globalization.DateTimeFormatInfo.CurrentInfo.MonthNames
                         .Where(m => !string.IsNullOrEmpty(m))
                         .Select((nome, index) => new SelectListItem { Value = (index + 1).ToString(), Text = char.ToUpper(nome[0]) + nome.Substring(1) });
 
@@ -39,7 +39,13 @@ namespace Finan.Web.Controllers
             int month = dashBoardViewModel.Month > 0 ? dashBoardViewModel.Month : DateTime.Now.Month;
             int year = dashBoardViewModel.Year > 0 ? dashBoardViewModel.Year : DateTime.Now.Year;
 
-            var transactions = await _TransactionClient.GetAllAsync();
+            var transactions = await _TransactionClient.GetAllAsync();               
+
+            if(transactions.Data == null)
+            {
+                return View();
+            }
+
 
             var receivableSummary = transactions.Data.Where(t => t.TypeId == TransactionType.Income.GetHashCode() && t.IssueDate.Month == month && t.IssueDate.Year == year)
                 .GroupBy(t => 1)

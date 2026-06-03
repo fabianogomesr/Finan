@@ -2,9 +2,12 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     "outDir": "./wwwroot/js/dist",
-    "rootDir": "./ts",
+    "rootDir": "./Scripts",
     "target": "ES2020",
     "module": "ES2020",
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
     "strict": true,
     // File Layout
     // "rootDir": "./src",
@@ -42,5 +45,8 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
-  }
+  },
+  "include": [
+    "Scripts/**/*" // Onde seus arquivos .ts estão
+  ]
 }

@@ -89,7 +89,9 @@
             <div class="card dashboard-card receitas mb-3">
                 <div class="card-body">
                     <h5 class="card-title"><i class="bi bi-cash-stack"></i> Receitas</h5>
-                    <p class="card-text display-6">R$ @ReceivableSummary.TotalAmount.ToString("N2")</p>
+                    <p class="card-text display-6">
+                        R$ @(ReceivableSummary?.TotalAmount.ToString("N2") ?? "0,00")
+                    </p>
                 </div>
             </div>
         </div>
@@ -97,7 +99,9 @@
             <div class="card dashboard-card despesas mb-3">
                 <div class="card-body">
                     <h5 class="card-title"><i class="bi bi-credit-card-2-front"></i> Despesas</h5>
-                    <p class="card-text display-6">R$ @TransactionSummary.TotalAmount.ToString("N2")</p>
+                    <p class="card-text display-6">
+                        R$ @(TransactionSummary?.TotalAmount.ToString("N2") ?? "0,00")
+                    </p>
                 </div>
             </div>
         </div>
@@ -105,7 +109,9 @@
             <div class="card dashboard-card saldo mb-3">
                 <div class="card-body">
                     <h5 class="card-title"><i class="bi bi-wallet2"></i> Saldo</h5>
-                    <p class="card-text display-6">R$ @Balance.ToString("N2")</p>
+                    <p class="card-text display-6">
+                        R$ @(Balance?.ToString("N2") ?? "0,00")
+                    </p>
                 </div>
             </div>
         </div>
@@ -120,7 +126,7 @@
             </tr>
         </thead>
         <tbody>
-            @if (ReceivableSummaryClassification != null && ReceivableSummaryClassification.Count > 0)
+            @if (ReceivableSummaryClassification != null)
             {
                 @foreach (var item in ReceivableSummaryClassification)
                 {
@@ -142,7 +148,7 @@
             </tr>
         </thead>
         <tbody>
-            @if (TransactionSummaryClassification != null && TransactionSummaryClassification.Count > 0)
+            @if (TransactionSummaryClassification != null)
             {
                 @foreach (var item in TransactionSummaryClassification)
                 {
